@@ -1,0 +1,73 @@
+
+function <size:int> next(pcurr:int 0 .. (size - 1)) : int 0 .. (size - 1) {
+    buf : T;
+    return (pcurr + 1) % size ;
+}
+
+
+automaton <T:type,size:int> Queue(A:in T, B:out T) {
+    variables {
+        buf : T [size] init t;
+        phead : int 0 .. (size - 1) init 0;
+        ptail : int 0 .. (size - 1) init 0;
+    }
+    transitions {
+	    // internal transitions
+        !A.reqRead && (buf[phead] == null) -> {
+            // TODO remove debug lines
+            buf[1] = t;
+            A.reqRead = true;
+        }
+        A.reqRead && (buf[phead] != null) -> A.reqRead = false;
+
+        !B.reqWrite && (buf[ptail] != null) -> B.reqWrite = true;
+        B.reqWrite && (buf[ptail] == null) -> B.reqWrite = false;
+
+        // enqueue operation (as an external transition)
+        (A.reqRead && A.reqWrite) -> {
+            sync A; // read data from input port A
+            buf[phead] = A.value;
+            phead = next(phead);
+        }
+        // dequeue operation (as an external transition)
+        (B.reqRead && B.reqWrite) -> {
+            B.value = buf[ptail];
+            ptail = next(ptail);
+            sync B; // write data to output port B
+        }
+    }
+}
+
+automaton <T:type> Producer (OUT: out T) {
+    variables {
+        t : int 0 .. 10 init 1;
+    }
+    transitions {
+        OUT.reqRead != OUT.reqWrite -> {
+            OUT.reqWrite = OUT.reqRead;
+            t = t + 1;
+        }
+    }
+}
+
+automaton <T:type> Consumer (IN: in T) {
+}
+
+automaton <T:type> Merger (IN1, IN2, IN3: in T, OUT: out T) {
+}
+
+automaton <T:type> Replicator(IN: in T, OUT1, OUT2, OUT3: out T) {
+}
+
+system <T:type, N:int> middleware_in_use () {
+    components {
+        producer_1, producer_2, producer_3 : Producer<T>;
+        consumer_1, consumer_2, consumer_3 : Consumer<T>;
+    }
+    internals  M1, M2 ;
+    connections {
+        Merger<T>(producer_1.OUT, producer_2.OUT, producer_3.OUT, M1);
+        Queue<T, 1>(M1, M2);
+        Replicator<T>(M2, consumer_1.IN, consumer_2.IN, consumer_3.IN);
+    }
+}}

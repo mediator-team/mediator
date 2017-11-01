@@ -1,0 +1,57 @@
+automaton sensor (OUT: out double) {
+    variables {
+        p : int 0 .. 9 init 0;
+    }
+    transitions {
+        OUT.reqRead != OUT.reqWrite -> OUT.reqWrite = OUT.reqRead;
+        OUT.reqWrite -> {
+            OUT.value = p;
+            sync OUT;
+            p = (p + 1) % 10;
+        }
+    }
+}
+
+automaton <window:int> smoother (IN: in double, OUT: out double) {
+    variables {
+        count : int 0 .. window init window;
+        avg : double init 0;
+    }
+    transitions {
+        IN.reqRead != (IN.reqWrite && count < window) -> IN.reqRead = (IN.reqWrite && count < window);
+        OUT.reqWrite != (OUT.reqRead && count == window) ->
+            OUT.reqWrite = (OUT.reqRead && count == window);
+
+        IN.reqRead -> {
+            count = count + 1;
+            sync IN;
+            avg = avg + IN.value;
+        }
+
+        OUT.reqWrite -> {
+            count = 0;
+            OUT.value = avg / window;
+            sync OUT;
+        }
+    }
+}
+
+automaton monitor (IN: in double) {
+    transitions {
+        IN.reqRead == false -> IN.reqRead = true;
+        IN.reqWrite -> {
+            sync IN;
+            // print(IN.value);
+        }
+    }
+}
+
+system testbench () {
+    components {
+        s : sensor;
+        m : monitor;
+    }
+    connections {
+        smoother<5>(s.OUT, m.IN);
+    }
+}
