@@ -7,7 +7,7 @@ prog: (dependency | typedef | function | automaton | system )* ;
 dependency:
     'import' (ID '.') * (ID | '*') ';';
 
-typedef: 'typedef' type 'as' ID ';';
+typedef: 'typedef' type 'as' ID (',' ID)* ';';
 
 statement:
     (target=term '=')? expr=term ';'                    # assignmentStatement
@@ -22,19 +22,18 @@ statements:
     (statement)*
 ;
 
-compTemplate: '<' param (',' param)* '>';
-param: ID ':' type;
+entityTemplate: '<' localVariableDef (',' localVariableDef)* '>';
 
 function
 locals [ boolean isNative = false ]
 :
-    ('native' {$isNative = true; })? 'function' compTemplate? name=ID '(' funcInterface ')' (':' returnType=type)?
+    ('native' {$isNative = true; })? 'function' entityTemplate? name=ID '(' funcInterface ')' (':' returnType=type)?
     (
         {!$isNative}?
         '{'
             (
-                localVariableDef
-                | statement
+                'variables' '{' (localVariableDef ';')* '}'
+                | 'statements' '{' statement* '}'
             ) *
         '}'
         |
@@ -43,10 +42,9 @@ locals [ boolean isNative = false ]
     )
 ;
 
-localVariableDef : ID (',' ID) * ':' type ';';
+localVariableDef : ID (',' ID) * ':' type;
 
-funcInterface: (funcArg (',' funcArg) *)? ;
-funcArg: ID (',' ID) * ':' type ;
+funcInterface: (localVariableDef (',' localVariableDef) *)? ;
 
 portsDecl:
     ID (',' ID)* ':' direction=('in' | 'out') type
@@ -56,7 +54,7 @@ compInterface:
     (portsDecl (',' portsDecl)* )?
     ;
 
-variableSegment: 'variables' '{' localVariableDef * '}' ;
+variableSegment: 'variables' '{' (localVariableDef ';') * '}' ;
 transitionSegment:
     'transitions' '{'
         (transition)*
@@ -70,7 +68,7 @@ transition:
 
 automaton
 :
-    'automaton' compTemplate? name=ID '(' compInterface ')' '{'
+    'automaton' entityTemplate? name=ID '(' compInterface ')' '{'
         (variableSegment | transitionSegment )*
     '}'
 ;
@@ -84,7 +82,7 @@ connectionDecl:  type '(' term ')';
 
 system
 :
-    'system' compTemplate? name=ID '(' compInterface ')' '{'
+    'system' entityTemplate? name=ID '(' compInterface ')' '{'
         (componentSegment | internalSegment | connectionSegment)*
     '}'
 ;

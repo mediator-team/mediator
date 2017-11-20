@@ -1,7 +1,10 @@
-package org.fmgroup.mediator.language;
+package org.fmgroup.mediator.language.entity.system;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.language.System;
+import org.fmgroup.mediator.language.MediatorLangParser;
+import org.fmgroup.mediator.language.entity.PortDeclaration;
+import org.fmgroup.mediator.language.RawElement;
+import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.IdValue;
 import org.fmgroup.mediator.language.term.Term;
 import org.fmgroup.mediator.language.term.TupleTerm;
@@ -87,16 +90,16 @@ public class Connection implements RawElement {
             throw ValidationException.UnexpectedElement(this.getClass(), parent.getClass(),"System", "parent");
         }
 
-        // are all the connected ports valid?
-        List<Port> connectorPorts = type.provider.getInterface().ports;
-        if (ports.size() != connectorPorts.size())
+        // are all the connected portDeclarations valid?
+        List<PortDeclaration> connectorPortDeclarations = type.provider.getInterface().portDeclarations;
+        if (ports.size() != connectorPortDeclarations.size())
             throw ValidationException.FromMessage(
-                    String.format("Number of ports mismatched at %s.", this.toString())
+                    String.format("Number of portDeclarations mismatched at %s.", this.toString())
             );
 
         for (IdValue portid : ports) {
             boolean isInternal = false;
-            if (portid.scopes.size() == 0) {
+            if (portid.scopeIdentifiers.size() == 0) {
                 // it is an internal node
                 if (((System) parent).internals.contains(portid.identifier)) {
                     isInternal = true;
@@ -105,22 +108,22 @@ public class Connection implements RawElement {
 
             if (!isInternal) {
                 // we are quite sure that it is not an internal node
-                Port port = ((System) this.parent).locatePort(portid);
-                if (port == null) throw ValidationException.UnknownIdentifier(portid.toString(), "port");
+                PortDeclaration portDeclaration = ((System) this.parent).locatePort(portid);
+                if (portDeclaration == null) throw ValidationException.UnknownIdentifier(portid.toString(), "portDeclaration");
 
-                Port connectorport = connectorPorts.get(ports.indexOf(portid));
+                PortDeclaration connectorport = connectorPortDeclarations.get(ports.indexOf(portid));
                 // direction and type must match
-                if (port.parent.equals(this.parent) && connectorport.direction != port.direction) {
-                    // the port belongs to the system, then its type should be the same with the connector's port
-                    throw ValidationException.FromMessage("Port directions dismatch. " + this.toString());
+                if (portDeclaration.parent.equals(this.parent) && connectorport.direction != portDeclaration.direction) {
+                    // the portDeclaration belongs to the system, then its type should be the same with the connector's portDeclaration
+                    throw ValidationException.FromMessage("PortDeclaration directions dismatch. " + this.toString());
                 }
-                if (!port.parent.equals(this.parent) && connectorport.direction == port.direction) {
-                    // the port belongs to the system, then its type should be the same with the connector's port
-                    throw ValidationException.FromMessage("Port directions dismatch. " + this.toString());
+                if (!portDeclaration.parent.equals(this.parent) && connectorport.direction == portDeclaration.direction) {
+                    // the portDeclaration belongs to the system, then its type should be the same with the connector's portDeclaration
+                    throw ValidationException.FromMessage("PortDeclaration directions dismatch. " + this.toString());
                 }
 
-                if (!port.type.toString().equals(connectorport.type.toString()))
-                    throw ValidationException.FromMessage("Port type dismatch. " + this.toString());
+                if (!portDeclaration.type.toString().equals(connectorport.type.toString()))
+                    throw ValidationException.FromMessage("PortDeclaration type dismatch. " + this.toString());
 
             }
         }

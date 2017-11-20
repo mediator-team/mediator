@@ -1,8 +1,7 @@
-package org.fmgroup.mediator.language.transition;
+package org.fmgroup.mediator.language.entity.automaton;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.generator.framework.UtilCode;
-import org.fmgroup.mediator.language.Automaton;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;

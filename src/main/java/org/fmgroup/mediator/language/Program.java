@@ -1,16 +1,23 @@
 package org.fmgroup.mediator.language;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.Scope;
+import org.fmgroup.mediator.language.scope.TypeDeclaration;
+import org.fmgroup.mediator.language.entity.automaton.Automaton;
+import org.fmgroup.mediator.language.scope.TypeDeclarationCollection;
+import org.fmgroup.mediator.language.entity.system.System;
+import org.fmgroup.mediator.language.function.Function;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Program implements RawElement {
+public class Program implements RawElement, Scope {
 
     public List<Program> dependencies = new ArrayList<>();
-    public Map<String, Typedef> typedefs = new HashMap<>();
+    public TypeDeclarationCollection typedefs = new TypeDeclarationCollection();
     public Map<String, Function> functions = new HashMap<>();
     public Map<String, Automaton> automata = new HashMap<>();
     public Map<String, Automaton> compiledAutomata = new HashMap<>();
@@ -30,8 +37,8 @@ public class Program implements RawElement {
         }
         // step 2. analyze typedefs
         for (MediatorLangParser.TypedefContext tc : prog.typedef()) {
-            Typedef typedef = (Typedef) new Typedef().setParent(this).fromContext(tc);
-            typedefs.put(typedef.name, typedef);
+            TypeDeclaration typedef = (TypeDeclaration) new TypeDeclaration().setParent(this).fromContext(tc);
+            typedefs.typedefs.add(typedef);
         }
 
         // step 3. analyze functions
@@ -57,9 +64,8 @@ public class Program implements RawElement {
     public String toString() {
         String prog = "";
 
-        for (String name : typedefs.keySet()) {
-            prog += typedefs.get(name).toString() + "\n";
-        }
+        prog += typedefs.toString();
+
         prog += "\n";
 
         for (String name : functions.keySet()) {
@@ -99,5 +105,12 @@ public class Program implements RawElement {
     public RawElement validate() throws ValidationException {
         // TODO
         return this;
+    }
+
+    @Override
+    public List<Declarations> getDeclarations() {
+        List<Declarations> result = new ArrayList<>();
+        result.add(typedefs);
+        return result;
     }
 }

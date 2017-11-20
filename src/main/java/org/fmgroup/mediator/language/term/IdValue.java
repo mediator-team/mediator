@@ -4,9 +4,10 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
+import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.type.IdType;
-import org.fmgroup.mediator.language.type.IntType;
 import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
@@ -14,9 +15,10 @@ import java.util.List;
 
 public class IdValue implements Term {
 
-    private RawElement parent = null;
-    public List<String> scopes = new ArrayList<>();
+    public RawElement parent = null;
+    public List<String> scopeIdentifiers = new ArrayList<>();
     public String identifier = null;
+    public VariableDeclaration reference = null;
 
     @Override
     public Type getType() {
@@ -31,25 +33,37 @@ public class IdValue implements Term {
     @Override
     public RawElement fromContext(ParserRuleContext context) throws ValidationException {
         if (context instanceof MediatorLangParser.IdValueContext) {
-            context = ((MediatorLangParser.IdValueContext) context).scopeID();
+            context = ((MediatorLangParser.IdValueContext) context).scopedID();
         }
 
-        if (!(context instanceof MediatorLangParser.ScopeIDContext)) {
+        if (!(context instanceof MediatorLangParser.ScopedIDContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "(Scope)IdValueContext", context.getClass().toString());
         }
 
-        this.identifier = ((MediatorLangParser.ScopeIDContext) context).identifier.getText();
-        for (Token t : ((MediatorLangParser.ScopeIDContext) context).scopes) {
-            this.scopes.add(t.getText());
+        this.identifier = ((MediatorLangParser.ScopedIDContext) context).identifier.getText();
+        for (Token t : ((MediatorLangParser.ScopedIDContext) context).scopes) {
+            this.scopeIdentifiers.add(t.getText());
         }
+
+        if (this.scopeIdentifiers.size() == 0) {
+            List<Scope> scopes = this.getScopes();
+            for (Scope scope : scopes) {
+                this.reference = scope.getVariable(this);
+                if (this.reference != null) break;
+            }
+        } else {
+            // TODO
+        }
+
+        if (this.reference == null) throw ValidationException.UnknownIdentifier(this.toString(), "variable");
 
         return this.validate();
     }
 
     @Override
     public String toString() {
-        return String.join(".", scopes) +
-                (scopes.size() > 0 ? "." : "") +
+        return String.join(".", scopeIdentifiers) +
+                (scopeIdentifiers.size() > 0 ? "." : "") +
                 identifier;
     }
 
@@ -74,7 +88,7 @@ public class IdValue implements Term {
         IdValue niv = new IdValue();
         niv.setParent(parent);
         niv.identifier = this.identifier;
-        niv.scopes = new ArrayList<>(this.scopes);
+        niv.scopeIdentifiers = new ArrayList<>(this.scopeIdentifiers);
 
         return niv.validate();
     }

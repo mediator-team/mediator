@@ -1,4 +1,4 @@
-// Generated from /Users/liyi/IdeaProjects/Mediator/src-antlr/MediatorLang.g4 by ANTLR 4.7
+// Generated from /Users/liyi/Library/Mobile Documents/com~apple~CloudDocs/项目/Mediator/src-antlr/MediatorLang.g4 by ANTLR 4.7
 package org.fmgroup.mediator.language;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -96,25 +96,15 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitStatements(MediatorLangParser.StatementsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#compTemplate}.
+	 * Enter a parse tree produced by {@link MediatorLangParser#entityTemplate}.
 	 * @param ctx the parse tree
 	 */
-	void enterCompTemplate(MediatorLangParser.CompTemplateContext ctx);
+	void enterEntityTemplate(MediatorLangParser.EntityTemplateContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#compTemplate}.
+	 * Exit a parse tree produced by {@link MediatorLangParser#entityTemplate}.
 	 * @param ctx the parse tree
 	 */
-	void exitCompTemplate(MediatorLangParser.CompTemplateContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#param}.
-	 * @param ctx the parse tree
-	 */
-	void enterParam(MediatorLangParser.ParamContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#param}.
-	 * @param ctx the parse tree
-	 */
-	void exitParam(MediatorLangParser.ParamContext ctx);
+	void exitEntityTemplate(MediatorLangParser.EntityTemplateContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#function}.
 	 * @param ctx the parse tree
@@ -145,16 +135,6 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFuncInterface(MediatorLangParser.FuncInterfaceContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#funcArg}.
-	 * @param ctx the parse tree
-	 */
-	void enterFuncArg(MediatorLangParser.FuncArgContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#funcArg}.
-	 * @param ctx the parse tree
-	 */
-	void exitFuncArg(MediatorLangParser.FuncArgContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#portsDecl}.
 	 * @param ctx the parse tree
@@ -672,13 +652,13 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitTypeorvalue(MediatorLangParser.TypeorvalueContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#scopeID}.
+	 * Enter a parse tree produced by {@link MediatorLangParser#scopedID}.
 	 * @param ctx the parse tree
 	 */
-	void enterScopeID(MediatorLangParser.ScopeIDContext ctx);
+	void enterScopedID(MediatorLangParser.ScopedIDContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#scopeID}.
+	 * Exit a parse tree produced by {@link MediatorLangParser#scopedID}.
 	 * @param ctx the parse tree
 	 */
-	void exitScopeID(MediatorLangParser.ScopeIDContext ctx);
+	void exitScopedID(MediatorLangParser.ScopedIDContext ctx);
 }

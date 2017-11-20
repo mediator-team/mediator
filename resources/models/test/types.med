@@ -1,0 +1,30 @@
+typedef int 0 .. 255 as ubyte;
+typedef ubyte [] as ubytelist;
+
+// typedef pkg.ubyte [] as ubytelist2;
+// typedef pkg.ubyte [] as ubytelist2;®
+
+typedef enum {Working, Idle} as Status;
+
+function <e,d:int> inc (a:ubyte, b:ubyte) : ubyte {
+    variables {
+        c : ubyte;
+    }
+    statements {
+        b = 1;
+        return a + d;
+    }
+}
+
+automaton <p1:int, p2:int> test (a, b:in int p1 .. p2) {
+    variables {
+        arr1: int [p1];
+        // TODO
+        arr2: int [arr1];
+        // TODO
+        c: int init arr2;
+    }
+    transitions {
+
+    }
+}

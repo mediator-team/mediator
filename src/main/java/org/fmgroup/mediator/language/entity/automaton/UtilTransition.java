@@ -1,15 +1,11 @@
-package org.fmgroup.mediator.language.transition;
+package org.fmgroup.mediator.language.entity.automaton;
 
 import org.fmgroup.mediator.language.*;
-import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.UtilStatement;
-import org.fmgroup.mediator.language.term.IdValue;
 import org.fmgroup.mediator.language.term.Term;
 import org.fmgroup.mediator.language.term.UtilTerm;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class UtilTransition {

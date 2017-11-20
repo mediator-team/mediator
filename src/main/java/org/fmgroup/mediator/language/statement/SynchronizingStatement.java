@@ -85,8 +85,8 @@ public class SynchronizingStatement implements Statement {
     @Override
     public RawElement validate() throws ValidationException {
         /*
-        1. you cannot synchronize two ports at the same time
-        2. all ports are correctly declared in the interface
+        1. you cannot synchronize two portDeclarations at the same time
+        2. all portDeclarations are correctly declared in the interface
         */
 
         return this;

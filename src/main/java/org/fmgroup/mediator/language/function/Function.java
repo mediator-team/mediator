@@ -1,25 +1,28 @@
-package org.fmgroup.mediator.language;
+package org.fmgroup.mediator.language.function;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.generator.framework.UtilCode;
+import org.fmgroup.mediator.language.*;
+import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.Scope;
+import org.fmgroup.mediator.language.scope.VariableDeclaration;
+import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
 import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.UtilStatement;
 import org.fmgroup.mediator.language.type.Type;
 import org.fmgroup.mediator.language.type.UtilType;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Function implements RawElement {
+public class Function implements RawElement, Scope {
 
-    private RawElement parent = null;
-    public CompTemplate compTemplate = null;
-    public FuncInterface funcInterface = null;
+    public RawElement parent = null;
     public String name;
-    public List<VariableDeclaration> variables = new ArrayList<>();
+
+    public Template template = null;
+    public FuncInterface funcInterface = null;
+    public VariableDeclarationCollection variables = new VariableDeclarationCollection();
     public List<Statement> statements = new ArrayList<>();
     public Type returnType = null;
 
@@ -34,36 +37,36 @@ public class Function implements RawElement {
         isNative = ((MediatorLangParser.FunctionContext) context).isNative;
         name = ((MediatorLangParser.FunctionContext) context).name.getText();
 
-        if (((MediatorLangParser.FunctionContext) context).compTemplate() != null) {
-            compTemplate = (CompTemplate) new CompTemplate()
-                    .setParent(this)
-                    .fromContext(((MediatorLangParser.FunctionContext) context).compTemplate()
-                    );
+        if (((MediatorLangParser.FunctionContext) context).entityTemplate() != null) {
+            template = new Template();
+            template.parse(
+                    ((MediatorLangParser.FunctionContext) context).entityTemplate(),
+                    this
+            );
         }
 
         if (((MediatorLangParser.FunctionContext) context).returnType != null) {
             returnType = UtilType.parse(((MediatorLangParser.FunctionContext) context).returnType, this);
         }
 
-        funcInterface = (FuncInterface) new FuncInterface()
-                .setParent(this)
-                .fromContext(((MediatorLangParser.FunctionContext) context).funcInterface());
+        funcInterface = new FuncInterface();
+        funcInterface.parse(((MediatorLangParser.FunctionContext) context).funcInterface(), this);
+
 
         for (MediatorLangParser.LocalVariableDefContext lvd : ((MediatorLangParser.FunctionContext) context).localVariableDef()) {
-            VariableDeclaration vardecl = (VariableDeclaration) new VariableDeclaration().setParent(this).fromContext(lvd);
-            variables.add(vardecl);
+            variables.vardecls.add((VariableDeclaration) new VariableDeclaration().parse(lvd, this));
         }
 
         for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.FunctionContext) context).statement()) {
             statements.add(UtilStatement.parse(sc, this));
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
     public String toString() {
-        String template = compTemplate == null? "" : compTemplate.toString();
+        String template = this.template == null? "" : this.template.toString();
         if (template.length() > 0) template = "<" + template + "> ";
 
         String rel = String.format(
@@ -77,12 +80,13 @@ public class Function implements RawElement {
 
         if (!isNative) {
             rel += " {\n";
-            for (VariableDeclaration var : variables) {
-                rel += UtilCode.addIndent(var.toString() + "\n", 1);
-            }
+            rel += UtilCode.addIndent(variables.toString(), 1);
+
+            rel += UtilCode.addIndent("statements {\n", 1);
             for (Statement stmt : statements) {
-                rel += UtilCode.addIndent(stmt.toString() + "\n", 1);
+                rel += UtilCode.addIndent(stmt.toString() + "\n", 2);
             }
+            rel += UtilCode.addIndent("}\n", 1);
             rel += "}\n";
         } else {
             rel += ";";
@@ -109,5 +113,18 @@ public class Function implements RawElement {
     public RawElement validate() throws ValidationException {
         // TODO
         return this;
+    }
+
+    @Override
+    public List<Declarations> getDeclarations() {
+        List<Declarations> result = new ArrayList<>();
+
+        if (template != null) {
+            result.add(template);
+        }
+        if (funcInterface != null) result.add(funcInterface);
+        if (variables != null) result.add(variables);
+
+        return result;
     }
 }

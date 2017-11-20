@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.term.Term;
 import org.fmgroup.mediator.language.term.UtilTerm;
-import org.fmgroup.mediator.language.transition.Transition;
 
 
 public class AssignmentStatement implements Statement {
@@ -38,6 +37,18 @@ public class AssignmentStatement implements Statement {
         if (target != null)
             return target.toString() + " = " + expr.toString() + ";";
         else return expr.toString() + ";";
+    }
+
+    public AssignmentStatement setExpr(Term expr) {
+        this.expr = expr;
+        expr.setParent(this);
+        return this;
+    }
+
+    public AssignmentStatement setTarget(Term target) {
+        this.target = target;
+        target.setParent(this);
+        return this;
     }
 
     @Override
@@ -77,13 +88,6 @@ public class AssignmentStatement implements Statement {
         3. both term is valid (assured by their own validate function
         */
 
-        if (
-                !(parent instanceof Automaton) &&
-                        !(parent instanceof Statement) &&
-                        !(parent instanceof Transition)
-                ) {
-            throw ValidationException.UnexpectedElement(this.getClass(), parent.getClass(),"Automaton/Statement", "parent");
-        }
         return this;
     }
 }

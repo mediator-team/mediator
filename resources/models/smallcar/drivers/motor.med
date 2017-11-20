@@ -1,0 +1,35 @@
+automaton <pinDirection:int, pinSpeed:int> motor (speed : in int -1023 .. 1023 init 0) {
+    transitions {
+        !speed.reqRead -> speed.reqRead = true;
+        speed.reqRead && speed.reqWrite -> {
+            sync speed;
+            if (speed.value > 0) {
+                digitalWrite(pinDirection, 1);
+                analogWrite(pinSpeed, speed.value);
+            } else {
+                digitalWrite(pinDirection, 0);
+                analogWrite(pinSpeed, -speed.value);
+            }
+        }
+    }
+}
+
+automaton const (ctrl : out int -1023 .. 1023 init 0) {
+    transitions {
+        !ctrl.reqWrite -> ctrl.reqWrite = true;
+        ctrl.reqRead && ctrl.reqWrite -> {
+            ctrl.value = 20;
+            sync ctrl;
+        }
+    }
+}
+
+system testbench() {
+    components {
+        m1 : motor<8, 9>;
+    }
+
+    connections {
+        const(m1.speed);
+    }
+}

@@ -1,15 +1,22 @@
 package org.fmgroup.mediator.core.scheduler;
 
 import org.fmgroup.mediator.language.*;
-import org.fmgroup.mediator.language.System;
+import org.fmgroup.mediator.language.entity.Entity;
+import org.fmgroup.mediator.language.entity.automaton.Automaton;
+import org.fmgroup.mediator.language.entity.EntityInterface;
+import org.fmgroup.mediator.language.Template;
+import org.fmgroup.mediator.language.entity.PortDeclaration;
+import org.fmgroup.mediator.language.scope.VariableDeclaration;
+import org.fmgroup.mediator.language.entity.system.Connection;
+import org.fmgroup.mediator.language.entity.system.System;
 import org.fmgroup.mediator.language.statement.AssignmentStatement;
 import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.*;
-import org.fmgroup.mediator.language.transition.Transition;
-import org.fmgroup.mediator.language.transition.TransitionGroup;
-import org.fmgroup.mediator.language.transition.TransitionSingle;
-import org.fmgroup.mediator.language.transition.UtilTransition;
+import org.fmgroup.mediator.language.entity.automaton.Transition;
+import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
+import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
+import org.fmgroup.mediator.language.entity.automaton.UtilTransition;
 import org.fmgroup.mediator.language.type.*;
 
 import java.util.*;
@@ -21,13 +28,13 @@ public class Scheduler {
 
         Automaton a = new Automaton();
         a.name = sys.name;
-        a.compInterface = new CompInterface(sys.compInterface, a);
-        a.compTemplate = sys.compTemplate != null ? new CompTemplate(sys.compTemplate, a) : null;
+        a.entityInterface = (EntityInterface) sys.entityInterface.clone(a);
+        a.template = sys.template != null ? (Template) sys.template.clone(a) : null;
 
         // 0. initialize components and connectors
         Map<String, Automaton> components = new HashMap<>();
         Map<Connection, Automaton> connections = new HashMap<>();
-        Map<InterfacedElement, List<Transition>> externals = new HashMap<>();
+        Map<Entity, List<Transition>> externals = new HashMap<>();
 
         for (String compname : sys.components.keySet()) {
             // TODO refactor this loop
@@ -53,16 +60,16 @@ public class Scheduler {
             // TODO check if the identifier is already used
             VariableDeclaration portval = new VariableDeclaration();
             portval.setParent(a);
-            portval.names.add(internal + "_value");
+            portval.identifiers.add(internal + "_value");
 
             // TODO analyse the type
             portval.type = new IdType().setIdentifier("TODO");
-            a.localVars.add(portval);
+            a.localVars.vardecls.add(portval);
 
             VariableDeclaration portstatus = new VariableDeclaration();
             portstatus.setParent(a);
-            portstatus.names.add(internal + "_reqRead");
-            portstatus.names.add(internal + "_reqWrite");
+            portstatus.identifiers.add(internal + "_reqRead");
+            portstatus.identifiers.add(internal + "_reqWrite");
             InitType portstatusType = (InitType) new InitType().setParent(a);
             portstatusType.baseType = (Type) new BoolType().setParent(a);
             portstatusType.defaultValue = (Term) new BoolValue().setValue(false).setParent(a);
@@ -72,7 +79,7 @@ public class Scheduler {
             rewriteMap.put(internal + ".reqRead", new IdValue().setIdentifier(internal + "_reqRead"));
             rewriteMap.put(internal + ".reqWrite", new IdValue().setIdentifier(internal + "_reqWrite"));
 
-            a.localVars.add(portstatus);
+            a.localVars.vardecls.add(portstatus);
         }
 
 
@@ -89,25 +96,25 @@ public class Scheduler {
             externals.get(comp).add(null);
 
             // port variables
-            for (Port p : comp.compInterface.ports) {
-                for (String suffix : Port.adjointVariables) {
+            for (PortDeclaration p : comp.entityInterface.portDeclarations) {
+                for (String suffix : PortDeclaration.adjointVariables) {
                     VariableDeclaration vd = (VariableDeclaration) new VariableDeclaration().setParent(a);
-                    vd.names.add(name + "_" + p.name + "_" + suffix);
+                    vd.identifiers.add(name + "_" + p.names + "_" + suffix);
                     vd.type = (Type) p.type.clone(vd);
-                    a.localVars.add(vd);
+                    a.localVars.vardecls.add(vd);
 
                     localRewriteMap.put(
-                            p.name + "." + suffix,
-                            new IdValue().setIdentifier(name + "_" + p.name + "_" + suffix)
+                            p.names + "." + suffix,
+                            new IdValue().setIdentifier(name + "_" + p.names + "_" + suffix)
                     );
                 }
             }
 
             // template parameters
             for (RawElement arg : sys.components.get(name).params) {
-                String paramName = comp.compTemplate.keyIndexes.get(
+                String paramName = comp.template.getDeclarationIdentifier((
                         sys.components.get(name).params.indexOf(arg)
-                );
+                ));
                 if (arg instanceof Term) {
                     localRewriteMap.put(paramName, (Term) arg);
                 } else {
@@ -116,17 +123,17 @@ public class Scheduler {
             }
 
             // local variables
-            for (VariableDeclaration var : comp.localVars) {
+            for (VariableDeclaration var : comp.localVars.vardecls) {
                 VariableDeclaration nvar = (VariableDeclaration) var.clone(a);
-                for (int i = 0; i < nvar.names.size(); i ++) {
-                    String newname = name + "_" + nvar.names.get(i);
-                    nvar.names.set(i, newname);
-                    localRewriteMap.put(var.names.get(i), new IdValue().setIdentifier(newname));
+                for (int i = 0; i < nvar.identifiers.size(); i ++) {
+                    String newname = name + "_" + nvar.identifiers.get(i);
+                    nvar.identifiers.set(i, newname);
+                    localRewriteMap.put(var.identifiers.get(i), new IdValue().setIdentifier(newname));
                 }
 
                 nvar.type = UtilType.refactor(nvar.type, localTypeRewriteMap, localRewriteMap);
 
-                a.localVars.add(nvar);
+                a.localVars.vardecls.add(nvar);
             }
 
             // transitions
@@ -165,16 +172,16 @@ public class Scheduler {
             // port variables are created by components and internals
 
             // locate the correct port variables created by other components/internals
-            for (Port p : connections.get(conn).compInterface.ports) {
-                int index = connections.get(conn).compInterface.ports.indexOf(p);
+            for (PortDeclaration p : connections.get(conn).entityInterface.portDeclarations) {
+                int index = connections.get(conn).entityInterface.portDeclarations.indexOf(p);
 
-                if (conn.ports.get(index).scopes.size() == 0) continue;
+                if (conn.ports.get(index).scopeIdentifiers.size() == 0) continue;
 
-                String prefix = conn.ports.get(index).scopes.get(0) + "_" + conn.ports.get(index).identifier + "_";
+                String prefix = conn.ports.get(index).scopeIdentifiers.get(0) + "_" + conn.ports.get(index).identifier + "_";
 
-                for (String suffix : Port.adjointVariables) {
+                for (String suffix : PortDeclaration.adjointVariables) {
                     localRewriteMap.put(
-                            p.name + "." + suffix,
+                            p.names + "." + suffix,
                             new IdValue().setIdentifier(prefix + suffix)
                     );
                 }
@@ -183,7 +190,7 @@ public class Scheduler {
 
             // templated parameters
             for (RawElement arg : conn.type.params) {
-                String paramName = conn.type.provider.getTemplate().keyIndexes.get(
+                String paramName = conn.type.provider.getTemplate().getDeclarationIdentifier(
                         conn.type.params.indexOf(arg)
                 );
                 if (arg instanceof Term) {
@@ -196,16 +203,16 @@ public class Scheduler {
             // local variables
             String prefix = connections.get(conn).name + "_" + sys.connections.indexOf(conn);
 
-            for (VariableDeclaration vd : connections.get(conn).localVars) {
+            for (VariableDeclaration vd : connections.get(conn).localVars.vardecls) {
                 VariableDeclaration nvd = (VariableDeclaration) vd.clone(a);
-                for (int i = 0; i < nvd.names.size(); i ++) {
-                    String newname = prefix + "_" + nvd.names.get(i);
-                    nvd.names.set(i, newname);
-                    localRewriteMap.put(vd.names.get(i), new IdValue().setIdentifier(newname));
+                for (int i = 0; i < nvd.identifiers.size(); i ++) {
+                    String newname = prefix + "_" + nvd.identifiers.get(i);
+                    nvd.identifiers.set(i, newname);
+                    localRewriteMap.put(vd.identifiers.get(i), new IdValue().setIdentifier(newname));
                 }
 
                 nvd.type = UtilType.refactor(nvd.type, localTypeRewriteMap, localRewriteMap);
-                a.localVars.add(nvd);
+                a.localVars.vardecls.add(nvd);
             }
 
             // transitions
@@ -227,13 +234,13 @@ public class Scheduler {
 
         // start synchronization
         // generate all possible combinations
-        List<Map<InterfacedElement, Transition>> combinations = new ArrayList<>();
+        List<Map<Entity, Transition>> combinations = new ArrayList<>();
         combinations.add(new HashMap<>());
-        for (InterfacedElement owner : externals.keySet()) {
-            List<Map<InterfacedElement, Transition>> temp = new ArrayList<>();
+        for (Entity owner : externals.keySet()) {
+            List<Map<Entity, Transition>> temp = new ArrayList<>();
             for (Transition t : externals.get(owner)) {
-                for (Map<InterfacedElement, Transition> prevCombination : combinations) {
-                    Map<InterfacedElement, Transition> newCombination = new HashMap<>(prevCombination);
+                for (Map<Entity, Transition> prevCombination : combinations) {
+                    Map<Entity, Transition> newCombination = new HashMap<>(prevCombination);
                     newCombination.put(owner, t);
                     temp.add(newCombination);
                 }
@@ -242,7 +249,7 @@ public class Scheduler {
             combinations = temp;
         }
 
-        for (Map<InterfacedElement, Transition> combination : combinations) {
+        for (Map<Entity, Transition> combination : combinations) {
             Transition syncTrans = Synchronize(combination);
             if (syncTrans != null) {
                 baseGroup.transitions.add(syncTrans);
@@ -253,10 +260,10 @@ public class Scheduler {
 
     }
 
-    private static Transition Synchronize(Map<InterfacedElement, Transition> combination) throws ValidationException {
+    private static Transition Synchronize(Map<Entity, Transition> combination) throws ValidationException {
         /*
         In what case a set of transitions can be synchronized?
-        - 1. all internal ports are synchronized
+        - 1. all internal portDeclarations are synchronized
         - 2. they can be scheduled
          */
         Term guard = null;
@@ -335,29 +342,28 @@ public class Scheduler {
 
         // some synchronizing statements should be kept, and some should be replaced with resetting statements
 
-        for (Statement s : statements) {
+        for (int i = 0; i < statements.size(); i ++) {
+            Statement s = statements.get(i);
+
             if (s instanceof SynchronizingStatement) {
                 assert ((SynchronizingStatement) s).synchronizedPorts.size() == 1;
                 String portId = ((SynchronizingStatement) s).synchronizedPorts.get(0);
 
                 if (portId.contains("_")) {
-                    // replace the statement
-                    AssignmentStatement resetStmt = new AssignmentStatement();
-                    resetStmt.setParent(((SynchronizingStatement) s).parent);
+                    int index = statements.indexOf(s);
+                    statements.remove(index);
+                    statements.add(
+                            index,
+                            new AssignmentStatement()
+                                    .setTarget(new IdValue().setIdentifier(portId + "_reqRead"))
+                                    .setExpr(new BoolValue().setValue(false))
+                            );
 
-                    TupleTerm rstTerm = (TupleTerm) new TupleTerm().setParent(resetStmt);
-                    resetStmt.expr = rstTerm
-                            .addTerm(new BoolValue().setValue(false))
-                            .addTerm(new BoolValue().setValue(false));
-
-                    TupleTerm assignedTerm = (TupleTerm) new TupleTerm().setParent(resetStmt);
-                    resetStmt.target = assignedTerm
-                            .addTerm(new IdValue().setIdentifier(portId + "_reqRead"))
-                            .addTerm(new IdValue().setIdentifier(portId + "_reqWrite"));
-
-                    statements.set(
-                            statements.indexOf(s),
-                            resetStmt
+                    statements.add(
+                            index,
+                            new AssignmentStatement()
+                                    .setTarget(new IdValue().setIdentifier(portId + "_reqWrite"))
+                                    .setExpr(new BoolValue().setValue(false))
                     );
                 }
             }
@@ -412,8 +418,8 @@ public class Scheduler {
 
         an.name = a.name;
         an.localVars = a.localVars;
-        an.compInterface = a.compInterface;
-        an.compTemplate = a.compTemplate;
+        an.entityInterface = a.entityInterface;
+        an.template = a.template;
         an.setParent(a.getParent());
 
         TransitionGroup tg = new TransitionGroup();

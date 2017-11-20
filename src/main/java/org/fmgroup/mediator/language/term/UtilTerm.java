@@ -20,7 +20,9 @@ public class UtilTerm {
         }
         if (t instanceof CallTerm) {
             ((CallTerm) t).callee = refactor(((CallTerm) t).callee, rewriteMap);
-            ((CallTerm) t).args = refactor(((CallTerm) t).args, rewriteMap);
+            for (int i = 0; i < ((CallTerm) t).args.size(); i ++) {
+                ((CallTerm) t).args.set(i, refactor(((CallTerm) t).args.get(i), rewriteMap));
+            }
         }
         if (t instanceof ElementTerm) {
             ((ElementTerm) t).container = refactor(((ElementTerm) t).container, rewriteMap);

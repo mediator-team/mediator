@@ -1,4 +1,4 @@
-// Generated from /Users/liyi/IdeaProjects/Mediator/src-antlr/MediatorLang.g4 by ANTLR 4.7
+// Generated from /Users/liyi/Library/Mobile Documents/com~apple~CloudDocs/项目/Mediator/src-antlr/MediatorLang.g4 by ANTLR 4.7
 package org.fmgroup.mediator.language;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -112,25 +112,13 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCompTemplate(MediatorLangParser.CompTemplateContext ctx) { }
+	@Override public void enterEntityTemplate(MediatorLangParser.EntityTemplateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCompTemplate(MediatorLangParser.CompTemplateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterParam(MediatorLangParser.ParamContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitParam(MediatorLangParser.ParamContext ctx) { }
+	@Override public void exitEntityTemplate(MediatorLangParser.EntityTemplateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -167,18 +155,6 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFuncInterface(MediatorLangParser.FuncInterfaceContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFuncArg(MediatorLangParser.FuncArgContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFuncArg(MediatorLangParser.FuncArgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -724,13 +700,13 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterScopeID(MediatorLangParser.ScopeIDContext ctx) { }
+	@Override public void enterScopedID(MediatorLangParser.ScopedIDContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitScopeID(MediatorLangParser.ScopeIDContext ctx) { }
+	@Override public void exitScopedID(MediatorLangParser.ScopedIDContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

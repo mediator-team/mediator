@@ -1,21 +1,24 @@
-package org.fmgroup.mediator.language;
+package org.fmgroup.mediator.language.entity.automaton;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.generator.framework.UtilCode;
-import org.fmgroup.mediator.language.transition.Transition;
-import org.fmgroup.mediator.language.transition.TransitionGroup;
-import org.fmgroup.mediator.language.transition.TransitionSingle;
-import org.fmgroup.mediator.language.transition.UtilTransition;
+import org.fmgroup.mediator.language.*;
+import org.fmgroup.mediator.language.entity.EntityInterface;
+import org.fmgroup.mediator.language.entity.Entity;
+import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.Scope;
+import org.fmgroup.mediator.language.scope.VariableDeclaration;
+import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Automaton implements InterfacedElement {
+public class Automaton implements Entity, Scope {
     private RawElement parent = null;
 
-    public CompTemplate compTemplate = null;
-    public CompInterface compInterface = null;
-    public List<VariableDeclaration> localVars = new ArrayList<>();
+    public Template template = null;
+    public EntityInterface entityInterface = null;
+    public VariableDeclarationCollection localVars = new VariableDeclarationCollection();
     public List<Transition> transitions = new ArrayList<>();
     public String name;
 
@@ -28,22 +31,19 @@ public class Automaton implements InterfacedElement {
         MediatorLangParser.AutomatonContext automaton = (MediatorLangParser.AutomatonContext) context;
 
         name = ((MediatorLangParser.AutomatonContext) context).name.getText();
-        compInterface = (CompInterface) new CompInterface()
-                .setParent(this)
-                .fromContext(
-                        ((MediatorLangParser.AutomatonContext) context).compInterface()
-                );
 
-        if (((MediatorLangParser.AutomatonContext) context).compTemplate() != null) {
-            compTemplate = (CompTemplate) new CompTemplate()
-                    .setParent(this)
-                    .fromContext(((MediatorLangParser.AutomatonContext) context).compTemplate());
+        if (((MediatorLangParser.AutomatonContext) context).entityTemplate() != null) {
+            template = new Template();
+            template.parse(((MediatorLangParser.AutomatonContext) context).entityTemplate(), this);
         }
+
+        entityInterface = new EntityInterface();
+        entityInterface.parse(((MediatorLangParser.AutomatonContext) context).compInterface(), this);
 
         // step 1. analyze local variables
         for (MediatorLangParser.VariableSegmentContext vsc : automaton.variableSegment()) {
             for (MediatorLangParser.LocalVariableDefContext lvc : vsc.localVariableDef()) {
-                this.localVars.add((VariableDeclaration) new VariableDeclaration().setParent(this).fromContext(lvc));
+                this.localVars.vardecls.add((VariableDeclaration) new VariableDeclaration().parse(lvc, this));
             }
         }
 
@@ -59,16 +59,12 @@ public class Automaton implements InterfacedElement {
 
     @Override
     public String toString() {
-        String template = compTemplate == null? "" : compTemplate.toString();
+        String template = this.template == null? "" : this.template.toString();
         if (template.length() > 0) template = "<" + template + "> ";
-        String rel = String.format("automaton %s%s (%s) {\n", template, name, compInterface.toString());
-        if (localVars.size() > 0) {
-            rel += UtilCode.addIndent("variables {\n", 1);
-            for (VariableDeclaration var : localVars) {
-                rel += UtilCode.addIndent(var.toString(), 2) + "\n";
-            }
-            rel += UtilCode.addIndent("}\n", 1);
-        }
+        String rel = String.format("automaton %s%s (%s) {\n", template, name, entityInterface.toString());
+
+        rel += UtilCode.addIndent(localVars.toString(), 1);
+
         if (transitions.size() > 0) {
             rel += UtilCode.addIndent("transitions {\n", 1);
             for (Transition t : transitions) {
@@ -103,13 +99,24 @@ public class Automaton implements InterfacedElement {
     }
 
     @Override
-    public CompInterface getInterface() {
-        return compInterface;
+    public EntityInterface getInterface() {
+        return entityInterface;
     }
 
     @Override
-    public CompTemplate getTemplate() {
-        return compTemplate;
+    public Template getTemplate() {
+        return template;
+    }
+
+    @Override
+    public List<Declarations> getDeclarations() {
+        List<Declarations> result = new ArrayList<>();
+
+        if (template != null) result.add(template);
+        if (entityInterface != null) result.add(entityInterface);
+        if (localVars != null) result.add(localVars);
+
+        return result;
     }
 
 }

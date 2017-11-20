@@ -2,7 +2,7 @@ package org.fmgroup.mediator.semantics.basic;
 
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.Program;
-import org.fmgroup.mediator.language.Automaton;
+import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.semantics.raw.graph.Edge;
 import org.fmgroup.mediator.semantics.raw.graph.Graph;

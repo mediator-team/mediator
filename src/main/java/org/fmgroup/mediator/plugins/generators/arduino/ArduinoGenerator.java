@@ -1,18 +1,22 @@
-package main.java.org.fmgroup.mediator.plugins.generators.arduino;
+package org.fmgroup.mediator.plugins.generators.arduino;
 
 import org.fmgroup.mediator.generator.framework.Generator;
 import org.fmgroup.mediator.generator.framework.UtilCode;
 import org.fmgroup.mediator.language.*;
+import org.fmgroup.mediator.language.entity.automaton.Automaton;
+import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.statement.AssignmentStatement;
+import org.fmgroup.mediator.language.statement.IteStatement;
 import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.*;
-import org.fmgroup.mediator.language.transition.Transition;
-import org.fmgroup.mediator.language.transition.TransitionGroup;
-import org.fmgroup.mediator.language.transition.TransitionSingle;
+import org.fmgroup.mediator.language.entity.automaton.Transition;
+import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
+import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
 import org.fmgroup.mediator.language.type.*;
 
 import java.lang.System;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArduinoGenerator extends Generator {
@@ -29,15 +33,15 @@ public class ArduinoGenerator extends Generator {
     }
 
     private String automatonGenerate(Automaton a) throws ArduinoGeneratorException, ValidationException {
-        // TODO only an automaton with no ports can be generated directly
+        // TODO only an automaton with no portDeclarations can be generated directly
 
         String endline = System.getProperty("line.separator");
         String tab = "\t";
 
         String prog = "";
-        for (VariableDeclaration var : a.localVars) {
+        for (VariableDeclaration var : a.localVars.vardecls) {
             String strType = typeGenerate(var.type);
-            for (String name : var.names) {
+            for (String name : var.identifiers) {
                 if (!strType.contains("%s")) {
                     strType += " %s";
                 }
@@ -56,8 +60,8 @@ public class ArduinoGenerator extends Generator {
         prog += endline;
         // generate setup
         prog += "void setup() {" + endline;
-        for (VariableDeclaration var : a.localVars) {
-            for (String name : var.names) {
+        for (VariableDeclaration var : a.localVars.vardecls) {
+            for (String name : var.identifiers) {
                 prog += UtilCode.addIndent(
                         name +
                             " = " +
@@ -132,10 +136,11 @@ public class ArduinoGenerator extends Generator {
     private String statementGenerate(List<Statement> statements) throws ArduinoGeneratorException {
         String rel = "";
         for (Statement s : statements) {
+            if (rel.length() > 0) rel += "\n";
+
             if (s instanceof SynchronizingStatement) {
                 System.err.println("A sync statement is not supposed to show up when generating codes.");
             } else if (s instanceof AssignmentStatement) {
-                if (rel.length() > 0) rel += "\n";
 
                 if (((AssignmentStatement) s).target == null) {
                     rel += termGenerate(((AssignmentStatement) s).expr, 0) + ";";
@@ -157,6 +162,24 @@ public class ArduinoGenerator extends Generator {
                             " = " +
                             termGenerate(((AssignmentStatement) s).expr, 0) + ";";
                 }
+            }
+            else if (s instanceof IteStatement) {
+                rel += String.format(
+                        "if (%s) {\n%s\n}",
+                        termGenerate(((IteStatement) s).condition, 0),
+                        UtilCode.addIndent(statementGenerate(((IteStatement) s).thenStmts), 1)
+                );
+
+                if (((IteStatement) s).elseStmts.size() > 0) {
+                    rel += String.format(
+                            "else {\n%s\n}\n",
+                            UtilCode.addIndent(statementGenerate(((IteStatement) s).elseStmts), 1)
+                    );
+                } else {
+                    rel += "\n";
+                }
+            } else {
+                throw ArduinoGeneratorException.UnhandledStatement(s);
             }
         }
         return rel;
@@ -213,10 +236,14 @@ public class ArduinoGenerator extends Generator {
             );
         }
         if (t instanceof CallTerm) {
+            List<String> args = new ArrayList<>();
+            for (Term arg : ((CallTerm) t).args) {
+                args.add(termGenerate(arg, 0));
+            }
             return String.format(
                     "%s(%s)",
                     termGenerate(((CallTerm) t).callee, t.getPrecedence()),
-                    termGenerate(((CallTerm) t).args, 0)
+                    String.join(", ", args)
             );
         }
 

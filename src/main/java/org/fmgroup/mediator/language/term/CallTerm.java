@@ -6,12 +6,15 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.Type;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CallTerm implements Term {
 
     private RawElement parent;
 
     public Term callee;
-    public Term args;
+    public List<Term> args = new ArrayList<>();
 
     @Override
     public RawElement fromContext(ParserRuleContext context) throws ValidationException {
@@ -20,7 +23,13 @@ public class CallTerm implements Term {
         }
 
         this.callee = UtilTerm.parse(((MediatorLangParser.CallTermContext) context).callee, this);
-        this.args = UtilTerm.parse(((MediatorLangParser.CallTermContext) context).args, this);
+        Term targs = UtilTerm.parse(((MediatorLangParser.CallTermContext) context).args, this);
+
+        if (targs instanceof TupleTerm) {
+            args.addAll(((TupleTerm) targs).getTerms());
+        } else {
+            args.add(targs);
+        }
 
         return this.validate();
     }
@@ -49,7 +58,7 @@ public class CallTerm implements Term {
     public RawElement clone(RawElement parent) throws ValidationException {
         CallTerm nct = (CallTerm) new CallTerm().setParent(parent);
         nct.callee = (Term) this.callee.clone(nct);
-        nct.args = (Term) this.args.clone(nct);
+        nct.args = new ArrayList<>(this.args);
         return nct.validate();
     }
 

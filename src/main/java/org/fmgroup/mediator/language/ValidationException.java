@@ -65,7 +65,7 @@ public class ValidationException extends Exception {
     public static ValidationException DumplicatedIdentifier(String identifier, String identifierType) {
         return new ValidationException(
                 null,
-                String.format("%s %s is already allocated.", identifierType, identifier)
+                String.format("%s %s is already declared before", identifierType, identifier)
         );
     }
 

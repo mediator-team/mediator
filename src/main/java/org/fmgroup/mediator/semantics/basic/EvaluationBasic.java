@@ -1,8 +1,8 @@
 package org.fmgroup.mediator.semantics.basic;
 
-import org.fmgroup.mediator.language.Automaton;
+import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.ValidationException;
-import org.fmgroup.mediator.language.VariableDeclaration;
+import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.term.Term;
 import org.fmgroup.mediator.language.type.UtilType;
 
@@ -16,9 +16,9 @@ public class EvaluationBasic {
     public static EvaluationBasic getInitEvaluation(Automaton a) throws ValidationException {
         EvaluationBasic eb = new EvaluationBasic();
 
-        for (VariableDeclaration var : a.localVars) {
+        for (VariableDeclaration var : a.localVars.vardecls) {
             Term initVal = UtilType.getInitValue(var.type);
-            for (String varname : var.names) {
+            for (String varname : var.identifiers) {
                 eb.put(varname, initVal);
             }
         }

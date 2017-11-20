@@ -2,7 +2,11 @@ package org.fmgroup.mediator.language.type;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.*;
-import org.fmgroup.mediator.language.System;
+import org.fmgroup.mediator.language.entity.Entity;
+import org.fmgroup.mediator.language.Program;
+import org.fmgroup.mediator.language.Template;
+import org.fmgroup.mediator.language.entity.system.Connection;
+import org.fmgroup.mediator.language.entity.system.System;
 import org.fmgroup.mediator.language.term.IdValue;
 import org.fmgroup.mediator.language.term.UtilTerm;
 
@@ -14,7 +18,7 @@ public class InterfaceType implements Type {
     private RawElement parent;
 
     public IdValue reference;
-    public InterfacedElement provider = null;
+    public Entity provider = null;
     public List<RawElement> params = new ArrayList<>();
 
     @Override
@@ -29,7 +33,7 @@ public class InterfaceType implements Type {
 
         this.reference = (IdValue) new IdValue()
                 .setParent(this)
-                .fromContext(((MediatorLangParser.InterfaceTypeContext) context).scopeID());
+                .fromContext(((MediatorLangParser.InterfaceTypeContext) context).scopedID());
         for (MediatorLangParser.TypeorvalueContext tov : ((MediatorLangParser.InterfaceTypeContext) context).typeorvalue()) {
             if (tov.type() == null) {
                 // it is a value
@@ -92,8 +96,8 @@ public class InterfaceType implements Type {
 
         // locate the reference
         Program prog = UtilLang.getRoot(this);
-        CompTemplate template = null;
-        if (reference.scopes.size() > 0) {
+        Template template = null;
+        if (reference.scopeIdentifiers.size() > 0) {
             // TODO look it up in the dependencies
             throw ValidationException.UnderDevelopment();
         } else {

@@ -43,7 +43,7 @@ value:
     |   REAL                                                    # doubleValue
     |   STRING                                                  # strValue
     |   BOOLEAN                                                 # boolValue
-    |   scopeID                                                 # idValue
+    |   scopedID                                                # idValue
     |   'null'                                                  # nullValue
     ;
 
@@ -60,13 +60,13 @@ type:   '(' type ')'                                # bracketType
     |   type '|' type                               # unionType
     |   'type'                                      # abstractType
     |   'NULL'                                      # nullType
-    |   scopeID                                     # idType
-    |   scopeID ('<' typeorvalue (',' typeorvalue )* '>')?         # interfaceType
+    |   scopedID                                     # idType
+    |   scopedID ('<' typeorvalue (',' typeorvalue )* '>')?         # interfaceType
 ;
 
 typeorvalue: type | value ;
 
-scopeID:
+scopedID:
     (scopes+=ID '.')* identifier=ID
     ;
 

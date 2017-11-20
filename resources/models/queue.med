@@ -25,7 +25,7 @@ automaton <T:type,size:int> Queue(A:in T, B:out T) {
 
         // enqueue operation (as an external transition)
         (A.reqRead && A.reqWrite) -> {
-            sync A; // read data from input port A
+            sync A; // read data from input portDeclaration A
             buf[phead] = A.value;
             phead = next(phead);
         }
@@ -33,7 +33,7 @@ automaton <T:type,size:int> Queue(A:in T, B:out T) {
         (B.reqRead && B.reqWrite) -> {
             B.value = buf[ptail];
             ptail = next(ptail);
-            sync B; // write data to output port B
+            sync B; // write data to output portDeclaration B
         }
     }
 }
