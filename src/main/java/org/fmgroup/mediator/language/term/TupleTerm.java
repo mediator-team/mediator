@@ -22,8 +22,8 @@ public class TupleTerm implements Term {
             throw ValidationException.IncompatibleContextType(this.getClass(), "TupleTermContext", context.toString());
         }
 
-        left = UtilTerm.parse(((MediatorLangParser.TupleTermContext) context).left, this);
-        right = UtilTerm.parse(((MediatorLangParser.TupleTermContext) context).right, this);
+        left = Term.parse(((MediatorLangParser.TupleTermContext) context).left, this);
+        right = Term.parse(((MediatorLangParser.TupleTermContext) context).right, this);
 
         return this.validate();
     }

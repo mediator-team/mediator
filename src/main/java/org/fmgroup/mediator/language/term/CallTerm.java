@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.type.TemplateType;
 import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class CallTerm implements Term {
 
     private RawElement parent;
 
-    public Term callee;
+    public TemplateType callee;
     public List<Term> args = new ArrayList<>();
 
     @Override
@@ -22,9 +23,9 @@ public class CallTerm implements Term {
             throw ValidationException.IncompatibleContextType(this.getClass(), "CallTermContext", context.toString());
         }
 
-        this.callee = UtilTerm.parse(((MediatorLangParser.CallTermContext) context).callee, this);
-        Term targs = UtilTerm.parse(((MediatorLangParser.CallTermContext) context).args, this);
+        this.callee = (TemplateType) new TemplateType().parse(((MediatorLangParser.CallTermContext) context).callee, this);
 
+        Term targs = Term.parse(((MediatorLangParser.CallTermContext) context).args, this);
         if (targs instanceof TupleTerm) {
             args.addAll(((TupleTerm) targs).getTerms());
         } else {
@@ -37,7 +38,7 @@ public class CallTerm implements Term {
     @Override
     public String toString() {
         return String.format(
-                callee.getPrecedence() < this.getPrecedence() ? "(%s)(%s)" : "%s(%s)",
+                "%s(%s)",
                 callee.toString(),
                 args.toString()
         );
@@ -57,7 +58,8 @@ public class CallTerm implements Term {
     @Override
     public RawElement clone(RawElement parent) throws ValidationException {
         CallTerm nct = (CallTerm) new CallTerm().setParent(parent);
-        nct.callee = (Term) this.callee.clone(nct);
+        nct.parent = parent;
+        nct.callee = (TemplateType) this.callee.clone(nct);
         nct.args = new ArrayList<>(this.args);
         return nct.validate();
     }

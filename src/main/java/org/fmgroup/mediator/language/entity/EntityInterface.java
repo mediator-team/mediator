@@ -3,13 +3,13 @@ package org.fmgroup.mediator.language.entity;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.scope.Declaration;
-import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.DeclarationCollection;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EntityInterface implements RawElement, Declarations {
+public class EntityInterface implements RawElement, DeclarationCollection {
 
     private RawElement parent;
 
@@ -19,11 +19,11 @@ public class EntityInterface implements RawElement, Declarations {
 
     @Override
     public RawElement fromContext(ParserRuleContext context) throws ValidationException {
-        if (!(context instanceof MediatorLangParser.CompInterfaceContext)) {
+        if (!(context instanceof MediatorLangParser.EntityInterfaceContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "CompInterfaceContext", context.toString());
         }
 
-        for (MediatorLangParser.PortsDeclContext pdc : ((MediatorLangParser.CompInterfaceContext) context).portsDecl()) {
+        for (MediatorLangParser.PortsDeclContext pdc : ((MediatorLangParser.EntityInterfaceContext) context).portsDecl()) {
             portDeclarations.add(
                     (PortDeclaration) new PortDeclaration().parse(pdc, this)
             );

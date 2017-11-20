@@ -6,33 +6,26 @@ import org.fmgroup.mediator.generator.framework.UtilCode;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.EntityInterface;
-import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.Template;
 import org.fmgroup.mediator.language.entity.PortDeclaration;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.term.IdValue;
-import org.fmgroup.mediator.language.type.IdType;
-import org.fmgroup.mediator.language.type.InterfaceType;
-import org.fmgroup.mediator.language.type.Type;
-import org.fmgroup.mediator.language.type.UtilType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class System implements Entity, Scope {
+public class System implements Entity, Scope, Templated {
 
     private RawElement parent = null;
     public String name;
     public EntityInterface entityInterface = null;
     public Template template = null;
 
-    public Map<String, InterfaceType> components = new HashMap<>();
+    public ComponentDeclarationCollection componentCollection = null;
+
     public List<String> internals = new ArrayList<>();
     public List<Connection> connections = new ArrayList<>();
-
-    public Map<String, Type> internalsType = new HashMap<>();
 
     @Override
     public RawElement fromContext(ParserRuleContext context) throws ValidationException {
@@ -41,32 +34,23 @@ public class System implements Entity, Scope {
         }
 
         name = ((MediatorLangParser.SystemContext) context).name.getText();
-        entityInterface = (EntityInterface) new EntityInterface()
-                .setParent(this)
-                .fromContext(((MediatorLangParser.SystemContext) context).compInterface());
 
-        if (((MediatorLangParser.SystemContext) context).entityTemplate() != null) {
-            template = (Template) new Template()
-                    .setParent(this)
-                    .fromContext(((MediatorLangParser.SystemContext) context).entityTemplate());
+        /**
+         * order of parsing is very important, otherwise e.g., parameters declared in templates
+         * cannot be referred by port types
+         */
+        if (((MediatorLangParser.SystemContext) context).template() != null) {
+            template = new Template();
+            template.parse(((MediatorLangParser.SystemContext) context).template(), this);
         }
 
+
+        entityInterface = new EntityInterface();
+        entityInterface.parse(((MediatorLangParser.SystemContext) context).entityInterface(), this);
+
+        componentCollection = new ComponentDeclarationCollection();
         for (MediatorLangParser.ComponentSegmentContext csc : ((MediatorLangParser.SystemContext) context).componentSegment()) {
-            for (MediatorLangParser.ComponentDeclContext comp : csc.componentDecl()) {
-                Type iftype = UtilType.parse(comp.type(), this);
-                if (!(iftype instanceof InterfaceType) && !(iftype instanceof IdType)) {
-                    throw ValidationException.UnexpectedType(this.getClass(), iftype.getClass(), "InterfaceType", "Components");
-                }
-                if (iftype instanceof IdType) {
-                    InterfaceType _iftype = (InterfaceType) new InterfaceType().setParent(iftype.getParent());
-                    _iftype.reference = (IdValue) new IdValue().setIdentifier(((IdType) iftype).identifier).setParent(_iftype);
-                    iftype = _iftype;
-                    iftype.validate();
-                }
-                for (TerminalNode name : comp.ID()) {
-                    components.put(name.getText(), (InterfaceType) iftype);
-                }
-            }
+            componentCollection.parse(csc, this);
         }
 
         for (MediatorLangParser.InternalSegmentContext isc : ((MediatorLangParser.SystemContext) context).internalSegment()) {
@@ -81,7 +65,7 @@ public class System implements Entity, Scope {
             }
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -97,20 +81,8 @@ public class System implements Entity, Scope {
                     1
             );
         }
-        if (components.size() > 0) {
-            String componentSeg = "";
-            componentSeg += "components {\n";
+        rel += UtilCode.addIndent(componentCollection.toString(), 1);
 
-            for (String name : components.keySet()) {
-                componentSeg += UtilCode.addIndent(
-                        name + ": " + components.get(name).toString() + ";\n",
-                        1
-                );
-            }
-            componentSeg += "}\n";
-
-            rel += UtilCode.addIndent(componentSeg, 1);
-        }
         if (connections.size() > 0) {
             String connectionSeg = "";
             connectionSeg += "connections {\n";
@@ -121,7 +93,7 @@ public class System implements Entity, Scope {
 
             rel += UtilCode.addIndent(connectionSeg, 1);
         }
-        rel += "}\n";
+        rel += "}";
         return rel;
     }
 
@@ -137,17 +109,6 @@ public class System implements Entity, Scope {
     }
 
     @Override
-    public RawElement clone(RawElement parent) {
-        return null;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
-    }
-
-    @Override
     public EntityInterface getInterface() {
         return entityInterface;
     }
@@ -157,31 +118,38 @@ public class System implements Entity, Scope {
         return template;
     }
 
-    public PortDeclaration locatePort(IdValue portid) {
-        assert portid.scopeIdentifiers.size() == 1;
-        if (portid.scopeIdentifiers.size() == 1) {
-            String compname = portid.scopeIdentifiers.get(0);
-            if (components.containsKey(compname)) {
-                List<PortDeclaration> portDeclarations = components.get(compname).provider.getInterface().portDeclarations;
-                for (PortDeclaration p : portDeclarations) {
-                    if (p.names.equals(portid.identifier)) return p;
-                }
-            }
-        }
-
-        // the port can also belong to the system itself
-        if (portid.scopeIdentifiers.size() == 0) {
-            for (PortDeclaration p : this.entityInterface.portDeclarations) {
-                if (p.names.equals(portid.toString())) {
-                    return p;
-                }
-            }
-        }
-        return null;
-    }
+//    public PortDeclaration locatePort(IdValue portid) {
+//        assert portid.scopeIdentifiers.size() == 1;
+//        if (portid.scopeIdentifiers.size() == 1) {
+//            String compname = portid.scopeIdentifiers.get(0);
+//            if (componentCollection.containsKey(compname)) {
+//                List<PortDeclaration> portDeclarations = componentCollection.get(compname).provider.getInterface().portDeclarations;
+//                for (PortDeclaration p : portDeclarations) {
+//                    if (p.names.equals(portid.identifier)) return p;
+//                }
+//            }
+//        }
+//
+//        // the port can also belong to the system itself
+//        if (portid.scopeIdentifiers.size() == 0) {
+//            for (PortDeclaration p : this.entityInterface.portDeclarations) {
+//                if (p.names.equals(portid.toString())) {
+//                    return p;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     @Override
-    public List<Declarations> getDeclarations() {
-        return null;
+    public List<DeclarationCollection> getDeclarations() {
+        List<DeclarationCollection> result = new ArrayList<>();
+
+        if (template != null) result.add(template);
+        if (entityInterface != null) result.add(entityInterface);
+        // TODO intervals
+        if (componentCollection != null) result.add(componentCollection);
+
+        return result;
     }
 }

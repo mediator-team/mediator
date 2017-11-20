@@ -55,7 +55,9 @@ public class IdValue implements Term {
             // TODO
         }
 
-        if (this.reference == null) throw ValidationException.UnknownIdentifier(this.toString(), "variable");
+        if (this.reference == null) {
+            throw ValidationException.UnknownIdentifier(this.toString(), "variable");
+        }
 
         return this.validate();
     }

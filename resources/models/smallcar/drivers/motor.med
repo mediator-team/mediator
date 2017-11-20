@@ -1,3 +1,6 @@
+native function digitalWrite(pin: int, val:int);
+native function analogWrite(pin: int, val:int 0..1);
+
 automaton <pinDirection:int, pinSpeed:int> motor (speed : in int -1023 .. 1023 init 0) {
     transitions {
         !speed.reqRead -> speed.reqRead = true;

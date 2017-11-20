@@ -3,7 +3,6 @@ package org.fmgroup.mediator.language.statement;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.term.UtilTerm;
 
 
 public class AssignmentStatement implements Statement {
@@ -18,13 +17,13 @@ public class AssignmentStatement implements Statement {
             throw ValidationException.IncompatibleContextType(this.getClass(), "AssignmentStatementContext", context.toString());
         }
 
-        expr = UtilTerm.parse(
+        expr = Term.parse(
                 ((MediatorLangParser.AssignmentStatementContext) context).expr,
                 this
         );
 
         if (((MediatorLangParser.AssignmentStatementContext) context).target != null)
-            target = UtilTerm.parse(
+            target = Term.parse(
                     ((MediatorLangParser.AssignmentStatementContext) context).target,
                     this
             );
@@ -39,13 +38,13 @@ public class AssignmentStatement implements Statement {
         else return expr.toString() + ";";
     }
 
-    public AssignmentStatement setExpr(Term expr) {
+    public AssignmentStatement setExpr(Term expr) throws ValidationException {
         this.expr = expr;
         expr.setParent(this);
         return this;
     }
 
-    public AssignmentStatement setTarget(Term target) {
+    public AssignmentStatement setTarget(Term target) throws ValidationException {
         this.target = target;
         target.setParent(this);
         return this;

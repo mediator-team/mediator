@@ -8,16 +8,25 @@ import java.util.List;
 
 public interface RawElement {
 
-    RawElement fromContext(ParserRuleContext context) throws ValidationException;
+    default RawElement fromContext(ParserRuleContext context) throws ValidationException {
+        throw ValidationException.UnderDevelopment();
+    }
 
-    RawElement getParent();
-    RawElement setParent(RawElement parent);
+    default RawElement getParent() throws ValidationException {
+        throw ValidationException.UnderDevelopment();
+    }
+
+    default RawElement setParent(RawElement parent) throws ValidationException {
+        throw ValidationException.UnderDevelopment();
+    }
 
     default RawElement clone(RawElement parent) throws ValidationException {
         throw ValidationException.UnderDevelopment();
     }
 
-    RawElement validate() throws ValidationException;
+    default RawElement validate() throws ValidationException {
+        return this;
+    }
 
 
     /**
@@ -44,7 +53,7 @@ public interface RawElement {
                 .validate();
     }
 
-    default List<Scope> getScopes() {
+    default List<Scope> getScopes() throws ValidationException {
         RawElement p = this;
         List<Scope> result = new ArrayList<>();
 
@@ -56,12 +65,12 @@ public interface RawElement {
         return result;
     }
 
-    default Scope getTopScope() {
+    default Scope getTopScope() throws ValidationException {
         List<Scope> scopes = this.getScopes();
         return scopes.get(scopes.size() - 1);
     }
 
-    default Scope getCurrentScope() {
+    default Scope getCurrentScope() throws ValidationException {
         return getScopes().get(0);
     }
 }

@@ -5,7 +5,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.term.UtilTerm;
 
 public class ReturnStatement implements Statement {
 
@@ -18,7 +17,7 @@ public class ReturnStatement implements Statement {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ReturnStatementContext", context.toString());
         }
 
-        returnedValue = UtilTerm.parse(((MediatorLangParser.ReturnStatementContext) context).term(), this);
+        returnedValue = Term.parse(((MediatorLangParser.ReturnStatementContext) context).term(), this);
         return this.validate();
     }
 

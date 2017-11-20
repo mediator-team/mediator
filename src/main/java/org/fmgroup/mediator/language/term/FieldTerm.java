@@ -19,7 +19,7 @@ public class FieldTerm implements Term {
             throw ValidationException.IncompatibleContextType(this.getClass(), "FieldTermContext", context.toString());
         }
 
-        this.owner = UtilTerm.parse(((MediatorLangParser.FieldTermContext) context).structure, this);
+        this.owner = Term.parse(((MediatorLangParser.FieldTermContext) context).structure, this);
         this.field = ((MediatorLangParser.FieldTermContext) context).key.getText();
         return this.validate();
     }

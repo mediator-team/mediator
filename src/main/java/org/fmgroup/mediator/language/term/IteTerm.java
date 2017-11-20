@@ -29,9 +29,9 @@ public class IteTerm implements Term {
             throw ValidationException.IncompatibleContextType(this.getClass(), "IteTermContext", context.toString());
         }
 
-        this.condition = UtilTerm.parse(((MediatorLangParser.IteTermContext) context).condition, this);
-        this.thenTerm = UtilTerm.parse(((MediatorLangParser.IteTermContext) context).ifTrue, this);
-        this.elseTerm = UtilTerm.parse(((MediatorLangParser.IteTermContext) context).ifFalse, this);
+        this.condition = Term.parse(((MediatorLangParser.IteTermContext) context).condition, this);
+        this.thenTerm = Term.parse(((MediatorLangParser.IteTermContext) context).ifTrue, this);
+        this.elseTerm = Term.parse(((MediatorLangParser.IteTermContext) context).ifFalse, this);
 
         return this.validate();
     }

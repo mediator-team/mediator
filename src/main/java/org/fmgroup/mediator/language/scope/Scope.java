@@ -1,5 +1,7 @@
 package org.fmgroup.mediator.language.scope;
 
+import org.fmgroup.mediator.language.entity.PortDeclaration;
+import org.fmgroup.mediator.language.entity.system.ComponentDeclaration;
 import org.fmgroup.mediator.language.term.IdValue;
 import org.fmgroup.mediator.language.type.IdType;
 
@@ -7,7 +9,7 @@ import java.util.List;
 
 public interface Scope {
 
-    List<Declarations> getDeclarations();
+    List<DeclarationCollection> getDeclarations();
 
     default boolean existsDeclaration(String identifier) {
         return getDeclaration(null, identifier) != null;
@@ -16,9 +18,9 @@ public interface Scope {
     default Declaration getDeclaration(List<String> scopeIdentifiers, String identifier) {
         if (scopeIdentifiers == null || scopeIdentifiers.size() == 0) {
             // no scope identifiers are specified
-            for (Declarations declarations : getDeclarations()) {
-                if (declarations.getDeclaration(identifier) != null)
-                    return declarations.getDeclaration(identifier);
+            for (DeclarationCollection declarationCollection : getDeclarations()) {
+                if (declarationCollection.getDeclaration(identifier) != null)
+                    return declarationCollection.getDeclaration(identifier);
             }
         } else {
             // TODO
@@ -54,6 +56,22 @@ public interface Scope {
         Declaration decl = getDeclaration(null, identifier);
         if (decl instanceof VariableDeclaration) {
             return (VariableDeclaration) decl;
+        }
+        return null;
+    }
+
+    default PortDeclaration getPort(String identifier) {
+        Declaration decl = getDeclaration(null, identifier);
+        if (decl instanceof PortDeclaration) {
+            return (PortDeclaration) decl;
+        }
+        return null;
+    }
+
+    default ComponentDeclaration getComponent(String identifier) {
+        Declaration decl = getDeclaration(null, identifier);
+        if (decl instanceof ComponentDeclaration) {
+            return (ComponentDeclaration) decl;
         }
         return null;
     }

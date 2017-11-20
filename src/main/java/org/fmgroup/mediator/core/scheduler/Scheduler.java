@@ -6,6 +6,7 @@ import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.entity.EntityInterface;
 import org.fmgroup.mediator.language.Template;
 import org.fmgroup.mediator.language.entity.PortDeclaration;
+import org.fmgroup.mediator.language.entity.system.ComponentDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.entity.system.Connection;
 import org.fmgroup.mediator.language.entity.system.System;
@@ -16,7 +17,6 @@ import org.fmgroup.mediator.language.term.*;
 import org.fmgroup.mediator.language.entity.automaton.Transition;
 import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
 import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
-import org.fmgroup.mediator.language.entity.automaton.UtilTransition;
 import org.fmgroup.mediator.language.type.*;
 
 import java.util.*;
@@ -24,28 +24,37 @@ import java.util.*;
 
 public class Scheduler {
 
+    /**
+     * Implements the scheduling algorithm in paper `Component-based Modeling in Mediator, FACS 2017`
+     * It flats a system (with hierarchy) to a simple automaton
+     * @param sys the system that needs to flat
+     * @return an automaton, with same name and interface with sys
+     * @throws ValidationException
+     */
     public static Automaton Schedule (System sys) throws ValidationException {
 
         Automaton a = new Automaton();
+        a.setParent(sys.getParent());
+
         a.name = sys.name;
-        a.entityInterface = (EntityInterface) sys.entityInterface.clone(a);
+        a.entityInterface = sys.entityInterface != null ? (EntityInterface) sys.entityInterface.clone(a) : null;
         a.template = sys.template != null ? (Template) sys.template.clone(a) : null;
 
-        // 0. initialize components and connectors
+        // 0. initialize componentCollection and connectors
         Map<String, Automaton> components = new HashMap<>();
         Map<Connection, Automaton> connections = new HashMap<>();
         Map<Entity, List<Transition>> externals = new HashMap<>();
 
-        for (String compname : sys.components.keySet()) {
-            // TODO refactor this loop
-
-            if (sys.components.get(compname).provider == null) {
-                java.lang.System.err.println("null provider");
+        for (ComponentDeclaration compDecl : sys.componentCollection.components) {
+            Automaton canonicalized = Scheduler.Canonicalize((Automaton) compDecl.type.provider);
+            if (compDecl.type.provider instanceof Automaton) {
+                for (String identifier : compDecl.identifiers) {
+                    components.put(identifier, canonicalized);
+                }
             } else {
-                if (sys.components.get(compname).provider instanceof Automaton) {
-                    components.put(compname, Scheduler.Canonicalize((Automaton) sys.components.get(compname).provider));
-                } else {
-                    components.put(compname, Scheduler.Schedule((System) sys.components.get(compname).provider));
+                Automaton scheduled = Scheduler.Schedule((System) compDecl.type.provider);
+                for (String identifier : compDecl.identifiers) {
+                    components.put(identifier, scheduled);
                 }
             }
         }
@@ -96,24 +105,27 @@ public class Scheduler {
             externals.get(comp).add(null);
 
             // port variables
-            for (PortDeclaration p : comp.entityInterface.portDeclarations) {
-                for (String suffix : PortDeclaration.adjointVariables) {
-                    VariableDeclaration vd = (VariableDeclaration) new VariableDeclaration().setParent(a);
-                    vd.identifiers.add(name + "_" + p.names + "_" + suffix);
-                    vd.type = (Type) p.type.clone(vd);
-                    a.localVars.vardecls.add(vd);
+            for (PortDeclaration pdecl : comp.entityInterface.portDeclarations) {
+                for (String pname: pdecl.names) {
+                    for (PortVariableType suffix : PortVariableType.values()) {
+                        VariableDeclaration vd = (VariableDeclaration) new VariableDeclaration().setParent(a);
+                        vd.identifiers.add(name + "_" + pname + "_" + suffix.toString());
+                        vd.type = (Type) pdecl.type.clone(vd);
+                        a.localVars.vardecls.add(vd);
 
-                    localRewriteMap.put(
-                            p.names + "." + suffix,
-                            new IdValue().setIdentifier(name + "_" + p.names + "_" + suffix)
-                    );
+                        localRewriteMap.put(
+                                pname + "." + suffix,
+                                new IdValue().setIdentifier(name + "_" + pname + "_" + suffix)
+                        );
+                    }
                 }
             }
 
             // template parameters
-            for (RawElement arg : sys.components.get(name).params) {
+            ComponentDeclaration currCompDecl = (ComponentDeclaration) sys.componentCollection.getDeclaration(name);
+            for (RawElement arg : currCompDecl.type.params) {
                 String paramName = comp.template.getDeclarationIdentifier((
-                        sys.components.get(name).params.indexOf(arg)
+                        currCompDecl.type.params.indexOf(arg)
                 ));
                 if (arg instanceof Term) {
                     localRewriteMap.put(paramName, (Term) arg);
@@ -131,7 +143,7 @@ public class Scheduler {
                     localRewriteMap.put(var.identifiers.get(i), new IdValue().setIdentifier(newname));
                 }
 
-                nvar.type = UtilType.refactor(nvar.type, localTypeRewriteMap, localRewriteMap);
+                nvar.type = Type.refactor(nvar.type, localTypeRewriteMap, localRewriteMap);
 
                 a.localVars.vardecls.add(nvar);
             }
@@ -145,11 +157,11 @@ public class Scheduler {
                 assert t instanceof TransitionSingle;
                 if (((TransitionSingle) t).isInternal) {
                     baseGroup.transitions.add(
-                            UtilTransition.refactor(t, localRewriteMap, baseGroup)
+                            Transition.refactor(t, localRewriteMap, baseGroup)
                     );
                 } else {
                     // deal with the external cases (synchronize)
-                    externals.get(comp).add(UtilTransition.refactor(t, localRewriteMap, baseGroup));
+                    externals.get(comp).add(Transition.refactor(t, localRewriteMap, baseGroup));
                 }
             }
 
@@ -165,25 +177,26 @@ public class Scheduler {
                 connections.put(conn, Scheduler.Canonicalize((Automaton) conn.type.provider));
             }
 
-            externals.put(conn.type.provider, new ArrayList<>());
+            externals.put((Entity) conn.type.provider, new ArrayList<>());
             externals.get(conn.type.provider).add(null);
 
             // connections do not produce extra port variables
-            // port variables are created by components and internals
+            // port variables are created by componentCollection and internals
 
-            // locate the correct port variables created by other components/internals
-            for (PortDeclaration p : connections.get(conn).entityInterface.portDeclarations) {
-                int index = connections.get(conn).entityInterface.portDeclarations.indexOf(p);
+            // locate the correct port variables created by other componentCollection/internals
+            for (PortDeclaration pdecl : connections.get(conn).entityInterface.portDeclarations) {
+                for (String pname: pdecl.names) {
+                    int index = connections.get(conn).entityInterface.getDeclarationIndex(pname);
+                    if (conn.ports.get(index).scopeIdentifiers.size() == 0) continue;
 
-                if (conn.ports.get(index).scopeIdentifiers.size() == 0) continue;
+                    String prefix = conn.ports.get(index).scopeIdentifiers.get(0) + "_" + conn.ports.get(index).portName + "_";
 
-                String prefix = conn.ports.get(index).scopeIdentifiers.get(0) + "_" + conn.ports.get(index).identifier + "_";
-
-                for (String suffix : PortDeclaration.adjointVariables) {
-                    localRewriteMap.put(
-                            p.names + "." + suffix,
-                            new IdValue().setIdentifier(prefix + suffix)
-                    );
+                    for (PortVariableType suffix : PortVariableType.values()) {
+                        localRewriteMap.put(
+                                pname + "." + suffix.toString(),
+                                new IdValue().setIdentifier(prefix + suffix.toString())
+                        );
+                    }
                 }
             }
 
@@ -211,7 +224,7 @@ public class Scheduler {
                     localRewriteMap.put(vd.identifiers.get(i), new IdValue().setIdentifier(newname));
                 }
 
-                nvd.type = UtilType.refactor(nvd.type, localTypeRewriteMap, localRewriteMap);
+                nvd.type = Type.refactor(nvd.type, localTypeRewriteMap, localRewriteMap);
                 a.localVars.vardecls.add(nvd);
             }
 
@@ -222,11 +235,11 @@ public class Scheduler {
                 assert t instanceof TransitionSingle;
                 if (((TransitionSingle) t).isInternal) {
                     baseGroup.transitions.add(
-                            UtilTransition.refactor(t, localRewriteMap, baseGroup)
+                            Transition.refactor(t, localRewriteMap, baseGroup)
                     );
                 } else {
                     // deal with the external cases (synchronize)
-                    externals.get(conn.type.provider).add(UtilTransition.refactor(t, localRewriteMap, baseGroup));
+                    externals.get(conn.type.provider).add(Transition.refactor(t, localRewriteMap, baseGroup));
                 }
             }
 
@@ -327,7 +340,7 @@ public class Scheduler {
         for (TopoGraphVertice v : graph.vertices) {
             if (v.element instanceof SynchronizingStatement) {
                 if (graph.countInEdges(v) != 2 || graph.countOutEdges(v) != 2) {
-                    if (((SynchronizingStatement) v.element).synchronizedPorts.get(0).contains("_")) {
+                    if (((SynchronizingStatement) v.element).synchronizedPorts.get(0).portName.contains("_")) {
                         valid = false;
                         break;
                     }
@@ -347,7 +360,7 @@ public class Scheduler {
 
             if (s instanceof SynchronizingStatement) {
                 assert ((SynchronizingStatement) s).synchronizedPorts.size() == 1;
-                String portId = ((SynchronizingStatement) s).synchronizedPorts.get(0);
+                String portId = ((SynchronizingStatement) s).synchronizedPorts.get(0).portName;
 
                 if (portId.contains("_")) {
                     int index = statements.indexOf(s);
@@ -385,7 +398,7 @@ public class Scheduler {
             if (t instanceof TransitionSingle) {
                 // TODO reset the parent
                 TransitionSingle tnew;
-                tnew = (TransitionSingle) t.clone(null);
+                tnew = (TransitionSingle) t.clone(t.getParent());
 
                 tnew.guard = new BinaryOperatorTerm()
                         .setOpr(EnumBinaryOperator.LAND)
@@ -413,7 +426,7 @@ public class Scheduler {
         return ctrans;
     }
 
-    public static Automaton Canonicalize(Automaton a) {
+    public static Automaton Canonicalize(Automaton a) throws ValidationException {
         Automaton an = new Automaton();
 
         an.name = a.name;

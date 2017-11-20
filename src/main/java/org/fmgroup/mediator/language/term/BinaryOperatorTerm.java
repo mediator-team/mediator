@@ -30,8 +30,8 @@ public class BinaryOperatorTerm implements Term {
             throw ValidationException.IncompatibleContextType(this.getClass(), "BinaryOprTermContext", context.toString());
         }
 
-        left = UtilTerm.parse(((MediatorLangParser.BinaryOprTermContext) context).left, this);
-        right = UtilTerm.parse(((MediatorLangParser.BinaryOprTermContext) context).right, this);
+        left = Term.parse(((MediatorLangParser.BinaryOprTermContext) context).left, this);
+        right = Term.parse(((MediatorLangParser.BinaryOprTermContext) context).right, this);
         opr = EnumBinaryOperator.fromString(((MediatorLangParser.BinaryOprTermContext) context).opr.getText());
 
         return this.validate();

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VariableDeclarationCollection implements Declarations {
+public class VariableDeclarationCollection implements DeclarationCollection {
 
     public List<VariableDeclaration> vardecls = new ArrayList<>();
 

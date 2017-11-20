@@ -1,19 +1,19 @@
 package org.fmgroup.mediator.language.statement;
 
-import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.entity.PortIdentifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class SynchronizingStatement implements Statement {
 
     public RawElement parent = null;
-    public List<String> synchronizedPorts = new ArrayList<>();
+    public List<PortIdentifier> synchronizedPorts = new ArrayList<>();
 
     @Override
     public RawElement fromContext(ParserRuleContext context) throws ValidationException {
@@ -21,16 +21,18 @@ public class SynchronizingStatement implements Statement {
             throw ValidationException.IncompatibleContextType(this.getClass(), "SynchronizingStatementContext", context.toString());
         }
 
-        for (TerminalNode t : ((MediatorLangParser.SynchronizingStatementContext) context).ID()) {
-            this.synchronizedPorts.add(t.getText());
+        for (MediatorLangParser.PortIdentifierContext portid : ((MediatorLangParser.SynchronizingStatementContext) context).portIdentifier()) {
+            this.synchronizedPorts.add(
+                    (PortIdentifier) new PortIdentifier().parse(portid, this)
+            );
         }
 
         return this.validate();
     }
 
-    public List<SynchronizingStatement> split() {
+    public List<SynchronizingStatement> split() throws ValidationException {
         List<SynchronizingStatement> newStmts = new ArrayList<>();
-        for (String port : synchronizedPorts) {
+        for (PortIdentifier port : synchronizedPorts) {
             newStmts.add(
                     (SynchronizingStatement) new SynchronizingStatement().addPort(port).setParent(this.parent)
             );
@@ -58,8 +60,8 @@ public class SynchronizingStatement implements Statement {
         return rel + ";";
     }
 
-    public SynchronizingStatement addPort(String port) {
-        this.synchronizedPorts.add(port);
+    public SynchronizingStatement addPort(PortIdentifier port) throws ValidationException {
+        this.synchronizedPorts.add((PortIdentifier) port.clone(this));
         return this;
     }
 

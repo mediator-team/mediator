@@ -5,14 +5,14 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.scope.Declaration;
-import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FuncInterface implements RawElement, Declarations {
+public class FuncInterface implements RawElement, DeclarationCollection {
 
     private RawElement parent;
 
@@ -20,11 +20,11 @@ public class FuncInterface implements RawElement, Declarations {
 
     @Override
     public RawElement fromContext(ParserRuleContext context) throws ValidationException {
-        if (!(context instanceof MediatorLangParser.FuncInterfaceContext)) {
+        if (!(context instanceof MediatorLangParser.FunctionInterfaceContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "FuncInterfaceContext", context.toString());
         }
 
-        for (MediatorLangParser.LocalVariableDefContext arg : ((MediatorLangParser.FuncInterfaceContext) context).localVariableDef()) {
+        for (MediatorLangParser.LocalVariableDefContext arg : ((MediatorLangParser.FunctionInterfaceContext) context).localVariableDef()) {
             args.add(
                     (VariableDeclaration) new VariableDeclaration().parse(arg, this)
             );

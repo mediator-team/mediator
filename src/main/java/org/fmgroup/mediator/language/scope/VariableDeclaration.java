@@ -6,7 +6,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.Type;
-import org.fmgroup.mediator.language.type.UtilType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class VariableDeclaration implements RawElement, Declaration {
 
             identifiers.add(tn.getText());
         }
-        type = UtilType.parse(vardef.type(), this);
+        type = Type.parse(vardef.type(), this);
 
         return this;
     }

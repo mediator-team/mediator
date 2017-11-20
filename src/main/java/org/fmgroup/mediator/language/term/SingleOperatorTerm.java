@@ -31,7 +31,7 @@ public class SingleOperatorTerm implements Term {
         }
 
         this.opr = EnumSingleOperator.fromString(((MediatorLangParser.SingleOprTermContext) context).opr.getText());
-        this.term = UtilTerm.parse(((MediatorLangParser.SingleOprTermContext) context).term(), this);
+        this.term = Term.parse(((MediatorLangParser.SingleOprTermContext) context).term(), this);
 
         return this.validate();
     }

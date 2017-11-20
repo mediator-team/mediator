@@ -4,7 +4,7 @@ import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.type.UtilType;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ public class EvaluationBasic {
         EvaluationBasic eb = new EvaluationBasic();
 
         for (VariableDeclaration var : a.localVars.vardecls) {
-            Term initVal = UtilType.getInitValue(var.type);
+            Term initVal = Type.getInitValue(var.type);
             for (String varname : var.identifiers) {
                 eb.put(varname, initVal);
             }

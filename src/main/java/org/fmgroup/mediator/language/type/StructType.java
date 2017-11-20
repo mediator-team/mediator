@@ -24,7 +24,7 @@ public class StructType implements Type {
         for (int i = 0; i < ((MediatorLangParser.StructTypeContext) context).ID().size(); i ++) {
             fields.put(
                     ((MediatorLangParser.StructTypeContext) context).ID(i).getText(),
-                    UtilType.parse(((MediatorLangParser.StructTypeContext) context).type(i), this)
+                    Type.parse(((MediatorLangParser.StructTypeContext) context).type(i), this)
             );
         }
 

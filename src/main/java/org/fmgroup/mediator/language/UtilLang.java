@@ -43,7 +43,7 @@ public class UtilLang {
 //        return null;
 //    }
 
-    public static Program getRoot(RawElement e) {
+    public static Program getRoot(RawElement e) throws ValidationException {
         while (e != null) {
             if (e instanceof Program) return (Program) e;
             else

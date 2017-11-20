@@ -3,19 +3,17 @@ package org.fmgroup.mediator.language.function;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.generator.framework.UtilCode;
 import org.fmgroup.mediator.language.*;
-import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
 import org.fmgroup.mediator.language.statement.Statement;
-import org.fmgroup.mediator.language.statement.UtilStatement;
 import org.fmgroup.mediator.language.type.Type;
-import org.fmgroup.mediator.language.type.UtilType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Function implements RawElement, Scope {
+public class Function implements RawElement, Scope, Templated {
 
     public RawElement parent = null;
     public String name;
@@ -37,20 +35,20 @@ public class Function implements RawElement, Scope {
         isNative = ((MediatorLangParser.FunctionContext) context).isNative;
         name = ((MediatorLangParser.FunctionContext) context).name.getText();
 
-        if (((MediatorLangParser.FunctionContext) context).entityTemplate() != null) {
+        if (((MediatorLangParser.FunctionContext) context).template() != null) {
             template = new Template();
             template.parse(
-                    ((MediatorLangParser.FunctionContext) context).entityTemplate(),
+                    ((MediatorLangParser.FunctionContext) context).template(),
                     this
             );
         }
 
         if (((MediatorLangParser.FunctionContext) context).returnType != null) {
-            returnType = UtilType.parse(((MediatorLangParser.FunctionContext) context).returnType, this);
+            returnType = Type.parse(((MediatorLangParser.FunctionContext) context).returnType, this);
         }
 
         funcInterface = new FuncInterface();
-        funcInterface.parse(((MediatorLangParser.FunctionContext) context).funcInterface(), this);
+        funcInterface.parse(((MediatorLangParser.FunctionContext) context).functionInterface(), this);
 
 
         for (MediatorLangParser.LocalVariableDefContext lvd : ((MediatorLangParser.FunctionContext) context).localVariableDef()) {
@@ -58,7 +56,7 @@ public class Function implements RawElement, Scope {
         }
 
         for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.FunctionContext) context).statement()) {
-            statements.add(UtilStatement.parse(sc, this));
+            statements.add(Statement.parse(sc, this));
         }
 
         return this;
@@ -87,7 +85,7 @@ public class Function implements RawElement, Scope {
                 rel += UtilCode.addIndent(stmt.toString() + "\n", 2);
             }
             rel += UtilCode.addIndent("}\n", 1);
-            rel += "}\n";
+            rel += "}";
         } else {
             rel += ";";
         }
@@ -116,8 +114,8 @@ public class Function implements RawElement, Scope {
     }
 
     @Override
-    public List<Declarations> getDeclarations() {
-        List<Declarations> result = new ArrayList<>();
+    public List<DeclarationCollection> getDeclarations() {
+        List<DeclarationCollection> result = new ArrayList<>();
 
         if (template != null) {
             result.add(template);
@@ -126,5 +124,10 @@ public class Function implements RawElement, Scope {
         if (variables != null) result.add(variables);
 
         return result;
+    }
+
+    @Override
+    public Template getTemplate() {
+        return this.template;
     }
 }

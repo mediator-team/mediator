@@ -1,9 +1,11 @@
 package org.fmgroup.mediator.language.scope;
 
+import org.fmgroup.mediator.language.RawElement;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface Declarations {
+public interface DeclarationCollection extends RawElement {
     List<Declaration> getDeclarationList();
 
     /**
@@ -49,5 +51,13 @@ public interface Declarations {
             else index -= declaration.size();
         }
         return null;
+    }
+
+    default int getDeclarationIndex(String identifier) {
+        for (int i = 0; i < getDeclarationList().size(); i ++) {
+            if (getDeclarationIdentifier(i).equals(identifier))
+                return i;
+        }
+        return -1;
     }
 }

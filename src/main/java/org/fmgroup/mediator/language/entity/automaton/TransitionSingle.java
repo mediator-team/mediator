@@ -7,9 +7,7 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
-import org.fmgroup.mediator.language.statement.UtilStatement;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.term.UtilTerm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +26,13 @@ public class TransitionSingle implements Transition {
             throw ValidationException.IncompatibleContextType(this.getClass(), "TransitionSingleContext", context.toString());
         }
 
-        this.guard = UtilTerm.parse(((MediatorLangParser.TransitionSingleContext) context).term(), this);
+        this.guard = Term.parse(((MediatorLangParser.TransitionSingleContext) context).term(), this);
 
         if (((MediatorLangParser.TransitionSingleContext) context).statement() != null) {
-            this.statements.add(UtilStatement.parse(((MediatorLangParser.TransitionSingleContext) context).statement(), this));
+            this.statements.add(Statement.parse(((MediatorLangParser.TransitionSingleContext) context).statement(), this));
         } else {
             for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.TransitionSingleContext) context).statements().statement()) {
-                this.statements.add(UtilStatement.parse(sc, this));
+                this.statements.add(Statement.parse(sc, this));
             }
         }
         return this.validate();
@@ -69,6 +67,7 @@ public class TransitionSingle implements Transition {
     @Override
     public RawElement clone(RawElement parent) throws ValidationException {
         TransitionSingle nt = new TransitionSingle();
+        nt.setParent(parent);
         nt.isInternal = this.isInternal;
         nt.guard = (Term) this.guard.clone(nt);
         for (Statement st : this.statements) {
@@ -90,15 +89,5 @@ public class TransitionSingle implements Transition {
     @Override
     public Term getGuard() {
         return this.guard;
-    }
-
-    @Override
-    public Automaton getAutomaton() {
-        RawElement pointer = this;
-        while (pointer != null && !(pointer instanceof Automaton)) {
-            pointer = pointer.getParent();
-        }
-
-        return (Automaton) pointer;
     }
 }

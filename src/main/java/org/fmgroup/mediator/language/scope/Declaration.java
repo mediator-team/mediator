@@ -1,6 +1,8 @@
 package org.fmgroup.mediator.language.scope;
 
-public interface Declaration {
+import org.fmgroup.mediator.language.RawElement;
+
+public interface Declaration extends RawElement {
     int size();
 
     String getIdentifier(int index);

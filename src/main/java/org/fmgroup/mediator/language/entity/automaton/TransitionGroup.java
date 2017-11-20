@@ -24,10 +24,10 @@ public class TransitionGroup implements Transition {
         }
 
         for (MediatorLangParser.TransitionContext tc : ((MediatorLangParser.TransitionGroupContext) context).transition()) {
-            this.transitions.add(UtilTransition.parse(tc, this));
+            this.transitions.add(Transition.parse(tc, this));
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -52,17 +52,6 @@ public class TransitionGroup implements Transition {
     }
 
     @Override
-    public RawElement clone(RawElement parent) {
-        return null;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
-    }
-
-    @Override
     public Term getGuard() throws ValidationException {
         Term guard = null;
         for (Transition t : this.transitions) {
@@ -75,15 +64,5 @@ public class TransitionGroup implements Transition {
             }
         }
         return guard;
-    }
-
-    @Override
-    public Automaton getAutomaton() {
-        RawElement pointer = this;
-        while (pointer != null && !(pointer instanceof Automaton)) {
-            pointer = pointer.getParent();
-        }
-
-        return (Automaton) pointer;
     }
 }

@@ -25,7 +25,7 @@ public class UnionType implements Type {
         }
 
         for (MediatorLangParser.TypeContext baseType : ((MediatorLangParser.UnionTypeContext) context).type()) {
-            baseTypes.add(UtilType.parse(baseType, this));
+            baseTypes.add(Type.parse(baseType, this));
         }
         return this.validate();
     }

@@ -38,6 +38,16 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitTypedef(MediatorLangParser.TypedefContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#portIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterPortIdentifier(MediatorLangParser.PortIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#portIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitPortIdentifier(MediatorLangParser.PortIdentifierContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code assignmentStatement}
 	 * labeled alternative in {@link MediatorLangParser#statement}.
 	 * @param ctx the parse tree
@@ -96,15 +106,15 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitStatements(MediatorLangParser.StatementsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#entityTemplate}.
+	 * Enter a parse tree produced by {@link MediatorLangParser#template}.
 	 * @param ctx the parse tree
 	 */
-	void enterEntityTemplate(MediatorLangParser.EntityTemplateContext ctx);
+	void enterTemplate(MediatorLangParser.TemplateContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#entityTemplate}.
+	 * Exit a parse tree produced by {@link MediatorLangParser#template}.
 	 * @param ctx the parse tree
 	 */
-	void exitEntityTemplate(MediatorLangParser.EntityTemplateContext ctx);
+	void exitTemplate(MediatorLangParser.TemplateContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#function}.
 	 * @param ctx the parse tree
@@ -126,15 +136,15 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitLocalVariableDef(MediatorLangParser.LocalVariableDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#funcInterface}.
+	 * Enter a parse tree produced by {@link MediatorLangParser#functionInterface}.
 	 * @param ctx the parse tree
 	 */
-	void enterFuncInterface(MediatorLangParser.FuncInterfaceContext ctx);
+	void enterFunctionInterface(MediatorLangParser.FunctionInterfaceContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#funcInterface}.
+	 * Exit a parse tree produced by {@link MediatorLangParser#functionInterface}.
 	 * @param ctx the parse tree
 	 */
-	void exitFuncInterface(MediatorLangParser.FuncInterfaceContext ctx);
+	void exitFunctionInterface(MediatorLangParser.FunctionInterfaceContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#portsDecl}.
 	 * @param ctx the parse tree
@@ -146,15 +156,15 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitPortsDecl(MediatorLangParser.PortsDeclContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#compInterface}.
+	 * Enter a parse tree produced by {@link MediatorLangParser#entityInterface}.
 	 * @param ctx the parse tree
 	 */
-	void enterCompInterface(MediatorLangParser.CompInterfaceContext ctx);
+	void enterEntityInterface(MediatorLangParser.EntityInterfaceContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#compInterface}.
+	 * Exit a parse tree produced by {@link MediatorLangParser#entityInterface}.
 	 * @param ctx the parse tree
 	 */
-	void exitCompInterface(MediatorLangParser.CompInterfaceContext ctx);
+	void exitEntityInterface(MediatorLangParser.EntityInterfaceContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#variableSegment}.
 	 * @param ctx the parse tree
@@ -438,6 +448,18 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitBoolValue(MediatorLangParser.BoolValueContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code portVarValue}
+	 * labeled alternative in {@link MediatorLangParser#value}.
+	 * @param ctx the parse tree
+	 */
+	void enterPortVarValue(MediatorLangParser.PortVarValueContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code portVarValue}
+	 * labeled alternative in {@link MediatorLangParser#value}.
+	 * @param ctx the parse tree
+	 */
+	void exitPortVarValue(MediatorLangParser.PortVarValueContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code idValue}
 	 * labeled alternative in {@link MediatorLangParser#value}.
 	 * @param ctx the parse tree
@@ -497,6 +519,18 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDoubleType(MediatorLangParser.DoubleTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code templateType}
+	 * labeled alternative in {@link MediatorLangParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterTemplateType(MediatorLangParser.TemplateTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code templateType}
+	 * labeled alternative in {@link MediatorLangParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitTemplateType(MediatorLangParser.TemplateTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code idType}
 	 * labeled alternative in {@link MediatorLangParser#type}.
@@ -581,18 +615,6 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBoolType(MediatorLangParser.BoolTypeContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code interfaceType}
-	 * labeled alternative in {@link MediatorLangParser#type}.
-	 * @param ctx the parse tree
-	 */
-	void enterInterfaceType(MediatorLangParser.InterfaceTypeContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code interfaceType}
-	 * labeled alternative in {@link MediatorLangParser#type}.
-	 * @param ctx the parse tree
-	 */
-	void exitInterfaceType(MediatorLangParser.InterfaceTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code boundedIntType}
 	 * labeled alternative in {@link MediatorLangParser#type}.

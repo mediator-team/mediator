@@ -7,7 +7,6 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.type.Type;
-import org.fmgroup.mediator.language.type.UtilType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,6 @@ enum PortDirection {
 }
 
 public class PortDeclaration implements RawElement, Declaration {
-
-    public static String [] adjointVariables = {"value", "reqRead", "reqWrite"};
 
     public List<String> names = new ArrayList<>();
     public PortDirection direction;
@@ -63,7 +60,7 @@ public class PortDeclaration implements RawElement, Declaration {
             this.direction = PortDirection.OUT;
         }
 
-        this.type = UtilType.parse(((MediatorLangParser.PortsDeclContext) context).type(), this);
+        this.type = Type.parse(((MediatorLangParser.PortsDeclContext) context).type(), this);
 
         return this;
     }

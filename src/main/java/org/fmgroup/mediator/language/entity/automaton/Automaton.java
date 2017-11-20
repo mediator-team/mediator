@@ -5,7 +5,7 @@ import org.fmgroup.mediator.generator.framework.UtilCode;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.entity.EntityInterface;
 import org.fmgroup.mediator.language.entity.Entity;
-import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
@@ -13,7 +13,7 @@ import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Automaton implements Entity, Scope {
+public class Automaton implements Entity, Scope, Templated {
     private RawElement parent = null;
 
     public Template template = null;
@@ -32,14 +32,15 @@ public class Automaton implements Entity, Scope {
 
         name = ((MediatorLangParser.AutomatonContext) context).name.getText();
 
-        if (((MediatorLangParser.AutomatonContext) context).entityTemplate() != null) {
+        if (((MediatorLangParser.AutomatonContext) context).template() != null) {
             template = new Template();
-            template.parse(((MediatorLangParser.AutomatonContext) context).entityTemplate(), this);
+            template.parse(((MediatorLangParser.AutomatonContext) context).template(), this);
         }
 
         entityInterface = new EntityInterface();
-        entityInterface.parse(((MediatorLangParser.AutomatonContext) context).compInterface(), this);
+        entityInterface.parse(((MediatorLangParser.AutomatonContext) context).entityInterface(), this);
 
+        // TODO rewrite it using localVars.parse(...)
         // step 1. analyze local variables
         for (MediatorLangParser.VariableSegmentContext vsc : automaton.variableSegment()) {
             for (MediatorLangParser.LocalVariableDefContext lvc : vsc.localVariableDef()) {
@@ -50,11 +51,11 @@ public class Automaton implements Entity, Scope {
         // step 2. analyze transitions
         for (MediatorLangParser.TransitionSegmentContext tsc : automaton.transitionSegment()) {
             for (MediatorLangParser.TransitionContext tc : tsc.transition()) {
-                transitions.add(UtilTransition.parse(tc, this));
+                transitions.add(Transition.parse(tc, this));
             }
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class Automaton implements Entity, Scope {
             }
             rel += UtilCode.addIndent("}\n", 1);
         }
-        rel += "}\n";
+        rel += "}";
         return rel;
     }
 
@@ -88,17 +89,6 @@ public class Automaton implements Entity, Scope {
     }
 
     @Override
-    public RawElement clone(RawElement parent) {
-        return null;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
-    }
-
-    @Override
     public EntityInterface getInterface() {
         return entityInterface;
     }
@@ -109,8 +99,8 @@ public class Automaton implements Entity, Scope {
     }
 
     @Override
-    public List<Declarations> getDeclarations() {
-        List<Declarations> result = new ArrayList<>();
+    public List<DeclarationCollection> getDeclarations() {
+        List<DeclarationCollection> result = new ArrayList<>();
 
         if (template != null) result.add(template);
         if (entityInterface != null) result.add(entityInterface);

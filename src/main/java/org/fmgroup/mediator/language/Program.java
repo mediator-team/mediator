@@ -1,7 +1,8 @@
 package org.fmgroup.mediator.language;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.entity.Entity;
+import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
 import org.fmgroup.mediator.language.entity.automaton.Automaton;
@@ -35,6 +36,7 @@ public class Program implements RawElement, Scope {
         for (MediatorLangParser.DependencyContext dc : prog.dependency()) {
             //
         }
+
         // step 2. analyze typedefs
         for (MediatorLangParser.TypedefContext tc : prog.typedef()) {
             TypeDeclaration typedef = (TypeDeclaration) new TypeDeclaration().setParent(this).fromContext(tc);
@@ -57,7 +59,7 @@ public class Program implements RawElement, Scope {
             systems.put(sys.name, sys);
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -108,9 +110,28 @@ public class Program implements RawElement, Scope {
     }
 
     @Override
-    public List<Declarations> getDeclarations() {
-        List<Declarations> result = new ArrayList<>();
+    public List<DeclarationCollection> getDeclarations() {
+        List<DeclarationCollection> result = new ArrayList<>();
         result.add(typedefs);
         return result;
+    }
+
+    public Function getFunction(List<String> libraryPath, String identifier) {
+        if (libraryPath == null || libraryPath.size() == 0) {
+            if (functions.containsKey(identifier)) return functions.get(identifier);
+        } else {
+            return null;
+        }
+        return null;
+    }
+
+    public Entity getEntity(List<String> libraryPath, String identifier) {
+        if (libraryPath == null || libraryPath.size() == 0) {
+            if (automata.containsKey(identifier)) return automata.get(identifier);
+            if (systems.containsKey(identifier)) return systems.get(identifier);
+        } else {
+            return null;
+        }
+        return null;
     }
 }

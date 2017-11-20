@@ -52,6 +52,18 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPortIdentifier(MediatorLangParser.PortIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPortIdentifier(MediatorLangParser.PortIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAssignmentStatement(MediatorLangParser.AssignmentStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -112,13 +124,13 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEntityTemplate(MediatorLangParser.EntityTemplateContext ctx) { }
+	@Override public void enterTemplate(MediatorLangParser.TemplateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEntityTemplate(MediatorLangParser.EntityTemplateContext ctx) { }
+	@Override public void exitTemplate(MediatorLangParser.TemplateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -148,13 +160,13 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFuncInterface(MediatorLangParser.FuncInterfaceContext ctx) { }
+	@Override public void enterFunctionInterface(MediatorLangParser.FunctionInterfaceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFuncInterface(MediatorLangParser.FuncInterfaceContext ctx) { }
+	@Override public void exitFunctionInterface(MediatorLangParser.FunctionInterfaceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -172,13 +184,13 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCompInterface(MediatorLangParser.CompInterfaceContext ctx) { }
+	@Override public void enterEntityInterface(MediatorLangParser.EntityInterfaceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCompInterface(MediatorLangParser.CompInterfaceContext ctx) { }
+	@Override public void exitEntityInterface(MediatorLangParser.EntityInterfaceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -484,6 +496,18 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPortVarValue(MediatorLangParser.PortVarValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPortVarValue(MediatorLangParser.PortVarValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIdValue(MediatorLangParser.IdValueContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -539,6 +563,18 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDoubleType(MediatorLangParser.DoubleTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTemplateType(MediatorLangParser.TemplateTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTemplateType(MediatorLangParser.TemplateTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -623,18 +659,6 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBoolType(MediatorLangParser.BoolTypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterInterfaceType(MediatorLangParser.InterfaceTypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInterfaceType(MediatorLangParser.InterfaceTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -26,5 +26,23 @@ automaton <p1:int, p2:int> test (a, b:in int p1 .. p2) {
     }
     transitions {
 
+        (c >= 0) -> {
+            sync a;
+            c = a.value;
+        }
+
+    }
+    variables {
+        arr3: int;
+    }
+}
+
+system <p3:int> a (a,b :in int p3 .. p3 + 10) {
+    components {
+        d: test<1,3>;
+        e, c: test<1,3>;
+    }
+    connections {
+        test<1,2>(d.a, e.b);
     }
 }

@@ -6,7 +6,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.term.UtilTerm;
 
 
 import java.util.ArrayList;
@@ -26,21 +25,21 @@ public class IteStatement implements Statement {
             throw ValidationException.IncompatibleContextType(this.getClass(), "IteStatementContext", context.toString());
         }
 
-        condition = UtilTerm.parse(((MediatorLangParser.IteStatementContext) context).condition, this);
+        condition = Term.parse(((MediatorLangParser.IteStatementContext) context).condition, this);
         if (((MediatorLangParser.IteStatementContext) context).thenstmt != null) thenStmts.add(
-                UtilStatement.parse(((MediatorLangParser.IteStatementContext) context).thenstmt, this)
+                Statement.parse(((MediatorLangParser.IteStatementContext) context).thenstmt, this)
         );
         if (((MediatorLangParser.IteStatementContext) context).thenstmts != null) {
             for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.IteStatementContext) context).thenstmts.statement()) {
-                thenStmts.add(UtilStatement.parse(sc, this));
+                thenStmts.add(Statement.parse(sc, this));
             }
         }
         if (((MediatorLangParser.IteStatementContext) context).elsestmt != null) elseStmts.add(
-                UtilStatement.parse(((MediatorLangParser.IteStatementContext) context).elsestmt, this)
+                Statement.parse(((MediatorLangParser.IteStatementContext) context).elsestmt, this)
         );
         if (((MediatorLangParser.IteStatementContext) context).elsestmts != null) {
             for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.IteStatementContext) context).elsestmts.statement()) {
-                elseStmts.add(UtilStatement.parse(sc, this));
+                elseStmts.add(Statement.parse(sc, this));
             }
         }
         return this.validate();

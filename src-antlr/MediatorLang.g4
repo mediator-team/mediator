@@ -9,10 +9,12 @@ dependency:
 
 typedef: 'typedef' type 'as' ID (',' ID)* ';';
 
+portIdentifier: (owner=ID '.')? identifier=ID;
+
 statement:
-    (target=term '=')? expr=term ';'                    # assignmentStatement
-    |   'sync' ID (',' ID)*   ';'                       # synchronizingStatement
-    |   'return' term         ';'                       # returnStatement
+    (target=term '=')? expr=term ';'                                        # assignmentStatement
+    |   'sync' portIdentifier (',' portIdentifier)*   ';'                   # synchronizingStatement
+    |   'return' term         ';'                                           # returnStatement
     |   'if' '(' condition=term ')'
         (thenstmt=statement | '{' thenstmts=statements '}')
         ('else' (elsestmt=statement | '{' elsestmts=statements '}'))?       # iteStatement
@@ -22,12 +24,12 @@ statements:
     (statement)*
 ;
 
-entityTemplate: '<' localVariableDef (',' localVariableDef)* '>';
+template: '<' localVariableDef (',' localVariableDef)* '>';
 
 function
 locals [ boolean isNative = false ]
 :
-    ('native' {$isNative = true; })? 'function' entityTemplate? name=ID '(' funcInterface ')' (':' returnType=type)?
+    ('native' {$isNative = true; })? 'function' template? name=ID '(' functionInterface ')' (':' returnType=type)?
     (
         {!$isNative}?
         '{'
@@ -44,13 +46,13 @@ locals [ boolean isNative = false ]
 
 localVariableDef : ID (',' ID) * ':' type;
 
-funcInterface: (localVariableDef (',' localVariableDef) *)? ;
+functionInterface: (localVariableDef (',' localVariableDef) *)? ;
 
 portsDecl:
     ID (',' ID)* ':' direction=('in' | 'out') type
     ;
 
-compInterface:
+entityInterface:
     (portsDecl (',' portsDecl)* )?
     ;
 
@@ -62,13 +64,13 @@ transitionSegment:
 ;
 
 transition:
-    term '->' ( '{' statements '}' | statement )     # transitionSingle
+    term '->' ( '{' statements '}' | statement )        # transitionSingle
     |   'group' '{' transition * '}'                    # transitionGroup
     ;
 
 automaton
 :
-    'automaton' entityTemplate? name=ID '(' compInterface ')' '{'
+    'automaton' template? name=ID '(' entityInterface ')' '{'
         (variableSegment | transitionSegment )*
     '}'
 ;
@@ -78,11 +80,11 @@ internalSegment: 'internals' ID (',' ID)* ';' ;
 connectionSegment: 'connections' '{' (connectionDecl ';')* '}';
 
 componentDecl: ID (',' ID)* ':' type;
-connectionDecl:  type '(' term ')';
+connectionDecl:  type '(' portIdentifier (',' portIdentifier)* ')';
 
 system
 :
-    'system' entityTemplate? name=ID '(' compInterface ')' '{'
+    'system' template? name=ID '(' entityInterface ')' '{'
         (componentSegment | internalSegment | connectionSegment)*
     '}'
 ;

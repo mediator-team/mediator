@@ -19,8 +19,8 @@ public class ElementTerm implements Term {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ElementTermContext", context.toString());
         }
 
-        this.container = UtilTerm.parse(((MediatorLangParser.ElementTermContext) context).container, this);
-        this.key = UtilTerm.parse(((MediatorLangParser.ElementTermContext) context).key, this);
+        this.container = Term.parse(((MediatorLangParser.ElementTermContext) context).container, this);
+        this.key = Term.parse(((MediatorLangParser.ElementTermContext) context).key, this);
 
         return this.validate();
     }

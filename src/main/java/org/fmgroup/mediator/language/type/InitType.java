@@ -5,7 +5,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.term.UtilTerm;
 
 public class InitType implements Type {
 
@@ -25,8 +24,8 @@ public class InitType implements Type {
             throw ValidationException.IncompatibleContextType(this.getClass(), "InitTypeContext", context.toString());
         }
 
-        this.defaultValue = UtilTerm.parse(((MediatorLangParser.InitTypeContext) context).term(), this);
-        this.baseType = UtilType.parse(((MediatorLangParser.InitTypeContext) context).type(), this);
+        this.defaultValue = Term.parse(((MediatorLangParser.InitTypeContext) context).term(), this);
+        this.baseType = Type.parse(((MediatorLangParser.InitTypeContext) context).type(), this);
         return this.validate();
     }
 

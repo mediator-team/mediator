@@ -5,7 +5,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.term.UtilTerm;
 
 public class ListType implements Type {
 
@@ -25,11 +24,11 @@ public class ListType implements Type {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ListTypeContext", context.toString());
         }
 
-        baseType = UtilType.parse(((MediatorLangParser.ListTypeContext) context).type(), this);
+        baseType = Type.parse(((MediatorLangParser.ListTypeContext) context).type(), this);
         if (((MediatorLangParser.ListTypeContext) context).capacity == null) {
             this.capacity = null;
         } else {
-            this.capacity = UtilTerm.parse(((MediatorLangParser.ListTypeContext) context).capacity, this);
+            this.capacity = Term.parse(((MediatorLangParser.ListTypeContext) context).capacity, this);
         }
 
         return this.validate();

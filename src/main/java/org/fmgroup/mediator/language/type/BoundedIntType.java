@@ -5,7 +5,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
-import org.fmgroup.mediator.language.term.UtilTerm;
 
 public class BoundedIntType implements Type {
 
@@ -23,8 +22,8 @@ public class BoundedIntType implements Type {
             throw ValidationException.IncompatibleContextType(this.getClass(), "BoundedIntTypeContext", context.toString());
         }
 
-        lowerBound = UtilTerm.parse(((MediatorLangParser.BoundedIntTypeContext) context).lbound, this);
-        upperBound = UtilTerm.parse(((MediatorLangParser.BoundedIntTypeContext) context).ubound, this);
+        lowerBound = Term.parse(((MediatorLangParser.BoundedIntTypeContext) context).lbound, this);
+        upperBound = Term.parse(((MediatorLangParser.BoundedIntTypeContext) context).ubound, this);
         return this.validate();
     }
 

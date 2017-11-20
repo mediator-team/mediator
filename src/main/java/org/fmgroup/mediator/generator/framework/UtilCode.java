@@ -3,6 +3,8 @@ package org.fmgroup.mediator.generator.framework;
 public class UtilCode {
 
     public static String addIndent(String rawCode, int level) {
+        if (rawCode.equals("")) return "";
+
         String [] lines = rawCode.split("\n");
         String newCode = "";
         String indent = "";

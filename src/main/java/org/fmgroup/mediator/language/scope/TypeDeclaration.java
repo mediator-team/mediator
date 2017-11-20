@@ -6,7 +6,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.Type;
-import org.fmgroup.mediator.language.type.UtilType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class TypeDeclaration implements RawElement, Declaration {
             identifiers.add(tn.getText());
         }
 
-        type = UtilType.parse(((MediatorLangParser.TypedefContext) context).type(), this);
+        type = Type.parse(((MediatorLangParser.TypedefContext) context).type(), this);
 
         return this;
     }

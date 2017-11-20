@@ -65,7 +65,7 @@ public class ArduinoGenerator extends Generator {
                 prog += UtilCode.addIndent(
                         name +
                             " = " +
-                            termGenerate(UtilType.getInitValue(var.type), 0) + ";" + endline,
+                            termGenerate(Type.getInitValue(var.type), 0) + ";" + endline,
                         1
                 );
             }
@@ -242,7 +242,7 @@ public class ArduinoGenerator extends Generator {
             }
             return String.format(
                     "%s(%s)",
-                    termGenerate(((CallTerm) t).callee, t.getPrecedence()),
+                    ((CallTerm) t).callee.toString(),
                     String.join(", ", args)
             );
         }

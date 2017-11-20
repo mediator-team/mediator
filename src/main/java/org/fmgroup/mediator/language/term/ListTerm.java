@@ -8,6 +8,7 @@ import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListTerm implements Term {
 
@@ -30,7 +31,7 @@ public class ListTerm implements Term {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ListTermContext", context.toString());
         }
 
-        Term t = UtilTerm.parse(((MediatorLangParser.ListTermContext) context).term(), this);
+        Term t = Term.parse(((MediatorLangParser.ListTermContext) context).term(), this);
         while (t instanceof TupleTerm) {
             values.add(0, ((TupleTerm) t).right);
             t = ((TupleTerm) t).left;
@@ -42,12 +43,10 @@ public class ListTerm implements Term {
 
     @Override
     public String toString() {
-        String rel = "";
-        for (Term t : this.values) {
-            if (rel.length() > 0) rel += ", ";
-            rel += t.toString();
-        }
-        return "[" + rel + "]";
+        return
+                "[" +
+                this.values.stream().map(Object::toString).collect(Collectors.joining(", "))
+                + "]";
     }
 
     @Override

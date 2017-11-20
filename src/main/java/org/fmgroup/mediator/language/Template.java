@@ -1,11 +1,8 @@
 package org.fmgroup.mediator.language;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.language.MediatorLangParser;
-import org.fmgroup.mediator.language.RawElement;
-import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.scope.Declaration;
-import org.fmgroup.mediator.language.scope.Declarations;
+import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.type.AbstractType;
@@ -14,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Template implements RawElement, Declarations {
+public class Template implements RawElement, DeclarationCollection {
 
     private RawElement parent;
 
@@ -24,11 +21,11 @@ public class Template implements RawElement, Declarations {
 
     @Override
     public RawElement fromContext(ParserRuleContext context) throws ValidationException {
-        if (!(context instanceof MediatorLangParser.EntityTemplateContext)) {
+        if (!(context instanceof MediatorLangParser.TemplateContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "CompTemplateContext", context.toString());
         }
 
-        for (MediatorLangParser.LocalVariableDefContext paramContext : ((MediatorLangParser.EntityTemplateContext) context).localVariableDef()) {
+        for (MediatorLangParser.LocalVariableDefContext paramContext : ((MediatorLangParser.TemplateContext) context).localVariableDef()) {
             VariableDeclaration vardecl = (VariableDeclaration) new VariableDeclaration().parse(paramContext, this);
             if (vardecl.type instanceof AbstractType) {
                 TypeDeclaration typedecl = new TypeDeclaration();
