@@ -1,0 +1,9 @@
+[project]
+name=SmallCar
+
+[library]
+external=/a/b/c:/d/e
+
+[task.task1]
+
+[task.task2]

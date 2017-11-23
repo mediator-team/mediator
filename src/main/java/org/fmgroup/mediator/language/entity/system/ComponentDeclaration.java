@@ -6,7 +6,6 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.scope.Declaration;
-import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.type.TemplateType;
 
 import java.util.ArrayList;
@@ -14,34 +13,44 @@ import java.util.List;
 
 public class ComponentDeclaration implements RawElement, Declaration {
 
-    public RawElement parent = null;
-    public List<String> identifiers = new ArrayList<>();
-    public TemplateType type = null;
+    private RawElement parent = null;
+    private List<String> identifiers = new ArrayList<>();
+    private TemplateType type = null;
 
-    @Override
-    public int size() {
-        return identifiers.size();
+    public TemplateType getType() {
+        return type;
+    }
+
+    public ComponentDeclaration setType(TemplateType type) {
+        this.type = type;
+        type.setParent(this);
+        return this;
     }
 
     @Override
-    public String getIdentifier(int index) {
-        return identifiers.get(index);
+    public List<String> getIdentifiers() {
+        return identifiers;
+    }
+
+    public ComponentDeclaration setIdentifiers(List<String> identifiers) {
+        this.identifiers = identifiers;
+        return this;
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public ComponentDeclaration fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.ComponentDeclContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ComponentDeclContext", context.toString());
         }
 
-        type = (TemplateType) new TemplateType().parse(((MediatorLangParser.ComponentDeclContext) context).type(), this);
-        Scope currScope = getCurrentScope();
+        setParent(parent);
+        setType(
+                new TemplateType()
+                        .fromContext(((MediatorLangParser.ComponentDeclContext) context).type(), this)
+        );
 
         for (TerminalNode name : ((MediatorLangParser.ComponentDeclContext) context).ID()) {
-            if (identifiers.contains(name.getText()) || currScope.existsDeclaration(name.getText())) {
-                throw ValidationException.DumplicatedIdentifier(name.getText(), "symbol");
-            }
-            identifiers.add(name.getText());
+            addIdentifier(name.getText());
         }
 
         return this;
@@ -49,7 +58,7 @@ public class ComponentDeclaration implements RawElement, Declaration {
 
     @Override
     public String toString() {
-        return String.join(", ", identifiers) + ": " + type.toString();
+        return String.join(", ", getIdentifiers()) + ": " + getType().toString();
     }
 
     @Override
@@ -58,7 +67,7 @@ public class ComponentDeclaration implements RawElement, Declaration {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public ComponentDeclaration setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }

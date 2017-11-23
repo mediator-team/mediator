@@ -1,10 +1,11 @@
 package org.fmgroup.mediator.language.type;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.generator.framework.UtilCode;
+import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.term.Term;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,23 +13,31 @@ import java.util.Map;
 public class StructType implements Type {
 
     private RawElement parent;
+    private Map<String, Type> fields = new HashMap<>();
 
-    public Map<String, Type> fields = new HashMap<>();
+    public StructType addField(String name, Type type) throws ValidationException {
+        if (fields.containsKey(name)) throw ValidationException.DumplicatedIdentifier(name, "field name");
+
+        fields.put(name, type);
+        type.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public StructType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.StructTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "StructTypeContext", context.toString());
         }
 
-        for (int i = 0; i < ((MediatorLangParser.StructTypeContext) context).ID().size(); i ++) {
-            fields.put(
+        setParent(parent);
+        for (int i = 0; i < ((MediatorLangParser.StructTypeContext) context).ID().size(); i++) {
+            addField(
                     ((MediatorLangParser.StructTypeContext) context).ID(i).getText(),
                     Type.parse(((MediatorLangParser.StructTypeContext) context).type(i), this)
             );
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -47,30 +56,24 @@ public class StructType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public StructType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public StructType copy(RawElement parent) throws ValidationException {
         StructType nst = new StructType();
         nst.setParent(parent);
         for (String key : this.fields.keySet()) {
-            nst.fields.put(key, (Type) this.fields.get(key).clone(nst));
+            nst.addField(key, this.fields.get(key).copy(nst));
         }
 
         return nst;
     }
 
     @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
     }
 }

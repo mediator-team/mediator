@@ -6,34 +6,46 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.Type;
 
+import java.util.Map;
+
 public class SingleOperatorTerm implements Term {
 
     private RawElement parent;
+    private EnumSingleOperator opr;
+    private Term term;
+
+    public EnumSingleOperator getOpr() {
+        return opr;
+    }
 
     public SingleOperatorTerm setOpr(EnumSingleOperator opr) {
         this.opr = opr;
         return this;
     }
 
-    public EnumSingleOperator opr;
+    public Term getTerm() {
+        return term;
+    }
 
     public SingleOperatorTerm setTerm(Term term) throws ValidationException {
-        this.term = (Term) term.clone(this);
+        this.term = term;
+        term.setParent(this);
         return this;
     }
 
-    public Term term;
-
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public SingleOperatorTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.SingleOprTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "SingleOprContext", context.toString());
         }
 
-        this.opr = EnumSingleOperator.fromString(((MediatorLangParser.SingleOprTermContext) context).opr.getText());
-        this.term = Term.parse(((MediatorLangParser.SingleOprTermContext) context).term(), this);
+        setParent(parent);
+        setOpr(EnumSingleOperator.fromString(
+                ((MediatorLangParser.SingleOprTermContext) context).opr.getText()
+        ));
+        setTerm(Term.parse(((MediatorLangParser.SingleOprTermContext) context).term(), this));
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -51,19 +63,26 @@ public class SingleOperatorTerm implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public SingleOperatorTerm copy(RawElement parent) throws ValidationException {
+
         SingleOperatorTerm nsot = new SingleOperatorTerm();
         nsot.setParent(parent);
-        nsot.opr = this.opr;
-        nsot.term = (Term) this.term.clone(nsot);
+        nsot.setOpr(opr);
+        nsot.setTerm(getTerm().copy(nsot));
 
-        return nsot.validate();
+        return nsot;
+    }
+
+    @Override
+    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setTerm(getTerm().refactor(rewriteMap));
+        return this;
     }
 
     @Override
@@ -74,11 +93,5 @@ public class SingleOperatorTerm implements Term {
     @Override
     public int getPrecedence() {
         return opr.oprLevel;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
     }
 }

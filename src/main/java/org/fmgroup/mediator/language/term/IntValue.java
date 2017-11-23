@@ -7,11 +7,19 @@ import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.IntType;
 import org.fmgroup.mediator.language.type.Type;
 
-public class IntValue implements Term {
+public class IntValue implements Value {
 
     private RawElement parent = null;
+    private int value;
 
-    public int value;
+    public int getValue() {
+        return value;
+    }
+
+    public IntValue setValue(int value) {
+        this.value = value;
+        return this;
+    }
 
     @Override
     public Type getType() {
@@ -24,13 +32,14 @@ public class IntValue implements Term {
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public IntValue fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.IntValueContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "IntValueContext", context.toString());
         }
 
-        this.value = Integer.parseInt(context.getText());
-        return this.validate();
+        setParent(parent);
+        setValue(Integer.parseInt(context.getText()));
+        return this;
     }
 
     @Override
@@ -44,21 +53,14 @@ public class IntValue implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public IntValue setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
-    public IntValue setValue(int value) { this.value = value; return this; }
-
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new IntValue().setValue(this.value).setParent(parent).validate();
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+    public IntValue copy(RawElement parent) throws ValidationException {
+        return new IntValue().setParent(parent)
+                .setValue(this.value);
     }
 }

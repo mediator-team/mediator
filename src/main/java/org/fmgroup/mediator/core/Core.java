@@ -1,5 +1,7 @@
 package org.fmgroup.mediator.core;
 
+import org.fmgroup.mediator.core.project.Project;
+import org.fmgroup.mediator.core.project.ProjectException;
 import org.fmgroup.mediator.core.scheduler.Scheduler;
 import org.fmgroup.mediator.language.Program;
 import org.fmgroup.mediator.language.*;
@@ -9,16 +11,17 @@ import org.fmgroup.mediator.plugins.generators.arduino.ArduinoGeneratorException
 import java.lang.System;
 
 public class Core {
-    public static void main (String args[]) {
+    public static void main (String args[]) throws ProjectException {
         System.out.println("Mediator Tool Alpha.");
+        Project proj = new Project("resources/models/smallcar");
+        Program prog = proj.parseFile("drivers/motor.med");
 
-//        Program prog = UtilLang.ParseFile("resources/models/test/types.med");
+//        System.out.println(prog.toString());
 
-        Program prog2 = UtilLang.ParseFile("resources/models/smallcar/drivers/motor.med");
         try {
             System.out.println(
                     new ArduinoGenerator().generate(
-                            Scheduler.Schedule(prog2.systems.get("testbench"))
+                            Scheduler.Schedule(prog.systems.get("testbench"))
                     )
             );
         }
@@ -27,6 +30,6 @@ public class Core {
         } catch (ValidationException e) {
             e.printStackTrace();
         }
-        return;
+
     }
 }

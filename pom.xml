@@ -15,6 +15,13 @@
             <artifactId>antlr4-runtime</artifactId>
             <version>4.7</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.ini4j/ini4j -->
+        <dependency>
+            <groupId>org.ini4j</groupId>
+            <artifactId>ini4j</artifactId>
+            <version>0.5.4</version>
+        </dependency>
     </dependencies>
 
     <properties>

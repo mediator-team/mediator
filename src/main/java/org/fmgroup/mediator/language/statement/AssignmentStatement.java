@@ -1,34 +1,63 @@
 package org.fmgroup.mediator.language.statement;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.language.*;
+import org.fmgroup.mediator.language.MediatorLangParser;
+import org.fmgroup.mediator.language.RawElement;
+import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
+
+import java.util.Map;
 
 
 public class AssignmentStatement implements Statement {
 
-    public Term expr;
-    public Term target;
+    private Term expr;
+    private Term target;
     private RawElement parent;
 
+    public Term getTarget() {
+        return target;
+    }
+
+    public AssignmentStatement setTarget(Term target) throws ValidationException {
+        this.target = target;
+        target.setParent(this);
+        return this;
+    }
+
+    public Term getExpr() {
+        return expr;
+    }
+
+    public AssignmentStatement setExpr(Term expr) throws ValidationException {
+        this.expr = expr;
+        expr.setParent(this);
+        return this;
+    }
+
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public AssignmentStatement fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.AssignmentStatementContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "AssignmentStatementContext", context.toString());
         }
 
-        expr = Term.parse(
-                ((MediatorLangParser.AssignmentStatementContext) context).expr,
-                this
+        setParent(parent);
+        setExpr(
+                Term.parse(
+                        ((MediatorLangParser.AssignmentStatementContext) context).expr,
+                        this
+                )
         );
 
         if (((MediatorLangParser.AssignmentStatementContext) context).target != null)
-            target = Term.parse(
-                    ((MediatorLangParser.AssignmentStatementContext) context).target,
-                    this
+            setTarget(
+                    Term.parse(
+                            ((MediatorLangParser.AssignmentStatementContext) context).target,
+                            this
+                    )
             );
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -38,23 +67,11 @@ public class AssignmentStatement implements Statement {
         else return expr.toString() + ";";
     }
 
-    public AssignmentStatement setExpr(Term expr) throws ValidationException {
-        this.expr = expr;
-        expr.setParent(this);
-        return this;
-    }
-
-    public AssignmentStatement setTarget(Term target) throws ValidationException {
-        this.target = target;
-        target.setParent(this);
-        return this;
-    }
-
     @Override
     public boolean equals(Object obj) {
         return
                 this.toString().equals(obj.toString()) &&
-                obj instanceof Statement;
+                        obj instanceof Statement;
     }
 
     @Override
@@ -63,29 +80,28 @@ public class AssignmentStatement implements Statement {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public RawElement copy(RawElement parent) throws ValidationException {
         AssignmentStatement nas = new AssignmentStatement();
         nas.setParent(parent);
-        nas.expr = (Term) this.expr.clone(nas);
-        nas.target = this.target == null ? null : (Term) this.target.clone(nas);
-        return nas.validate();
+
+        nas.setExpr(getExpr().copy(nas));
+        if (target != null)
+            nas.setTarget(this.getTarget().copy(nas));
+
+        return nas;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-
-        /*
-        An assignment statement is valid iff.
-        TODO 1. its target is assignable
-        2. it belongs to an automaton or another statement (e.g. an ite statement)
-        3. both term is valid (assured by their own validate function
-        */
+    public Statement refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setExpr(getExpr().refactor(rewriteMap));
+        if (getTarget() != null)
+            setTarget(getTarget().refactor(rewriteMap));
 
         return this;
     }

@@ -13,39 +13,40 @@ import java.util.List;
 public class VariableDeclaration implements RawElement, Declaration {
 
     private RawElement parent = null;
-    public List<String> identifiers = new ArrayList<>();
-    public Type type = null;
+    private List<String> identifiers = new ArrayList<>();
+    private Type type = null;
+
+    public Type getType() {
+        return type;
+    }
+
+    public VariableDeclaration setType(Type type) {
+        this.type = type;
+        type.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public VariableDeclaration fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.LocalVariableDefContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "LocalVariableDefContext", context.toString());
         }
 
-        Scope currentScope = getCurrentScope();
-
-        MediatorLangParser.LocalVariableDefContext vardef = (MediatorLangParser.LocalVariableDefContext) context;
-        for (TerminalNode tn : vardef.ID()) {
-            if (identifiers.contains(tn.getText()) || currentScope.existsDeclaration(tn.getText())) {
-                throw ValidationException.DumplicatedIdentifier(tn.getText(), "symbol");
-            }
-
-            identifiers.add(tn.getText());
+        setParent(parent);
+        for (TerminalNode tn : ((MediatorLangParser.LocalVariableDefContext) context).ID()) {
+            addIdentifier(tn.getText());
         }
-        type = Type.parse(vardef.type(), this);
 
+        setType(Type.parse(((MediatorLangParser.LocalVariableDefContext) context).type(), this));
         return this;
     }
 
     @Override
     public String toString() {
-        String str = "";
-        for (int i = 0; i < identifiers.size(); i ++) str += (i == 0 ? "" : ", ") + identifiers.get(i);
-
-        if (identifiers.size() > 0) {
-            str += " : " + type.toString();
-        }
-        return str;
+        if (identifiers.size() == 0) return "";
+        else
+            return
+                    String.join(", ", getIdentifiers()) + ": " + type.toString();
     }
 
     @Override
@@ -54,23 +55,20 @@ public class VariableDeclaration implements RawElement, Declaration {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public VariableDeclaration setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        VariableDeclaration nvd = (VariableDeclaration) new VariableDeclaration().setParent(parent);
-        nvd.identifiers = new ArrayList<>(this.identifiers);
-        nvd.type = (Type) this.type.clone(nvd);
+    public VariableDeclaration copy(RawElement parent) throws ValidationException {
+        VariableDeclaration nvd = new VariableDeclaration();
+
+        nvd.setParent(parent);
+        nvd.setIdentifiers(identifiers);
+        nvd.setType(this.type.copy(nvd));
 
         return nvd;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        return this;
     }
 
     @Override
@@ -79,7 +77,12 @@ public class VariableDeclaration implements RawElement, Declaration {
     }
 
     @Override
-    public String getIdentifier(int index) {
-        return identifiers.get(index);
+    public List<String> getIdentifiers() {
+        return identifiers;
+    }
+
+    public VariableDeclaration setIdentifiers(List<String> identifiers) {
+        this.identifiers = identifiers;
+        return this;
     }
 }

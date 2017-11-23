@@ -6,12 +6,44 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.Type;
 
+import java.util.Map;
+
 public class IteTerm implements Term {
 
-    public RawElement parent = null;
-    public Term condition = null;
-    public Term thenTerm = null;
-    public Term elseTerm = null;
+    private RawElement parent = null;
+    private Term condition = null;
+    private Term thenTerm = null;
+    private Term elseTerm = null;
+
+    public Term getCondition() {
+        return condition;
+    }
+
+    public IteTerm setCondition(Term cond) throws ValidationException {
+        this.condition = cond;
+        cond.setParent(this);
+        return this;
+    }
+
+    public Term getThenTerm() {
+        return thenTerm;
+    }
+
+    public IteTerm setThenTerm(Term thenTerm) throws ValidationException {
+        this.thenTerm = thenTerm;
+        thenTerm.setParent(this);
+        return this;
+    }
+
+    public Term getElseTerm() {
+        return elseTerm;
+    }
+
+    public IteTerm setElseTerm(Term elseTerm) throws ValidationException {
+        this.elseTerm = elseTerm;
+        elseTerm.setParent(this);
+        return this;
+    }
 
     @Override
     public Type getType() {
@@ -24,16 +56,17 @@ public class IteTerm implements Term {
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public IteTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.IteTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "IteTermContext", context.toString());
         }
 
-        this.condition = Term.parse(((MediatorLangParser.IteTermContext) context).condition, this);
-        this.thenTerm = Term.parse(((MediatorLangParser.IteTermContext) context).ifTrue, this);
-        this.elseTerm = Term.parse(((MediatorLangParser.IteTermContext) context).ifFalse, this);
+        setParent(parent);
+        setCondition(Term.parse(((MediatorLangParser.IteTermContext) context).condition, this));
+        setCondition(Term.parse(((MediatorLangParser.IteTermContext) context).ifTrue, this));
+        setElseTerm(Term.parse(((MediatorLangParser.IteTermContext) context).ifFalse, this));
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -55,36 +88,25 @@ public class IteTerm implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public IteTerm setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return ((IteTerm) new IteTerm().setParent(parent))
+    public IteTerm copy(RawElement parent) throws ValidationException {
+        return new IteTerm().setParent(parent)
                 .setCondition(this.condition)
                 .setThenTerm(this.thenTerm)
                 .setElseTerm(this.elseTerm);
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        return this;
-    }
+    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setCondition(getCondition().refactor(rewriteMap));
+        setThenTerm(getThenTerm().refactor(rewriteMap));
+        setElseTerm(getElseTerm().refactor(rewriteMap));
 
-    public IteTerm setCondition(Term cond) throws ValidationException {
-        this.condition = (Term) cond.clone(this);
-        return this;
-    }
-
-    public IteTerm setThenTerm(Term thenTerm) throws ValidationException {
-        this.thenTerm = (Term) thenTerm.clone(this);
-        return this;
-    }
-
-    public IteTerm setElseTerm(Term elseTerm) throws ValidationException {
-        this.elseTerm = (Term) elseTerm.clone(this);
         return this;
     }
 }

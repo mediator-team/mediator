@@ -3,32 +3,95 @@ package org.fmgroup.mediator.language.type;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.fmgroup.mediator.language.*;
-import org.fmgroup.mediator.language.Program;
-import org.fmgroup.mediator.language.Template;
 import org.fmgroup.mediator.language.term.CallTerm;
 import org.fmgroup.mediator.language.term.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TemplateType implements Type {
 
     private RawElement parent;
 
-    public List<String> libraryPath;
-    public String identifier;
-    public Templated provider = null;
-    public List<RawElement> params = new ArrayList<>();
+    private List<String> libraryPath;
+    private String identifier;
+    private Templated provider = null;
+    private List<RawElement> params = new ArrayList<>();
+
+    public List<String> getLibraryPath() {
+        return libraryPath;
+    }
+
+    public TemplateType setLibraryPath(List<String> libraryPath) {
+        this.libraryPath = libraryPath;
+        return this;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public TemplateType setIdentifier(String identifier) throws ValidationException {
+        this.identifier = identifier;
+
+        // locate the reference
+        Program prog = RawElement.getRoot(this);
+        Template template = null;
+        if (libraryPath.size() > 0) {
+            // TODO look it up in the dependencies
+            throw ValidationException.UnderDevelopment();
+        } else {
+
+            if (parent instanceof CallTerm) {
+                provider = prog.getFunction(libraryPath, identifier);
+                if (provider == null) throw ValidationException.UnknownIdentifier(identifier, "function");
+            } else {
+                provider = prog.getEntity(libraryPath, identifier);
+                if (provider == null) throw ValidationException.UnknownIdentifier(identifier, "entity");
+            }
+
+            template = provider.getTemplate();
+        }
+
+        if (provider == null) {
+            throw ValidationException.UnknownIdentifier(toString(), "Interface");
+        }
+
+        // validate the reference
+        if (params.size() != (template == null ? 0 : template.getDeclarationList().size())) {
+            throw ValidationException.FromMessage("Number of params mismatched.");
+        }
+
+        return this;
+    }
+
+    public List<RawElement> getParams() {
+        return params;
+    }
+
+    public TemplateType addParam(RawElement param) {
+        params.add(param);
+        param.setParent(this);
+        return this;
+    }
+
+    public TemplateType setParams(List<RawElement> params) {
+        this.params = new ArrayList<>();
+        params.forEach(this::addParam);
+        return this;
+    }
+
+    public Templated getProvider() {
+        return provider;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
-        if (context instanceof MediatorLangParser.TemplateTypeContext) {
-            identifier = ((MediatorLangParser.TemplateTypeContext) context).scopedID().identifier.getText();
-            libraryPath = ((MediatorLangParser.TemplateTypeContext) context).scopedID().scopes.stream()
-                    .map(Token::getText)
-                    .collect(Collectors.toList());
+    public TemplateType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
+        setParent(parent);
 
+        if (context instanceof MediatorLangParser.TemplateTypeContext) {
             for (MediatorLangParser.TypeorvalueContext tov : ((MediatorLangParser.TemplateTypeContext) context).typeorvalue()) {
                 if (tov.type() == null) {
                     // it is a value
@@ -37,14 +100,19 @@ public class TemplateType implements Type {
                     params.add(Type.parse(tov.type(), this));
                 }
             }
-        }
-        else if (context instanceof MediatorLangParser.IdTypeContext) {
-            identifier = ((MediatorLangParser.IdTypeContext) context).scopedID().identifier.getText();
-            libraryPath = ((MediatorLangParser.IdTypeContext) context).scopedID().scopes.stream()
+
+            setLibraryPath(((MediatorLangParser.TemplateTypeContext) context).scopedID().scopes.stream()
                     .map(Token::getText)
-                    .collect(Collectors.toList());
-        }
-        else {
+                    .collect(Collectors.toList()));
+
+            setIdentifier(((MediatorLangParser.TemplateTypeContext) context).scopedID().identifier.getText());
+        } else if (context instanceof MediatorLangParser.IdTypeContext) {
+            setLibraryPath(((MediatorLangParser.IdTypeContext) context).scopedID().scopes.stream()
+                    .map(Token::getText)
+                    .collect(Collectors.toList()));
+
+            setIdentifier(((MediatorLangParser.IdTypeContext) context).scopedID().identifier.getText());
+        } else {
             throw ValidationException.IncompatibleContextType(
                     this.getClass(),
                     "TemplateTypeContext / IdTypeContext",
@@ -80,62 +148,28 @@ public class TemplateType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public TemplateType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public TemplateType copy(RawElement parent) throws ValidationException {
         TemplateType nit = new TemplateType();
         nit.setParent(parent);
-        nit.identifier = identifier;
-        nit.libraryPath = new ArrayList<>(libraryPath);
+
         for (RawElement elem : this.params) {
-            nit.params.add(elem.clone(nit));
+            nit.addParam(elem.copy(nit));
         }
 
-        return nit.validate();
+        nit.setLibraryPath(getLibraryPath());
+        nit.setIdentifier(getIdentifier());
+
+        return nit;
     }
 
     @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-
-        // locate the reference
-        Program prog = UtilLang.getRoot(this);
-        Template template = null;
-        if (libraryPath.size() > 0) {
-            // TODO look it up in the dependencies
-            throw ValidationException.UnderDevelopment();
-        } else {
-
-            if (parent instanceof CallTerm) {
-                provider = prog.getFunction(libraryPath, identifier);
-                if (provider == null) throw ValidationException.UnknownIdentifier(identifier, "function");
-            } else {
-                provider = (Templated) prog.getEntity(libraryPath, identifier);
-                if (provider == null) throw ValidationException.UnknownIdentifier(identifier, "entity");
-            }
-
-            template = provider.getTemplate();
-        }
-
-        if (provider == null) {
-            throw ValidationException.UnknownIdentifier(toString(), "Interface");
-        }
-
-        // validate the reference
-        if (params.size() != (template == null ? 0 : template.params.size())) {
-            throw ValidationException.FromMessage("Number of params mismatched.");
-        }
-
-        // TODO type should also match
-
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
     }
 }

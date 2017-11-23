@@ -1,7 +1,7 @@
 package org.fmgroup.mediator.language.entity.automaton;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.generator.framework.UtilCode;
+import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
@@ -11,31 +11,74 @@ import org.fmgroup.mediator.language.term.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TransitionSingle implements Transition {
 
     private RawElement parent;
+    private Term guard;
+    private List<Statement> statements = new ArrayList<>();
+    private boolean isInternal = true;
 
-    public Term guard;
-    public List<Statement> statements = new ArrayList<>();
-    public boolean isInternal = true;
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public TransitionSingle setStatements(List<Statement> statements) {
+        this.statements = new ArrayList<>();
+        statements.forEach(this::addStatement);
+        return this;
+    }
+
+    public int size() {
+        return statements.size();
+    }
+
+    public Statement getStatement(int i) {
+        return statements.get(i);
+    }
+
+    public TransitionSingle addStatement(Statement statement) {
+        this.statements.add(statement);
+        statement.setParent(this);
+        if (statement instanceof SynchronizingStatement) isInternal = false;
+
+        return this;
+    }
+
+    public boolean isInternal() {
+        return isInternal;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public TransitionSingle fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.TransitionSingleContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "TransitionSingleContext", context.toString());
         }
 
-        this.guard = Term.parse(((MediatorLangParser.TransitionSingleContext) context).term(), this);
+        setParent(parent);
+        setGuard(Term.parse(((MediatorLangParser.TransitionSingleContext) context).term(), this));
 
+        /**
+         * a single transition may have two form:
+         * 1. guard -> stmt;
+         * 2. guard -> {
+         *        stmt1;
+         *        stmt2;
+         *        ...
+         *    }
+         *
+         * in these different cases, the assigned fields in the context are different, plz refer to the antlr source file
+         */
         if (((MediatorLangParser.TransitionSingleContext) context).statement() != null) {
-            this.statements.add(Statement.parse(((MediatorLangParser.TransitionSingleContext) context).statement(), this));
+            addStatement(Statement.parse(((MediatorLangParser.TransitionSingleContext) context).statement(), this));
         } else {
             for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.TransitionSingleContext) context).statements().statement()) {
-                this.statements.add(Statement.parse(sc, this));
+                addStatement(Statement.parse(sc, this));
             }
         }
-        return this.validate();
+
+        return this;
     }
 
     @Override
@@ -59,35 +102,43 @@ public class TransitionSingle implements Transition {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public TransitionSingle setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public TransitionSingle copy(RawElement parent) throws ValidationException {
         TransitionSingle nt = new TransitionSingle();
         nt.setParent(parent);
-        nt.isInternal = this.isInternal;
-        nt.guard = (Term) this.guard.clone(nt);
+        nt.setGuard(this.guard.copy(nt));
         for (Statement st : this.statements) {
-            nt.statements.add((Statement) st.clone(nt));
+            nt.addStatement((Statement) st.copy(nt));
         }
         return nt;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO finish it
+    public Term getGuard() {
+        return this.guard;
+    }
 
-        for (Statement st : statements) {
-            if (st instanceof SynchronizingStatement) this.isInternal = false;
-        }
+    public TransitionSingle setGuard(Term guard) throws ValidationException {
+        this.guard = guard;
+        guard.setParent(this);
         return this;
     }
 
     @Override
-    public Term getGuard() {
-        return this.guard;
+    public Transition refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
+        this.parent = parent;
+        setGuard(getGuard().refactor(rewriteMap));
+        List<Statement> newStatements = new ArrayList<>();
+        for (Statement s : getStatements()) {
+            newStatements.add(s.refactor(rewriteMap));
+        }
+
+        setStatements(newStatements);
+        return this;
     }
 }

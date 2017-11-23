@@ -3,19 +3,29 @@ package org.fmgroup.mediator.language.type;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.term.BoolValue;
+import org.fmgroup.mediator.language.term.Term;
 
-public class BoolType implements Type, RawElement {
+import java.util.Map;
+
+public class BoolType implements Type {
 
     private RawElement parent = null;
 
     @Override
-    public String getName() {
-        return "bool";
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        return null;
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
-        return this.validate();
+    public BoolType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
+        setParent(parent);
+        return this;
+    }
+
+    @Override
+    public Term getInitValue() throws ValidationException {
+        return new BoolValue().setValue(false);
     }
 
     @Override
@@ -29,19 +39,13 @@ public class BoolType implements Type, RawElement {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public BoolType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new BoolType().setParent(parent).validate();
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+    public BoolType copy(RawElement parent) throws ValidationException {
+        return new BoolType().setParent(parent);
     }
 }

@@ -5,12 +5,16 @@ import org.fmgroup.mediator.language.RawElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface DeclarationCollection extends RawElement {
-    List<Declaration> getDeclarationList();
+public interface DeclarationCollection<T extends Declaration> extends RawElement {
+    List<T> getDeclarationList();
+
+    DeclarationCollection<T> setDeclarationList(List<T> declarationList);
+
+    DeclarationCollection<T> addDeclaration(T declaration);
 
     /**
      * getDeclaration(i) returns the declaration where ith argument belongs, e.g. in
-     *
+     * <p>
      * ```
      * function f(a,b:int, c:bool) { ... }
      * ```
@@ -20,10 +24,10 @@ public interface DeclarationCollection extends RawElement {
      * @param index
      * @return the declaration where ith argument belongs
      */
-    default Declaration getDeclaration(int index) {
-        List<Declaration> declarations = this.getDeclarationList();
+    default T getDeclaration(int index) {
+        List<T> declarations = this.getDeclarationList();
         int offset = index;
-        for (Declaration declaration : declarations) {
+        for (T declaration : declarations) {
             if (declaration.size() > index) return declaration;
             else index -= declaration.size();
         }
@@ -44,9 +48,9 @@ public interface DeclarationCollection extends RawElement {
     }
 
     default String getDeclarationIdentifier(int index) {
-        List<Declaration> declarations = this.getDeclarationList();
+        List<T> declarations = this.getDeclarationList();
         int offset = index;
-        for (Declaration declaration : declarations) {
+        for (T declaration : declarations) {
             if (declaration.size() > index) return declaration.getIdentifier(index);
             else index -= declaration.size();
         }
@@ -54,8 +58,13 @@ public interface DeclarationCollection extends RawElement {
     }
 
     default int getDeclarationIndex(String identifier) {
-        for (int i = 0; i < getDeclarationList().size(); i ++) {
-            if (getDeclarationIdentifier(i).equals(identifier))
+        List<String> identifiers = getDeclarationList()
+                .stream()
+                .map(Declaration::getIdentifiers)
+                .flatMap(List::stream).collect(Collectors.toList());
+
+        for (int i = 0; i < identifiers.size(); i++) {
+            if (identifiers.get(i).equals(identifier))
                 return i;
         }
         return -1;

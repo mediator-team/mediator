@@ -4,36 +4,51 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.term.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UnionType implements Type {
 
     private RawElement parent = null;
     private List<Type> baseTypes = new ArrayList<>();
 
-    @Override
-    public String getName() {
-        return "union";
+    public List<Type> getBaseTypes() {
+        return baseTypes;
+    }
+
+    public UnionType setBaseTypes(List<Type> baseTypes) {
+        this.baseTypes = new ArrayList<>();
+        baseTypes.forEach(this::addBaseType);
+        return this;
+    }
+
+    public UnionType addBaseType(Type baseType) {
+        this.baseTypes.add(baseType);
+        baseType.setParent(this);
+        return this;
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public UnionType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.UnionTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "UnionTypeContext", context.toString());
         }
 
+        setParent(parent);
         for (MediatorLangParser.TypeContext baseType : ((MediatorLangParser.UnionTypeContext) context).type()) {
-            baseTypes.add(Type.parse(baseType, this));
+            addBaseType(Type.parse(baseType, this));
         }
-        return this.validate();
+
+        return this;
     }
 
     @Override
     public String toString() {
         String str = "";
-        for (int i = 0; i < baseTypes.size(); i ++) {
+        for (int i = 0; i < baseTypes.size(); i++) {
             if (i > 0) str += "| ";
             str += baseTypes.get(i).toString();
         }
@@ -46,25 +61,24 @@ public class UnionType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public UnionType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public UnionType copy(RawElement parent) throws ValidationException {
         UnionType nut = new UnionType();
         nut.setParent(parent);
-        for (Type t : this.baseTypes) {
-            nut.baseTypes.add((Type) t.clone(nut));
+        for (Type t : getBaseTypes()) {
+            nut.addBaseType(t.copy(nut));
         }
 
         return nut;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
     }
 }

@@ -7,39 +7,60 @@ import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.PortIdentifier;
 
 
-public class PortVariableValue implements RawElement, Term {
+public class PortVariableValue implements RawElement, Value {
 
-    public RawElement parent;
-    public PortIdentifier port;
-    public PortVariableType type;
+    private RawElement parent;
+    private PortIdentifier portIdentifier;
+    private PortVariableType portVariableType;
+
+    public PortIdentifier getPortIdentifier() {
+        return portIdentifier;
+    }
+
+    public PortVariableValue setPortIdentifier(PortIdentifier portIdentifier) {
+        this.portIdentifier = portIdentifier;
+        portIdentifier.setParent(this);
+        return this;
+    }
+
+    public PortVariableType getPortVariableType() {
+        return portVariableType;
+    }
+
+    public PortVariableValue setPortVariableType(PortVariableType portVariableType) {
+        this.portVariableType = portVariableType;
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public PortVariableValue fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.PortVarValueContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "PortVarValueContext", context.toString());
         }
 
-        port = (PortIdentifier) new PortIdentifier().parse(((MediatorLangParser.PortVarValueContext) context).scopedID(), this);
-        type = PortVariableType.get(
+        setParent(parent);
+        setPortIdentifier(new PortIdentifier().fromContext(((MediatorLangParser.PortVarValueContext) context).scopedID(), this));
+        setPortVariableType(PortVariableType.fromString(
                 ((MediatorLangParser.PortVarValueContext) context).PORTVAR_SUFFIX().getText()
-        );
+        ));
 
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public PortVariableValue copy(RawElement parent) throws ValidationException {
         PortVariableValue npv = new PortVariableValue();
-        npv.parent = this.parent;
-        npv.type = this.type;
-        npv.port = (PortIdentifier) this.port.clone(npv);
 
-        return npv.validate();
+        npv.setParent(parent);
+        npv.setPortVariableType(portVariableType);
+        npv.setPortIdentifier(getPortIdentifier().copy(npv));
+
+        return npv;
     }
 
     @Override
     public String toString() {
-        return port.toString() + "." + type.toString();
+        return portIdentifier.toString() + "." + portVariableType.toString();
     }
 
     @Override
@@ -48,7 +69,7 @@ public class PortVariableValue implements RawElement, Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public PortVariableValue setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }

@@ -1,7 +1,7 @@
 package org.fmgroup.mediator.language.function;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.generator.framework.UtilCode;
+import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
@@ -15,48 +15,105 @@ import java.util.List;
 
 public class Function implements RawElement, Scope, Templated {
 
-    public RawElement parent = null;
-    public String name;
+    private RawElement parent = null;
+    private String name;
+    private Template template = null;
+    private FuncInterface funcInterface = null;
+    private VariableDeclarationCollection variables;
+    private List<Statement> statements = new ArrayList<>();
+    private Type returnType = null;
+    private boolean isNative = false;
 
-    public Template template = null;
-    public FuncInterface funcInterface = null;
-    public VariableDeclarationCollection variables = new VariableDeclarationCollection();
-    public List<Statement> statements = new ArrayList<>();
-    public Type returnType = null;
+    public String getName() {
+        return name;
+    }
 
-    public boolean isNative = false;
+    public Function setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public FuncInterface getFuncInterface() {
+        return funcInterface;
+    }
+
+    public Function setFuncInterface(FuncInterface funcInterface) {
+        this.funcInterface = funcInterface;
+        funcInterface.setParent(this);
+        return this;
+    }
+
+    public VariableDeclarationCollection getVariables() {
+        return variables;
+    }
+
+    public Function setVariables(VariableDeclarationCollection variables) {
+        this.variables = variables;
+        variables.setParent(this);
+        return this;
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public Function setStatements(List<Statement> statements) {
+        this.statements = new ArrayList<>();
+        statements.forEach(this::addStatement);
+        return this;
+    }
+
+    public Function addStatement(Statement statement) {
+        this.statements.add(statement);
+        statement.setParent(this);
+        return this;
+    }
+
+    public Type getReturnType() {
+        return returnType;
+    }
+
+    public Function setReturnType(Type returnType) {
+        this.returnType = returnType;
+        if (returnType != null)
+            returnType.setParent(this);
+        return this;
+    }
+
+    public boolean isNative() {
+        return isNative;
+    }
+
+    public Function setNative(boolean aNative) {
+        isNative = aNative;
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public Function fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.FunctionContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "FunctionContext", context.toString());
         }
 
-        isNative = ((MediatorLangParser.FunctionContext) context).isNative;
-        name = ((MediatorLangParser.FunctionContext) context).name.getText();
+        setParent(parent);
 
-        if (((MediatorLangParser.FunctionContext) context).template() != null) {
-            template = new Template();
-            template.parse(
-                    ((MediatorLangParser.FunctionContext) context).template(),
-                    this
-            );
-        }
+        setNative(((MediatorLangParser.FunctionContext) context).isNative);
+        setName(((MediatorLangParser.FunctionContext) context).name.getText());
 
-        if (((MediatorLangParser.FunctionContext) context).returnType != null) {
-            returnType = Type.parse(((MediatorLangParser.FunctionContext) context).returnType, this);
-        }
+        setTemplate(new Template().fromContext(((MediatorLangParser.FunctionContext) context).template(), this));
+        setFuncInterface(new FuncInterface().fromContext(((MediatorLangParser.FunctionContext) context).functionInterface(), this));
 
-        funcInterface = new FuncInterface();
-        funcInterface.parse(((MediatorLangParser.FunctionContext) context).functionInterface(), this);
+        setReturnType(Type.parse(((MediatorLangParser.FunctionContext) context).returnType, this));
 
+        if (!isNative) {
+            setVariables(new VariableDeclarationCollection().setParent(this));
+            for (MediatorLangParser.LocalVariableDefContext lvd : ((MediatorLangParser.FunctionContext) context).localVariableDef()) {
+                getVariables().addDeclaration(new VariableDeclaration().fromContext(lvd, this));
+            }
 
-        for (MediatorLangParser.LocalVariableDefContext lvd : ((MediatorLangParser.FunctionContext) context).localVariableDef()) {
-            variables.vardecls.add((VariableDeclaration) new VariableDeclaration().parse(lvd, this));
-        }
-
-        for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.FunctionContext) context).statement()) {
-            statements.add(Statement.parse(sc, this));
+            for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.FunctionContext) context).statement()) {
+                addStatement(Statement.parse(sc, this));
+            }
         }
 
         return this;
@@ -64,7 +121,7 @@ public class Function implements RawElement, Scope, Templated {
 
     @Override
     public String toString() {
-        String template = this.template == null? "" : this.template.toString();
+        String template = this.template == null ? "" : this.template.toString();
         if (template.length() > 0) template = "<" + template + "> ";
 
         String rel = String.format(
@@ -98,19 +155,26 @@ public class Function implements RawElement, Scope, Templated {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public Function setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) {
-        return null;
-    }
+    public Function copy(RawElement parent) throws ValidationException {
+        Function nfunc = new Function();
 
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+        nfunc.setParent(parent);
+        nfunc.setName(getName());
+        nfunc.setTemplate(getTemplate().copy(nfunc));
+        nfunc.setFuncInterface(getFuncInterface().copy(nfunc));
+        nfunc.setReturnType(getReturnType().copy(nfunc));
+
+        for (Statement stmt : getStatements()) {
+            nfunc.addStatement((Statement) stmt.copy(nfunc));
+        }
+
+        return nfunc;
     }
 
     @Override
@@ -129,5 +193,10 @@ public class Function implements RawElement, Scope, Templated {
     @Override
     public Template getTemplate() {
         return this.template;
+    }
+
+    public Function setTemplate(Template template) {
+        this.template = template;
+        return this;
     }
 }

@@ -6,23 +6,26 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.Type;
 
+import java.util.Map;
+
 public class ElementTerm implements Term {
 
     private RawElement parent;
 
-    public Term container;
-    public Term key;
+    private Term container;
+    private Term key;
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public ElementTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.ElementTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ElementTermContext", context.toString());
         }
 
-        this.container = Term.parse(((MediatorLangParser.ElementTermContext) context).container, this);
-        this.key = Term.parse(((MediatorLangParser.ElementTermContext) context).key, this);
+        setParent(parent);
+        setContainer(Term.parse(((MediatorLangParser.ElementTermContext) context).container, this));
+        setKey(Term.parse(((MediatorLangParser.ElementTermContext) context).key, this));
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -40,19 +43,46 @@ public class ElementTerm implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
+    public Term getContainer() {
+        return container;
+    }
+
+    public ElementTerm setContainer(Term container) {
+        this.container = container;
+        container.setParent(this);
+        return this;
+    }
+
+    public Term getKey() {
+        return key;
+    }
+
+    public ElementTerm setKey(Term key) {
+        this.key = key;
+        key.setParent(this);
+        return this;
+    }
+
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public ElementTerm copy(RawElement parent) throws ValidationException {
         ElementTerm net = new ElementTerm();
         net.setParent(parent);
-        net.container = (Term) this.container.clone(net);
-        net.key = (Term) this.key.clone(net);
+        net.setContainer(this.container.copy(net));
+        net.setKey(this.key.copy(net));
 
-        return net.validate();
+        return net;
+    }
+
+    @Override
+    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setContainer(getContainer().refactor(rewriteMap));
+        setKey(getKey().refactor(rewriteMap));
+        return this;
     }
 
     @Override
@@ -63,11 +93,5 @@ public class ElementTerm implements Term {
     @Override
     public int getPrecedence() {
         return 13;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
     }
 }

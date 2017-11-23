@@ -5,18 +5,16 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.DoubleType;
-import org.fmgroup.mediator.language.type.IntType;
 import org.fmgroup.mediator.language.type.Type;
 
-public class DoubleValue implements Term {
+public class DoubleValue implements Value {
 
     private RawElement parent = null;
-
-    public double value;
+    private double value;
 
     @Override
     public Type getType() {
-        return new DoubleType();
+        return (Type) new DoubleType().setParent(parent);
     }
 
     @Override
@@ -25,13 +23,13 @@ public class DoubleValue implements Term {
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public DoubleValue fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.DoubleValueContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "DoubleValueContext", context.toString());
         }
 
-        this.value = Double.parseDouble(context.getText());
-        return this.validate();
+        setValue(Double.parseDouble(context.getText()));
+        return this;
     }
 
     @Override
@@ -45,21 +43,24 @@ public class DoubleValue implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public DoubleValue setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
-    public DoubleValue setValue(double value) { this.value = value; return this; }
+    public double getValue() {
+        return value;
+    }
 
-    @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new DoubleValue().setValue(this.value).setParent(parent).validate();
+    public DoubleValue setValue(double value) {
+        this.value = value;
+        return this;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+    public DoubleValue copy(RawElement parent) throws ValidationException {
+        return new DoubleValue()
+                .setParent(parent)
+                .setValue(this.value);
     }
 }

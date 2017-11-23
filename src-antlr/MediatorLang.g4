@@ -76,7 +76,7 @@ automaton
 ;
 
 componentSegment: 'components' '{' (componentDecl ';')* '}';
-internalSegment: 'internals' ID (',' ID)* ';' ;
+internalSegment: 'internalCollection' ID (',' ID)* ';' ;
 connectionSegment: 'connections' '{' (connectionDecl ';')* '}';
 
 componentDecl: ID (',' ID)* ':' type;

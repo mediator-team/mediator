@@ -8,39 +8,61 @@ import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class TupleTerm implements Term {
 
     private RawElement parent;
+    private Term left, right;
 
-    public Term left, right;
+    public Term getLeft() {
+        return left;
+    }
+
+    public TupleTerm setLeft(Term left) {
+        this.left = left;
+        left.setParent(this);
+        return this;
+    }
+
+    public Term getRight() {
+        return right;
+    }
+
+    public TupleTerm setRight(Term right) {
+        this.right = right;
+        right.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public TupleTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.TupleTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "TupleTermContext", context.toString());
         }
 
-        left = Term.parse(((MediatorLangParser.TupleTermContext) context).left, this);
-        right = Term.parse(((MediatorLangParser.TupleTermContext) context).right, this);
-
-        return this.validate();
-    }
-
-    public TupleTerm addTerm(Term t) throws ValidationException {
-        if (left == null) left = (Term) t.clone(this);
-        else if (right == null) right = (Term) t.clone(this);
-        else {
-            TupleTerm ntt = (TupleTerm) new TupleTerm().setParent(this.parent);
-            ntt.left = this;
-            ntt.right = (Term) t.clone(ntt);
-            this.setParent(ntt);
-            return ntt;
-        }
+        setParent(parent);
+        setLeft(Term.parse(((MediatorLangParser.TupleTermContext) context).left, this));
+        setRight(Term.parse(((MediatorLangParser.TupleTermContext) context).right, this));
 
         return this;
     }
+
+//    todo need to rewrite if it is still used
+//    public TupleTerm addTerm(Term t) throws ValidationException {
+//        if (left == null) left = t.copy(this);
+//        else if (right == null) right = t.copy(this);
+//        else {
+//            TupleTerm ntt = (TupleTerm) new TupleTerm().setParent(this.parent);
+//            ntt.left = this;
+//            ntt.right = t.copy(ntt);
+//            this.setParent(ntt);
+//            return ntt;
+//        }
+//
+//        return this;
+//    }
 
     public List<Term> getTerms() {
         List<Term> lst;
@@ -71,19 +93,19 @@ public class TupleTerm implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public TupleTerm copy(RawElement parent) throws ValidationException {
         TupleTerm ntt = new TupleTerm();
         ntt.setParent(parent);
-        ntt.left = (Term) this.left.clone(ntt);
-        ntt.right = (Term) this.right.clone(ntt);
+        ntt.setLeft(this.left.copy(ntt));
+        ntt.setRight(this.right.copy(ntt));
 
-        return ntt.validate();
+        return ntt;
     }
 
     @Override
@@ -92,13 +114,14 @@ public class TupleTerm implements Term {
     }
 
     @Override
-    public int getPrecedence() {
-        return 1;
+    public TupleTerm refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setLeft(getLeft().refactor(rewriteMap));
+        setRight(getRight().refactor(rewriteMap));
+        return this;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+    public int getPrecedence() {
+        return 1;
     }
 }

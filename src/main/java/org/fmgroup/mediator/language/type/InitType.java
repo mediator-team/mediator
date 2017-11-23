@@ -6,27 +6,56 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
 
+import java.util.Map;
+
 public class InitType implements Type {
 
     private RawElement parent = null;
+    private Term defaultValue = null;
+    private Type baseType = null;
 
-    public Term defaultValue = null;
-    public Type baseType = null;
+    public Term getDefaultValue() {
+        return defaultValue;
+    }
 
-    @Override
-    public String getName() {
-        return "init";
+    public InitType setDefaultValue(Term value) {
+        this.defaultValue = value;
+        value.setParent(this);
+        return this;
+    }
+
+    public Type getBaseType() {
+        return baseType;
+    }
+
+    public InitType setBaseType(Type baseType) {
+        this.baseType = baseType;
+        baseType.setParent(this);
+        return this;
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public InitType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.InitTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "InitTypeContext", context.toString());
         }
 
-        this.defaultValue = Term.parse(((MediatorLangParser.InitTypeContext) context).term(), this);
-        this.baseType = Type.parse(((MediatorLangParser.InitTypeContext) context).type(), this);
-        return this.validate();
+        setParent(parent);
+        setDefaultValue(Term.parse(((MediatorLangParser.InitTypeContext) context).term(), this));
+        setBaseType(Type.parse(((MediatorLangParser.InitTypeContext) context).type(), this));
+
+        return this;
+    }
+
+    @Override
+    public Term getInitValue() throws ValidationException {
+        return (Term) this.getDefaultValue().copy();
+    }
+
+    @Override
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setDefaultValue(getDefaultValue().refactor(termRewriteMap));
+        return this;
     }
 
     @Override
@@ -40,28 +69,19 @@ public class InitType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public InitType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public InitType copy(RawElement parent) throws ValidationException {
         InitType nit = new InitType();
+
         nit.setParent(parent);
-        nit.baseType = (Type) this.baseType.clone(nit);
-        nit.defaultValue = (Term) this.defaultValue.clone(nit);
+        nit.setBaseType(getBaseType().copy(nit));
+        nit.setDefaultValue(getDefaultValue().copy(nit));
 
-        return nit.validate();
-    }
-
-    public InitType setBaseType(Type baseType) { this.baseType = baseType; return this; }
-
-    public InitType setDefaultValue(Term value) { this.defaultValue = value; return this; }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+        return nit;
     }
 }

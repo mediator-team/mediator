@@ -1,4 +1,4 @@
-package org.fmgroup.mediator.generator.framework;
+package org.fmgroup.mediator.common;
 
 public class UtilCode {
 

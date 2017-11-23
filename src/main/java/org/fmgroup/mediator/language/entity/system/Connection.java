@@ -14,20 +14,47 @@ import java.util.stream.Collectors;
 public class Connection implements RawElement {
 
     private RawElement parent;
+    private List<PortIdentifier> portIdentifiers = new ArrayList<>();
+    private TemplateType type;
 
-    public List<PortIdentifier> ports = new ArrayList<>();
-    public TemplateType type;
+    public List<PortIdentifier> getPortIdentifiers() {
+        return portIdentifiers;
+    }
+
+    public Connection setPortIdentifiers(List<PortIdentifier> portIdentifiers) {
+        this.portIdentifiers.forEach(this::addPortIdentifier);
+        return this;
+    }
+
+    public Connection addPortIdentifier(PortIdentifier portIdentifier) {
+        portIdentifiers.add(portIdentifier);
+        portIdentifier.setParent(this);
+        return this;
+    }
+
+    public TemplateType getType() {
+        return type;
+    }
+
+    public Connection setType(TemplateType type) {
+        this.type = type;
+        type.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public Connection fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.ConnectionDeclContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ConnectionDeclContext", context.getClass().toString());
         }
 
-        type = (TemplateType) new TemplateType().parse(((MediatorLangParser.ConnectionDeclContext) context).type(), this);
+        setParent(parent);
+        setType(
+                new TemplateType().fromContext(((MediatorLangParser.ConnectionDeclContext) context).type(), this)
+        );
 
         for (MediatorLangParser.PortIdentifierContext portid : ((MediatorLangParser.ConnectionDeclContext) context).portIdentifier()) {
-            ports.add((PortIdentifier) new PortIdentifier().parse(portid, this));
+            addPortIdentifier(new PortIdentifier().fromContext(portid, this));
         }
 
         return this;
@@ -38,7 +65,7 @@ public class Connection implements RawElement {
         return String.format(
                 "%s(%s)",
                 type.toString(),
-                ports.stream().map(Object::toString).collect(Collectors.joining(", "))
+                portIdentifiers.stream().map(Object::toString).collect(Collectors.joining(", "))
         );
     }
 
@@ -48,7 +75,7 @@ public class Connection implements RawElement {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
@@ -59,14 +86,14 @@ public class Connection implements RawElement {
 //            throw ValidationException.UnexpectedElement(this.getClass(), parent.getClass(),"System", "parent");
 //        }
 //
-//        // are all the connected portDeclarations valid?
-//        List<PortDeclaration> connectorPortDeclarations = type.provider.getInterface().portDeclarations;
-//        if (ports.size() != connectorPortDeclarations.size())
+//        // are all the connected declarationList valid?
+//        List<PortDeclaration> connectorPortDeclarations = type.provider.getInterface().declarationList;
+//        if (portIdentifiers.size() != connectorPortDeclarations.size())
 //            throw ValidationException.FromMessage(
-//                    String.format("Number of portDeclarations mismatched at %s.", this.toString())
+//                    String.format("Number of declarationList mismatched at %s.", this.toString())
 //            );
 //
-//        for (IdValue portid : ports) {
+//        for (IdValue portid : portIdentifiers) {
 //            boolean isInternal = false;
 //            if (portid.scopeIdentifiers.size() == 0) {
 //                // it is an internal node
@@ -80,7 +107,7 @@ public class Connection implements RawElement {
 //                PortDeclaration portDeclaration = ((System) this.parent).locatePort(portid);
 //                if (portDeclaration == null) throw ValidationException.UnknownIdentifier(portid.toString(), "portDeclaration");
 //
-//                PortDeclaration connectorport = connectorPortDeclarations.get(ports.indexOf(portid));
+//                PortDeclaration connectorport = connectorPortDeclarations.fromString(portIdentifiers.indexOf(portid));
 //                // direction and type must match
 //                if (portDeclaration.parent.equals(this.parent) && connectorport.direction != portDeclaration.direction) {
 //                    // the portDeclaration belongs to the system, then its type should be the same with the connector's portDeclaration

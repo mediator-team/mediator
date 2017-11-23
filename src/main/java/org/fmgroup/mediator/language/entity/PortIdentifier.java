@@ -1,55 +1,93 @@
 package org.fmgroup.mediator.language.entity;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.system.ComponentDeclaration;
 import org.fmgroup.mediator.language.scope.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PortIdentifier implements RawElement {
-    public RawElement parent = null;
+    private RawElement parent = null;
+    private String portName;
+    private String owner;
+    private ComponentDeclaration componentReference = null;
+    private PortDeclaration reference = null;
 
-    public String portName;
-    public List<String> scopeIdentifiers = new ArrayList<>();
-    public ComponentDeclaration componentReference = null;
-    public PortDeclaration reference = null;
+    public ComponentDeclaration getComponentReference() {
+        return componentReference;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public PortIdentifier setOwner(String owner) {
+        this.owner = owner;
+        return this;
+    }
+
+    public String getPortName() {
+        return portName;
+    }
+
+    public PortIdentifier setPortName(String portName) throws ValidationException {
+        return setPortName(portName, false);
+    }
+
+    public PortIdentifier setPortName(String portName, boolean noChecking) throws ValidationException {
+        this.portName = portName;
+
+        if (noChecking == false) {
+            if (owner == null) {
+                Scope scope = this.getCurrentScope();
+                reference = scope.getPort(portName);
+            } else {
+                Scope scope = this.getCurrentScope();
+                componentReference = scope.getComponent(owner);
+                if (componentReference != null) {
+                    reference = componentReference.getType().getProvider().getPort(portName);
+                }
+            }
+        }
+
+        return this;
+    }
+
+    public PortDeclaration getReference() {
+        return reference;
+    }
+
+    public PortIdentifier setReference(PortDeclaration reference) {
+        this.reference = reference;
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public PortIdentifier fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.PortIdentifierContext || context instanceof MediatorLangParser.ScopedIDContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "PortIdentifierContext", context.getClass().getName());
         }
 
+        setParent(parent);
+
         if (context instanceof MediatorLangParser.PortIdentifierContext) {
-            portName = ((MediatorLangParser.PortIdentifierContext) context).identifier.getText();
             if (((MediatorLangParser.PortIdentifierContext) context).owner != null) {
-                scopeIdentifiers.add(((MediatorLangParser.PortIdentifierContext) context).owner.getText());
+                setOwner(
+                        ((MediatorLangParser.PortIdentifierContext) context).owner.getText()
+                );
             }
+
+            setPortName(((MediatorLangParser.PortIdentifierContext) context).identifier.getText());
         } else {
-            portName = ((MediatorLangParser.ScopedIDContext) context).identifier.getText();
-            for (Token scopeid : ((MediatorLangParser.ScopedIDContext) context).scopes) {
-                scopeIdentifiers.add(scopeid.toString());
+            if (((MediatorLangParser.ScopedIDContext) context).scopes.size() > 1) {
+                throw ValidationException.FromMessage("unknown port");
             }
-        }
 
-        if (scopeIdentifiers.size() == 0) {
-            Scope scope = this.getCurrentScope();
-            reference = scope.getPort(portName);
-        } else if (scopeIdentifiers.size() == 1){
-            Scope scope = this.getCurrentScope();
-            componentReference = scope.getComponent(scopeIdentifiers.get(0));
-            if (componentReference != null) {
-                reference = componentReference.type.provider.getPort(portName);
-            }
-        }
+            if (((MediatorLangParser.ScopedIDContext) context).scopes.size() == 1)
+                setOwner(((MediatorLangParser.ScopedIDContext) context).scopes.get(0).getText());
 
-        if (reference == null) {
-            throw ValidationException.UnknownIdentifier(this.toString(), "port");
+            setPortName(((MediatorLangParser.ScopedIDContext) context).identifier.getText());
         }
 
         return this;
@@ -57,9 +95,8 @@ public class PortIdentifier implements RawElement {
 
     @Override
     public String toString() {
-        String scopeStr = String.join(".", scopeIdentifiers);
-        if (scopeStr.length() == 0) return portName;
-        else return scopeStr + "." + portName;
+        if (owner == null) return portName;
+        else return owner + "." + portName;
     }
 
     @Override
@@ -68,18 +105,18 @@ public class PortIdentifier implements RawElement {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public PortIdentifier setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public PortIdentifier copy(RawElement parent) throws ValidationException {
         PortIdentifier portid = new PortIdentifier();
         portid.setParent(parent);
-        portid.portName = portName;
-        portid.reference = reference;
-        portid.validate();
+
+        portid.setOwner(owner);
+        portid.setPortName(portName);
 
         return portid;
     }

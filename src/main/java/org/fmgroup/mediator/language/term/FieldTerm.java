@@ -6,22 +6,26 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.Type;
 
+import java.util.Map;
+
 public class FieldTerm implements Term {
 
     private RawElement parent;
 
-    public Term owner;
-    public String field;
+    private Term owner;
+    private String field;
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public FieldTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.FieldTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "FieldTermContext", context.toString());
         }
 
-        this.owner = Term.parse(((MediatorLangParser.FieldTermContext) context).structure, this);
-        this.field = ((MediatorLangParser.FieldTermContext) context).key.getText();
-        return this.validate();
+        setParent(parent);
+        setOwner(Term.parse(((MediatorLangParser.FieldTermContext) context).structure, this));
+        setField(((MediatorLangParser.FieldTermContext) context).key.getText());
+
+        return this;
     }
 
     @Override
@@ -39,19 +43,45 @@ public class FieldTerm implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
+    public Term getOwner() {
+        return owner;
+    }
+
+    public FieldTerm setOwner(Term owner) {
+        // TODO
+        this.owner = owner;
+        owner.setParent(this);
+        return this;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public FieldTerm setField(String field) {
+        this.field = field;
+        return this;
+    }
+
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public FieldTerm copy(RawElement parent) throws ValidationException {
         FieldTerm nft = new FieldTerm();
         nft.setParent(parent);
-        nft.field = this.field;
-        nft.owner = (Term) this.owner.clone(nft);
+        nft.setField(getField());
+        nft.setOwner(getOwner().copy(nft));
 
-        return nft.validate();
+        return nft;
+    }
+
+    @Override
+    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setOwner(getOwner().refactor(rewriteMap));
+        return this;
     }
 
     @Override
@@ -62,11 +92,5 @@ public class FieldTerm implements Term {
     @Override
     public int getPrecedence() {
         return 12;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
     }
 }

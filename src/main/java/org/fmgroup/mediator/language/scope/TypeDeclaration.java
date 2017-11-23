@@ -13,29 +13,42 @@ import java.util.List;
 
 public class TypeDeclaration implements RawElement, Declaration {
 
-    public RawElement parent;
+    private RawElement parent;
+    private List<String> identifiers = new ArrayList<>();
+    private Type type;
+    private boolean isTypedef = true;
 
-    public List<String> identifiers = new ArrayList<>();
-    public Type type;
-    public boolean isTypedef = true;
+    public Type getType() {
+        return type;
+    }
+
+    public TypeDeclaration setType(Type type) {
+        this.type = type;
+        type.setParent(this);
+        return this;
+    }
+
+    public boolean isTypedef() {
+        return isTypedef;
+    }
+
+    public TypeDeclaration setTypedef(boolean typedef) {
+        isTypedef = typedef;
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public TypeDeclaration fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.TypedefContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "TypedefContext", context.toString());
         }
 
-        Scope currentScope = getCurrentScope();
-
+        setParent(parent);
         for (TerminalNode tn : ((MediatorLangParser.TypedefContext) context).ID()) {
-            if (identifiers.contains(tn.getText()) || currentScope.existsDeclaration(tn.getText())) {
-                throw ValidationException.DumplicatedIdentifier(tn.getText(), "symbol");
-            }
-
-            identifiers.add(tn.getText());
+            addIdentifier(tn.getText());
         }
 
-        type = Type.parse(((MediatorLangParser.TypedefContext) context).type(), this);
+        setType(Type.parse(((MediatorLangParser.TypedefContext) context).type(), this));
 
         return this;
     }
@@ -63,14 +76,8 @@ public class TypeDeclaration implements RawElement, Declaration {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
-        return this;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
         return this;
     }
 
@@ -80,7 +87,13 @@ public class TypeDeclaration implements RawElement, Declaration {
     }
 
     @Override
-    public String getIdentifier(int index) {
-        return identifiers.get(index);
+    public List<String> getIdentifiers() {
+        return identifiers;
+    }
+
+    public TypeDeclaration setIdentifiers(List<String> identifiers) throws ValidationException {
+        this.identifiers = new ArrayList<>();
+        for (String identifier : identifiers) addIdentifier(identifier);
+        return this;
     }
 }

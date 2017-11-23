@@ -1,10 +1,10 @@
 package org.fmgroup.mediator.language.entity.automaton;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.generator.framework.UtilCode;
+import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.*;
-import org.fmgroup.mediator.language.entity.EntityInterface;
 import org.fmgroup.mediator.language.entity.Entity;
+import org.fmgroup.mediator.language.entity.EntityInterface;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
@@ -12,39 +12,93 @@ import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Automaton implements Entity, Scope, Templated {
     private RawElement parent = null;
+    private Template template = null;
+    private EntityInterface entityInterface = null;
+    private VariableDeclarationCollection localVars = new VariableDeclarationCollection();
+    private List<Transition> transitions = new ArrayList<>();
+    private String name;
 
-    public Template template = null;
-    public EntityInterface entityInterface = null;
-    public VariableDeclarationCollection localVars = new VariableDeclarationCollection();
-    public List<Transition> transitions = new ArrayList<>();
-    public String name;
+    public EntityInterface getEntityInterface() {
+        return entityInterface;
+    }
+
+    public Automaton setEntityInterface(EntityInterface entityInterface) {
+        this.entityInterface = entityInterface;
+        entityInterface.setParent(this);
+        return this;
+    }
+
+    public VariableDeclarationCollection getLocalVars() {
+        return localVars;
+    }
+
+    public Automaton setLocalVars(VariableDeclarationCollection localVars) {
+        this.localVars = localVars;
+        localVars.setParent(this);
+        return this;
+    }
+
+    public List<Transition> getTransitions() {
+        return transitions;
+    }
+
+    public Automaton addTransition(Transition transition) {
+        this.transitions.add(transition);
+        transition.setParent(this);
+        return this;
+    }
+
+    public Automaton setTransitions(List<Transition> transitions) {
+        this.transitions = new ArrayList<>();
+        transitions.forEach(this::addTransition);
+        return this;
+    }
+
+    public Transition getTransition(int i) {
+        return transitions.get(i);
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException{
+    public String getName() {
+        return name;
+    }
+
+    public Automaton setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @Override
+    public Automaton fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.AutomatonContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "AutomatonContext", context.toString());
         }
 
         MediatorLangParser.AutomatonContext automaton = (MediatorLangParser.AutomatonContext) context;
 
-        name = ((MediatorLangParser.AutomatonContext) context).name.getText();
+        setParent(parent);
+        setName(((MediatorLangParser.AutomatonContext) context).name.getText());
 
         if (((MediatorLangParser.AutomatonContext) context).template() != null) {
-            template = new Template();
-            template.parse(((MediatorLangParser.AutomatonContext) context).template(), this);
+            setTemplate(
+                    new Template().fromContext(((MediatorLangParser.AutomatonContext) context).template(), this)
+            );
         }
 
-        entityInterface = new EntityInterface();
-        entityInterface.parse(((MediatorLangParser.AutomatonContext) context).entityInterface(), this);
+        setEntityInterface(
+                new EntityInterface()
+                        .fromContext(((MediatorLangParser.AutomatonContext) context).entityInterface(), this)
+        );
 
         // TODO rewrite it using localVars.parse(...)
         // step 1. analyze local variables
         for (MediatorLangParser.VariableSegmentContext vsc : automaton.variableSegment()) {
             for (MediatorLangParser.LocalVariableDefContext lvc : vsc.localVariableDef()) {
-                this.localVars.vardecls.add((VariableDeclaration) new VariableDeclaration().parse(lvc, this));
+                this.localVars.addDeclaration((VariableDeclaration) new VariableDeclaration().fromContext(lvc, this));
             }
         }
 
@@ -59,19 +113,48 @@ public class Automaton implements Entity, Scope, Templated {
     }
 
     @Override
+    public Automaton copy(RawElement parent) throws ValidationException {
+        Automaton a = new Automaton();
+        a.setParent(parent);
+
+        a.setName(getName());
+        if (getTemplate() != null)
+            a.setTemplate(getTemplate().copy(a));
+
+        a.setEntityInterface(getEntityInterface().copy(a));
+        a.setLocalVars(getLocalVars().copy(a));
+
+        List<Transition> transitions = new ArrayList<>();
+        for (Transition t : getTransitions()) {
+            transitions.add((Transition) t.copy(a));
+        }
+
+        a.setTransitions(transitions);
+
+        return a;
+    }
+
+    @Override
     public String toString() {
-        String template = this.template == null? "" : this.template.toString();
+        String template = this.template == null ? "" : this.template.toString();
         if (template.length() > 0) template = "<" + template + "> ";
         String rel = String.format("automaton %s%s (%s) {\n", template, name, entityInterface.toString());
 
         rel += UtilCode.addIndent(localVars.toString(), 1);
 
         if (transitions.size() > 0) {
-            rel += UtilCode.addIndent("transitions {\n", 1);
-            for (Transition t : transitions) {
-                rel += UtilCode.addIndent(t.toString(), 2) + "\n";
-            }
-            rel += UtilCode.addIndent("}\n", 1);
+            rel += UtilCode.addIndent(
+                    String.format(
+                            "transitions {\n%s}\n",
+                            UtilCode.addIndent(
+                                    getTransitions().stream().map(
+                                            transition -> transition.toString() + "\n"
+                                    ).collect(Collectors.joining("")),
+                                    1
+                            )
+                    ),
+                    1
+            );
         }
         rel += "}";
         return rel;
@@ -83,7 +166,7 @@ public class Automaton implements Entity, Scope, Templated {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public Automaton setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
@@ -96,6 +179,12 @@ public class Automaton implements Entity, Scope, Templated {
     @Override
     public Template getTemplate() {
         return template;
+    }
+
+    public Automaton setTemplate(Template template) {
+        this.template = template;
+        if (template != null) template.setParent(this);
+        return this;
     }
 
     @Override

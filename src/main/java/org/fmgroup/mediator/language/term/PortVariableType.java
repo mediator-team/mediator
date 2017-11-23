@@ -11,16 +11,16 @@ public enum PortVariableType {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return this.value;
-    }
-
-    public static PortVariableType get(String value) {
+    public static PortVariableType fromString(String value) {
         if (value.equals(VALUE.value)) return VALUE;
         else if (value.equals(REQREAD.value)) return REQREAD;
         else if (value.equals(REQWRITE.value)) return REQWRITE;
 
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
     }
 }

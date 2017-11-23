@@ -1,7 +1,7 @@
 package org.fmgroup.mediator.language.entity.automaton;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.generator.framework.UtilCode;
+import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
@@ -11,20 +11,38 @@ import org.fmgroup.mediator.language.term.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class TransitionGroup implements Transition {
+public class TransitionGroup implements Transition, RawElement {
 
     private RawElement parent;
-    public List<Transition> transitions = new ArrayList<>();
+    private List<Transition> transitions = new ArrayList<>();
+
+    public List<Transition> getTransitions() {
+        return transitions;
+    }
+
+    public TransitionGroup setTransitions(List<Transition> transitions) {
+        this.transitions = new ArrayList<>();
+        transitions.forEach(this::addTransition);
+        return this;
+    }
+
+    public TransitionGroup addTransition(Transition transition) {
+        this.transitions.add(transition);
+        transition.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public TransitionGroup fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.TransitionGroupContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "TransitionGroupContext", context.toString());
         }
 
+        setParent(parent);
         for (MediatorLangParser.TransitionContext tc : ((MediatorLangParser.TransitionGroupContext) context).transition()) {
-            this.transitions.add(Transition.parse(tc, this));
+            addTransition(Transition.parse(tc, this));
         }
 
         return this;
@@ -32,12 +50,16 @@ public class TransitionGroup implements Transition {
 
     @Override
     public String toString() {
-        String rel = "group {\n";
-        for (Transition t : transitions) {
-            rel += UtilCode.addIndent(t.toString(), 1) + "\n";
-        }
-        rel += "}";
-        return rel;
+        return String.format(
+                "group {\n%s\n}",
+                UtilCode.addIndent(
+                        getTransitions()
+                            .stream()
+                            .map(Object::toString)
+                            .collect(Collectors.joining("\n")),
+                        1
+                )
+        );
     }
 
     @Override
@@ -46,9 +68,20 @@ public class TransitionGroup implements Transition {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public TransitionGroup setParent(RawElement parent) {
         this.parent = parent;
         return this;
+    }
+
+    @Override
+    public TransitionGroup copy(RawElement parent) throws ValidationException {
+        TransitionGroup transG = new TransitionGroup();
+        transG.setParent(parent);
+        for (Transition t : getTransitions()) {
+            transG.addTransition((Transition) t.copy(transG));
+        }
+
+        return transG;
     }
 
     @Override

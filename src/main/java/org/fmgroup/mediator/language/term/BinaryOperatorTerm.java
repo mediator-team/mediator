@@ -4,18 +4,26 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
-import org.fmgroup.mediator.language.type.BoolType;
 import org.fmgroup.mediator.language.type.Type;
 
+import java.util.Map;
+
+/**
+ * Formalization for all the binary terms like
+ * - a + b
+ * - a - c
+ * ...
+ */
 public class BinaryOperatorTerm implements Term {
 
     private RawElement parent = null;
 
-    public Term left, right;
-    public EnumBinaryOperator opr;
+    private Term left, right;
+    private EnumBinaryOperator opr;
 
     @Override
     public Type getType() {
+        // TODO
         return null;
     }
 
@@ -25,16 +33,25 @@ public class BinaryOperatorTerm implements Term {
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public BinaryOperatorTerm refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setLeft(getLeft().refactor(rewriteMap));
+        setRight(getRight().refactor(rewriteMap));
+
+        return this;
+    }
+
+    @Override
+    public BinaryOperatorTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.BinaryOprTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "BinaryOprTermContext", context.toString());
         }
 
-        left = Term.parse(((MediatorLangParser.BinaryOprTermContext) context).left, this);
-        right = Term.parse(((MediatorLangParser.BinaryOprTermContext) context).right, this);
-        opr = EnumBinaryOperator.fromString(((MediatorLangParser.BinaryOprTermContext) context).opr.getText());
+        setParent(parent);
+        setLeft(Term.parse(((MediatorLangParser.BinaryOprTermContext) context).left, this));
+        setRight(Term.parse(((MediatorLangParser.BinaryOprTermContext) context).right, this));
+        setOpr(EnumBinaryOperator.fromString(((MediatorLangParser.BinaryOprTermContext) context).opr.getText()));
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -52,26 +69,25 @@ public class BinaryOperatorTerm implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public BinaryOperatorTerm setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public BinaryOperatorTerm copy(RawElement parent) throws ValidationException {
         BinaryOperatorTerm nbot = new BinaryOperatorTerm();
-        nbot.setParent(parent);
-        nbot.left = (Term) this.left.clone(nbot);
-        nbot.right = (Term) this.right.clone(nbot);
-        nbot.opr = this.opr;
 
-        return nbot.validate();
+        nbot.setParent(parent);
+        nbot.setLeft(this.left.copy(nbot));
+        nbot.setRight(this.right.copy(nbot));
+        nbot.setOpr(this.opr);
+
+        return nbot;
     }
 
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+    public EnumBinaryOperator getOpr() {
+        return opr;
     }
 
     public BinaryOperatorTerm setOpr(EnumBinaryOperator opr) {
@@ -79,13 +95,23 @@ public class BinaryOperatorTerm implements Term {
         return this;
     }
 
+    public Term getLeft() {
+        return left;
+    }
+
     public BinaryOperatorTerm setLeft(Term left) throws ValidationException {
-        this.left = (Term) left.clone(this);
+        this.left = left;
+        left.setParent(this);
         return this;
     }
 
+    public Term getRight() {
+        return right;
+    }
+
     public BinaryOperatorTerm setRight(Term right) throws ValidationException {
-        this.right = (Term) right.clone(this);
+        this.right = right;
+        right.setParent(this);
         return this;
     }
 }

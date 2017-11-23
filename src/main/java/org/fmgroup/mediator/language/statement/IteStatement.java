@@ -1,48 +1,94 @@
 package org.fmgroup.mediator.language.statement;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.generator.framework.UtilCode;
+import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class IteStatement implements Statement {
 
     private RawElement parent;
+    private Term condition;
+    private List<Statement> thenStmts = new ArrayList<>();
+    private List<Statement> elseStmts = new ArrayList<>();
 
-    public Term condition;
-    public List<Statement> thenStmts = new ArrayList<>();
-    public List<Statement> elseStmts = new ArrayList<>();
+    public Term getCondition() {
+        return condition;
+    }
+
+    public IteStatement setCondition(Term condition) {
+        this.condition = condition;
+        condition.setParent(this);
+        return this;
+    }
+
+    public List<Statement> getThenStmts() {
+        return thenStmts;
+    }
+
+    public IteStatement setThenStmts(List<Statement> thenStmts) {
+        this.thenStmts = new ArrayList<>();
+        thenStmts.forEach(this::addThenStmt);
+        return this;
+    }
+
+    public IteStatement addThenStmt(Statement statement) {
+        thenStmts.add(statement);
+        statement.setParent(this);
+        return this;
+    }
+
+    public List<Statement> getElseStmts() {
+        return elseStmts;
+    }
+
+    public IteStatement setElseStmts(List<Statement> elseStmts) {
+        this.elseStmts = new ArrayList<>();
+        elseStmts.forEach(this::addElseStmt);
+        return this;
+    }
+
+    public IteStatement addElseStmt(Statement statement) {
+        elseStmts.add(statement);
+        statement.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public IteStatement fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.IteStatementContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "IteStatementContext", context.toString());
         }
 
-        condition = Term.parse(((MediatorLangParser.IteStatementContext) context).condition, this);
-        if (((MediatorLangParser.IteStatementContext) context).thenstmt != null) thenStmts.add(
+        setParent(parent);
+        setCondition(
+                Term.parse(((MediatorLangParser.IteStatementContext) context).condition, this)
+        );
+
+        if (((MediatorLangParser.IteStatementContext) context).thenstmt != null) addThenStmt(
                 Statement.parse(((MediatorLangParser.IteStatementContext) context).thenstmt, this)
         );
         if (((MediatorLangParser.IteStatementContext) context).thenstmts != null) {
             for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.IteStatementContext) context).thenstmts.statement()) {
-                thenStmts.add(Statement.parse(sc, this));
+                addThenStmt(Statement.parse(sc, this));
             }
         }
-        if (((MediatorLangParser.IteStatementContext) context).elsestmt != null) elseStmts.add(
+        if (((MediatorLangParser.IteStatementContext) context).elsestmt != null) addElseStmt(
                 Statement.parse(((MediatorLangParser.IteStatementContext) context).elsestmt, this)
         );
         if (((MediatorLangParser.IteStatementContext) context).elsestmts != null) {
             for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.IteStatementContext) context).elsestmts.statement()) {
-                elseStmts.add(Statement.parse(sc, this));
+                addElseStmt(Statement.parse(sc, this));
             }
         }
-        return this.validate();
+
+        return this;
     }
 
     @Override
@@ -67,7 +113,7 @@ public class IteStatement implements Statement {
             if (elseStmts.size() == 1) rel += elseStmts.get(0).toString() + "\n";
             else {
                 rel += "{\n";
-                for (Statement s : elseStmts) rel +=  UtilCode.addIndent(s.toString(), 1) + "\n";
+                for (Statement s : elseStmts) rel += UtilCode.addIndent(s.toString(), 1) + "\n";
                 rel += "}";
             }
         }
@@ -80,24 +126,31 @@ public class IteStatement implements Statement {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public RawElement copy(RawElement parent) throws ValidationException {
         IteStatement nis = new IteStatement();
         nis.setParent(parent);
-        nis.condition = (Term) this.condition.clone(nis);
-        for (Statement st : this.thenStmts) nis.thenStmts.add((Statement) st.clone(nis));
-        for (Statement st : this.elseStmts) nis.elseStmts.add((Statement) st.clone(nis));
-        return nis.validate();
+        nis.setCondition(this.condition.copy(nis));
+        for (Statement st : this.thenStmts) nis.addThenStmt((Statement) st.copy(nis));
+        for (Statement st : this.elseStmts) nis.addElseStmt((Statement) st.copy(nis));
+
+        return nis;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Statement refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setCondition(getCondition().refactor(rewriteMap));
+        for (Statement s : getThenStmts()) {
+            s.refactor(rewriteMap);
+        }
+        for (Statement s : getElseStmts()) {
+            s.refactor(rewriteMap);
+        }
         return this;
     }
 }

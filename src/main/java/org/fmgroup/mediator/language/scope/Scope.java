@@ -1,10 +1,13 @@
 package org.fmgroup.mediator.language.scope;
 
+import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.PortDeclaration;
 import org.fmgroup.mediator.language.entity.system.ComponentDeclaration;
 import org.fmgroup.mediator.language.term.IdValue;
+import org.fmgroup.mediator.language.type.EnumType;
 import org.fmgroup.mediator.language.type.IdType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface Scope {
@@ -29,7 +32,7 @@ public interface Scope {
     }
 
     default TypeDeclaration getType(IdType typeIdentifier) {
-        Declaration decl = getDeclaration(typeIdentifier.scopeIdentifiers, typeIdentifier.identifier);
+        Declaration decl = getDeclaration(typeIdentifier.getScopeIdentifiers(), typeIdentifier.getIdentifier());
         if (decl instanceof TypeDeclaration) {
             return (TypeDeclaration) decl;
         }
@@ -45,7 +48,7 @@ public interface Scope {
     }
 
     default VariableDeclaration getVariable(IdValue variableIdentifier) {
-        Declaration decl = getDeclaration(variableIdentifier.scopeIdentifiers, variableIdentifier.identifier);
+        Declaration decl = getDeclaration(variableIdentifier.getScopeIdentifiers(), variableIdentifier.getIdentifier());
         if (decl instanceof VariableDeclaration) {
             return (VariableDeclaration) decl;
         }
@@ -60,12 +63,13 @@ public interface Scope {
         return null;
     }
 
-    default PortDeclaration getPort(String identifier) {
+    default PortDeclaration getPort(String identifier) throws ValidationException {
         Declaration decl = getDeclaration(null, identifier);
         if (decl instanceof PortDeclaration) {
             return (PortDeclaration) decl;
         }
-        return null;
+
+        throw ValidationException.UnknownIdentifier(identifier, "port");
     }
 
     default ComponentDeclaration getComponent(String identifier) {
@@ -73,6 +77,31 @@ public interface Scope {
         if (decl instanceof ComponentDeclaration) {
             return (ComponentDeclaration) decl;
         }
+        return null;
+    }
+
+    default List<TypeDeclaration> getEnumTypes() {
+        List<TypeDeclaration> result = new ArrayList<>();
+        for (DeclarationCollection coll : getDeclarations()) {
+            for (Object decl: coll.getDeclarationList()) {
+                if (decl instanceof TypeDeclaration && ((TypeDeclaration) decl).getType() instanceof EnumType) {
+                    result.add((TypeDeclaration) decl);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    default TypeDeclaration getEnumFromIdentifier(String identifier) {
+        for (TypeDeclaration typedecl: getEnumTypes()) {
+            if (typedecl.getType() instanceof EnumType) {
+                if (((EnumType) typedecl.getType()).getItems().contains(identifier)) {
+                    return typedecl;
+                }
+            }
+        }
+
         return null;
     }
 }

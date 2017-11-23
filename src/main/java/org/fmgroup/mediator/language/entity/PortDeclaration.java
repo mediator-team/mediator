@@ -29,16 +29,35 @@ enum PortDirection {
 
 public class PortDeclaration implements RawElement, Declaration {
 
-    public List<String> names = new ArrayList<>();
-    public PortDirection direction;
-    public Type type;
+    private List<String> identifiers = new ArrayList<>();
+    private PortDirection direction;
+    private Type type;
+    private RawElement parent;
 
-    public RawElement parent;
+    public PortDeclaration() {
+    }
 
-    public PortDeclaration() {}
+    public PortDirection getDirection() {
+        return direction;
+    }
+
+    public PortDeclaration setDirection(PortDirection direction) {
+        this.direction = direction;
+        return this;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public PortDeclaration setType(Type type) {
+        this.type = type;
+        type.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public PortDeclaration fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.PortsDeclContext)) {
             throw ValidationException.IncompatibleContextType(
                     this.getClass(),
@@ -46,21 +65,22 @@ public class PortDeclaration implements RawElement, Declaration {
             );
         }
 
+        setParent(parent);
         for (TerminalNode portName : ((MediatorLangParser.PortsDeclContext) context).ID()) {
-            if (names.contains(portName.getText()) || this.getCurrentScope().existsDeclaration(portName.getText())) {
+            if (identifiers.contains(portName.getText()) || this.getCurrentScope().existsDeclaration(portName.getText())) {
                 throw ValidationException.DumplicatedIdentifier(portName.getText(), "symbol");
             }
 
-            names.add(portName.getText());
+            addIdentifier(portName.getText());
         }
 
         if (((MediatorLangParser.PortsDeclContext) context).direction.getText().equals("IN")) {
-            this.direction = PortDirection.IN;
+            setDirection(PortDirection.IN);
         } else {
-            this.direction = PortDirection.OUT;
+            setDirection(PortDirection.OUT);
         }
 
-        this.type = Type.parse(((MediatorLangParser.PortsDeclContext) context).type(), this);
+        setType(Type.parse(((MediatorLangParser.PortsDeclContext) context).type(), this));
 
         return this;
     }
@@ -69,7 +89,7 @@ public class PortDeclaration implements RawElement, Declaration {
     public String toString() {
         return String.format(
                 "%s: %s %s",
-                String.join(", ", names),
+                String.join(", ", identifiers),
                 direction.toString(),
                 type.toString()
         );
@@ -81,35 +101,40 @@ public class PortDeclaration implements RawElement, Declaration {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public PortDeclaration setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public PortDeclaration copy(RawElement parent) throws ValidationException {
         PortDeclaration newdecl = new PortDeclaration();
-        newdecl.names = new ArrayList<>(names);
-        newdecl.direction = direction;
-        newdecl.type = (Type) type.clone(newdecl);
-        newdecl.validate();
+        newdecl.setParent(parent);
+
+        newdecl.setIdentifiers(identifiers);
+        newdecl.setType(type.copy(newdecl));
+        newdecl.setDirection(getDirection());
 
         return newdecl;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        return this;
     }
 
 
     @Override
     public int size() {
-        return names.size();
+        return identifiers.size();
     }
 
     @Override
-    public String getIdentifier(int index) {
-        return names.get(index);
+    public List<String> getIdentifiers() {
+        return identifiers;
+    }
+
+    public PortDeclaration setIdentifiers(List<String> identifiers) throws ValidationException {
+        this.identifiers = new ArrayList<>();
+
+        for (String identifier : identifiers) {
+            addIdentifier(identifier);
+        }
+        return this;
     }
 }

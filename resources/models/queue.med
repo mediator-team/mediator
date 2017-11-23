@@ -64,7 +64,7 @@ system <T:type, N:int> middleware_in_use () {
         producer_1, producer_2, producer_3 : Producer<T>;
         consumer_1, consumer_2, consumer_3 : Consumer<T>;
     }
-    internals  M1, M2 ;
+    internalCollection  M1, M2 ;
     connections {
         Merger<T>(producer_1.OUT, producer_2.OUT, producer_3.OUT, M1);
         Queue<T, 1>(M1, M2);

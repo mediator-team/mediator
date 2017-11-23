@@ -4,17 +4,22 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.term.Term;
+
+import java.util.Map;
 
 public class AbstractType implements Type {
 
     private RawElement parent;
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public AbstractType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.AbstractTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "AbstractTypeContext", context.toString());
         }
-        return this.validate();
+
+        setParent(parent);
+        return this;
     }
 
     @Override
@@ -28,24 +33,18 @@ public class AbstractType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public AbstractType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new AbstractType().setParent(parent).validate();
+    public AbstractType copy(RawElement parent) throws ValidationException {
+        return new AbstractType().setParent(parent);
     }
 
     @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
     }
 }

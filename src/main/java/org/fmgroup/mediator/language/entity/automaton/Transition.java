@@ -4,13 +4,21 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.scope.Scope;
-import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.term.Term;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public interface Transition extends RawElement {
+    static Transition parse(MediatorLangParser.TransitionContext context, RawElement parent) throws ValidationException {
+
+        if (context instanceof MediatorLangParser.TransitionSingleContext)
+            return new TransitionSingle().fromContext(context, parent);
+        if (context instanceof MediatorLangParser.TransitionGroupContext)
+            return new TransitionGroup().fromContext(context, parent);
+
+        throw ValidationException.UnregisteredTransition(context.getClass().toString());
+    }
+
     Term getGuard() throws ValidationException;
 
     default Automaton getAutomaton() throws ValidationException {
@@ -26,34 +34,7 @@ public interface Transition extends RawElement {
         }
     }
 
-    static Transition parse (MediatorLangParser.TransitionContext context, RawElement parent) throws ValidationException {
-
-        if (context instanceof MediatorLangParser.TransitionSingleContext)
-            return (Transition) new TransitionSingle().setParent(parent).fromContext(context);
-        if (context instanceof MediatorLangParser.TransitionGroupContext)
-            return (Transition) new TransitionGroup().setParent(parent).fromContext(context);
-
-        throw ValidationException.UnregisteredTransition(context.getClass().toString());
-    }
-
-    static Transition refactor(
-            Transition t,
-            Map<String, Term> baseRewriteMap,
-            RawElement parent
-    ) throws ValidationException {
-        assert t instanceof TransitionSingle;
-        TransitionSingle tnew = (TransitionSingle) t.clone(parent);
-
-        // refactor the port variables
-        Map<String, Term> rewriteMap = new HashMap<>(baseRewriteMap);
-
-        tnew.guard = Term.refactor(tnew.guard, rewriteMap);
-        for (int i = 0; i < tnew.statements.size(); i ++) {
-            tnew.statements.set(
-                    i,
-                    Statement.refactor(tnew.statements.get(i), rewriteMap)
-            );
-        }
-        return tnew;
+    default Transition refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
+        throw ValidationException.UnderDevelopment();
     }
 }

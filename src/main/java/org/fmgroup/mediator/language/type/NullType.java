@@ -4,23 +4,22 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.term.Term;
+
+import java.util.Map;
 
 public class NullType implements Type {
 
     private RawElement parent = null;
 
     @Override
-    public String getName() {
-        return "NULL";
-    }
-
-    @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public NullType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.NullTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "NullTypeContext", context.toString());
         }
 
-        return this.validate();
+        setParent(parent);
+        return this;
     }
 
     @Override
@@ -34,19 +33,18 @@ public class NullType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public NullType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new NullType().setParent(parent).validate();
+    public NullType copy(RawElement parent) throws ValidationException {
+        return new NullType().setParent(parent);
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public NullType refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
     }
 }

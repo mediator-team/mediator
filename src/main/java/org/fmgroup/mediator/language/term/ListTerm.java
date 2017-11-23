@@ -8,12 +8,29 @@ import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ListTerm implements Term {
 
-    public List<Term> values = new ArrayList<>();
-    public RawElement parent = null;
+    private List<Term> values = new ArrayList<>();
+    private RawElement parent = null;
+
+    public List<Term> getValues() {
+        return values;
+    }
+
+    public ListTerm setValues(List<Term> values) {
+        this.values = new ArrayList<>();
+        values.forEach(this::addValue);
+        return this;
+    }
+
+    public ListTerm addValue(Term value) {
+        values.add(value);
+        value.setParent(this);
+        return this;
+    }
 
     @Override
     public Type getType() {
@@ -26,27 +43,28 @@ public class ListTerm implements Term {
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public ListTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.ListTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ListTermContext", context.toString());
         }
 
+        setParent(parent);
         Term t = Term.parse(((MediatorLangParser.ListTermContext) context).term(), this);
-        while (t instanceof TupleTerm) {
-            values.add(0, ((TupleTerm) t).right);
-            t = ((TupleTerm) t).left;
+        if (t instanceof TupleTerm) {
+            setValues(((TupleTerm) t).getTerms());
+        } else {
+            addValue(t);
         }
-        values.add(0, t);
 
-        return this.validate();
+        return this;
     }
 
     @Override
     public String toString() {
         return
                 "[" +
-                this.values.stream().map(Object::toString).collect(Collectors.joining(", "))
-                + "]";
+                        this.values.stream().map(Object::toString).collect(Collectors.joining(", "))
+                        + "]";
     }
 
     @Override
@@ -61,14 +79,21 @@ public class ListTerm implements Term {
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public ListTerm copy(RawElement parent) throws ValidationException {
         ListTerm nlt = (ListTerm) new ListTerm().setParent(parent);
-        nlt.values = new ArrayList<>(this.values);
-        return nlt.validate();
+        for (Term t : getValues()) {
+            nlt.addValue(t.copy(nlt));
+        }
+        return nlt;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
+    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        List<Term> lstterms = new ArrayList<>();
+        for (Term t : getValues()) {
+            lstterms.add(t.refactor(rewriteMap));
+        }
+        setValues(lstterms);
         return this;
     }
 }

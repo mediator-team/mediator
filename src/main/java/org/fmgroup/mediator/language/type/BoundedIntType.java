@@ -6,25 +6,45 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
 
+import java.util.Map;
+
 public class BoundedIntType implements Type {
 
     private RawElement parent = null;
-    public Term lowerBound, upperBound;
+    private Term lowerBound;
+    private Term upperBound;
 
-    @Override
-    public String getName() {
-        return "bounded int";
+    public Term getLowerBound() {
+        return lowerBound;
+    }
+
+    public BoundedIntType setLowerBound(Term lowerBound) {
+        this.lowerBound = lowerBound;
+        lowerBound.setParent(this);
+        return this;
+    }
+
+    public Term getUpperBound() {
+        return upperBound;
+    }
+
+    public BoundedIntType setUpperBound(Term upperBound) {
+        this.upperBound = upperBound;
+        upperBound.setParent(this);
+        return this;
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public BoundedIntType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.BoundedIntTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "BoundedIntTypeContext", context.toString());
         }
 
-        lowerBound = Term.parse(((MediatorLangParser.BoundedIntTypeContext) context).lbound, this);
-        upperBound = Term.parse(((MediatorLangParser.BoundedIntTypeContext) context).ubound, this);
-        return this.validate();
+        setParent(parent);
+        setLowerBound(Term.parse(((MediatorLangParser.BoundedIntTypeContext) context).lbound, this));
+        setUpperBound(Term.parse(((MediatorLangParser.BoundedIntTypeContext) context).ubound, this));
+
+        return this;
     }
 
     @Override
@@ -38,25 +58,27 @@ public class BoundedIntType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public BoundedIntType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public BoundedIntType copy(RawElement parent) throws ValidationException {
         BoundedIntType nbit = new BoundedIntType();
-        nbit.setParent(nbit);
-        nbit.lowerBound = (Term) this.lowerBound.clone(nbit);
-        nbit.upperBound = (Term) this.upperBound.clone(nbit);
 
-        return nbit.validate();
+        nbit.setParent(nbit);
+        nbit.setLowerBound(getLowerBound().copy(nbit));
+        nbit.setUpperBound(getUpperBound().copy(nbit));
+
+        return nbit;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public BoundedIntType refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setLowerBound(getLowerBound().refactor(termRewriteMap));
+        setUpperBound(getUpperBound().refactor(termRewriteMap));
+
         return this;
     }
-
 }

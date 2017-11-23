@@ -11,33 +11,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Template implements RawElement, DeclarationCollection {
+public class Template implements RawElement, DeclarationCollection<Declaration> {
 
     private RawElement parent;
 
-    public List<Declaration> params = new ArrayList<>();
+    private List<Declaration> params = new ArrayList<>();
 
-    public Template() {}
+    public Template() {
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public Template fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
+        if (context == null) return null;
+
         if (!(context instanceof MediatorLangParser.TemplateContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "CompTemplateContext", context.toString());
         }
 
-        for (MediatorLangParser.LocalVariableDefContext paramContext : ((MediatorLangParser.TemplateContext) context).localVariableDef()) {
-            VariableDeclaration vardecl = (VariableDeclaration) new VariableDeclaration().parse(paramContext, this);
-            if (vardecl.type instanceof AbstractType) {
-                TypeDeclaration typedecl = new TypeDeclaration();
-                typedecl.identifiers = new ArrayList<>(vardecl.identifiers);
-                typedecl.type = new AbstractType();
-                typedecl.setParent(this);
-                typedecl.isTypedef = false;
-                typedecl.validate();
+        setParent(parent);
 
-                params.add(typedecl);
+        for (MediatorLangParser.LocalVariableDefContext paramContext : ((MediatorLangParser.TemplateContext) context).localVariableDef()) {
+            VariableDeclaration vardecl = new VariableDeclaration().fromContext(paramContext, this);
+            if (vardecl.getType() instanceof AbstractType) {
+                TypeDeclaration typedecl = new TypeDeclaration();
+
+                typedecl.setParent(this);
+                typedecl.setType(new AbstractType());
+                typedecl.setIdentifiers(vardecl.getIdentifiers());
+                typedecl.setTypedef(false);
+
+                addDeclaration(typedecl);
             } else {
-                params.add(vardecl);
+                addDeclaration(vardecl);
             }
         }
         return this;
@@ -56,24 +61,34 @@ public class Template implements RawElement, DeclarationCollection {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public Template setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) {
-        return null;
+    public Template copy(RawElement parent) throws ValidationException {
+        return new Template().setParent(parent).setDeclarationList(params);
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public List<Declaration> getDeclarationList() {
+        return this.params;
+    }
+
+    @Override
+    public Template setDeclarationList(List<Declaration> declarationList) {
+        this.params = new ArrayList<>();
+        declarationList.forEach(this::addDeclaration);
         return this;
     }
 
     @Override
-    public List<Declaration> getDeclarationList() { return this.params; }
+    public Template addDeclaration(Declaration declaration) {
+        this.params.add(declaration);
+        declaration.setParent(this);
+        return this;
+    }
 
 
 }

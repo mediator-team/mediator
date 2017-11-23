@@ -5,36 +5,58 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.PortIdentifier;
+import org.fmgroup.mediator.language.term.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class SynchronizingStatement implements Statement {
 
-    public RawElement parent = null;
-    public List<PortIdentifier> synchronizedPorts = new ArrayList<>();
+    private RawElement parent = null;
+    private List<PortIdentifier> synchronizedPorts = new ArrayList<>();
+
+    public List<PortIdentifier> getSynchronizedPorts() {
+        return synchronizedPorts;
+    }
+
+    public SynchronizingStatement setSynchronizedPorts(List<PortIdentifier> synchronizedPorts) {
+        this.synchronizedPorts = new ArrayList<>();
+        synchronizedPorts.forEach(this::addSyncronizedPort);
+        return this;
+    }
+
+    public PortIdentifier getSynchronizedPort(int i) {
+        return synchronizedPorts.get(i);
+    }
+
+    public SynchronizingStatement addSyncronizedPort(PortIdentifier synchronizedPort) {
+        synchronizedPorts.add(synchronizedPort);
+        synchronizedPort.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public SynchronizingStatement fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.SynchronizingStatementContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "SynchronizingStatementContext", context.toString());
         }
 
+        setParent(parent);
         for (MediatorLangParser.PortIdentifierContext portid : ((MediatorLangParser.SynchronizingStatementContext) context).portIdentifier()) {
-            this.synchronizedPorts.add(
-                    (PortIdentifier) new PortIdentifier().parse(portid, this)
-            );
+            addSyncronizedPort(new PortIdentifier().fromContext(portid, this));
         }
 
-        return this.validate();
+        return this;
     }
 
     public List<SynchronizingStatement> split() throws ValidationException {
         List<SynchronizingStatement> newStmts = new ArrayList<>();
         for (PortIdentifier port : synchronizedPorts) {
             newStmts.add(
-                    (SynchronizingStatement) new SynchronizingStatement().addPort(port).setParent(this.parent)
+                    new SynchronizingStatement().setParent(this.parent).addSyncronizedPort(port)
             );
         }
 
@@ -51,18 +73,11 @@ public class SynchronizingStatement implements Statement {
     @Override
     public String toString() {
         assert synchronizedPorts.size() > 0;
-
-        String rel = "sync ";
-        for (int i = 0; i < synchronizedPorts.size(); i ++) {
-            if (i > 0) rel += ",";
-            rel += synchronizedPorts.get(i);
-        }
-        return rel + ";";
-    }
-
-    public SynchronizingStatement addPort(PortIdentifier port) throws ValidationException {
-        this.synchronizedPorts.add((PortIdentifier) port.clone(this));
-        return this;
+        return "sync " + synchronizedPorts
+                .stream()
+                .map(PortIdentifier::toString)
+                .collect(Collectors.joining(", "))
+                + ";";
     }
 
     @Override
@@ -71,27 +86,36 @@ public class SynchronizingStatement implements Statement {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public SynchronizingStatement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public SynchronizingStatement copy(RawElement parent) throws ValidationException {
         SynchronizingStatement nss = new SynchronizingStatement();
         nss.setParent(parent);
-        nss.synchronizedPorts = new ArrayList<>(this.synchronizedPorts);
-        return nss.validate();
+        for (PortIdentifier port : synchronizedPorts) {
+            nss.addSyncronizedPort(port.copy(nss));
+        }
+
+        return nss;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        /*
-        1. you cannot synchronize two portDeclarations at the same time
-        2. all portDeclarations are correctly declared in the interface
-        */
+    public SynchronizingStatement refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        List<PortIdentifier> newPorts = new ArrayList<>();
 
+        for (PortIdentifier port : getSynchronizedPorts()) {
+            if (rewriteMap.containsKey(port + ".value")) {
+                String newPortName = rewriteMap.get(port + ".value").toString().replace("_value", "");
+                newPorts.add(new PortIdentifier().setParent(this.parent).setPortName(newPortName, true));
+            } else {
+                newPorts.add(port);
+            }
+        }
+
+        setSynchronizedPorts(newPorts);
         return this;
     }
-
 }

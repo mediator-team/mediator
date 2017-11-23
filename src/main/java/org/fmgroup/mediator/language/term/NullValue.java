@@ -4,11 +4,10 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
-import org.fmgroup.mediator.language.type.IntType;
 import org.fmgroup.mediator.language.type.NullType;
 import org.fmgroup.mediator.language.type.Type;
 
-public class NullValue implements Term {
+public class NullValue implements Value {
 
     private RawElement parent = null;
 
@@ -23,12 +22,14 @@ public class NullValue implements Term {
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public NullValue fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.NullValueContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "NullValueContext", context.toString());
         }
 
-        return this.validate();
+        setParent(parent);
+
+        return this;
     }
 
     @Override
@@ -42,20 +43,14 @@ public class NullValue implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public NullValue setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new NullValue().setParent(parent).validate();
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+    public NullValue copy(RawElement parent) throws ValidationException {
+        return new NullValue().setParent(parent);
     }
 
 }

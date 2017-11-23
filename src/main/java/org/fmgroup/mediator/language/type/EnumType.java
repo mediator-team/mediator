@@ -5,26 +5,56 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.term.EnumValue;
+import org.fmgroup.mediator.language.term.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EnumType implements Type {
 
     private RawElement parent;
+    private List<String> items = new ArrayList<>();
 
-    public List<String> items = new ArrayList<>();
+    public List<String> getItems() {
+        return items;
+    }
+
+    public EnumType setItems(List<String> items) throws ValidationException {
+        this.items = new ArrayList<>();
+        for (String item : items) addItem(item);
+        return this;
+    }
+
+    public EnumType addItem(String item) throws ValidationException {
+        if (getItems().contains(item)) {
+            throw ValidationException.DumplicatedIdentifier(item, "enum item");
+        }
+
+        items.add(item);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public Term getInitValue() throws ValidationException {
+        return new EnumValue().setParent(this)
+                .setReference(this)
+                .setIdentifier(getItems().get(0));
+    }
+
+    @Override
+    public EnumType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.EnumTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "EnumTypeContext", context.toString());
         }
 
-        for (TerminalNode id : ((MediatorLangParser.EnumTypeContext) context).ID()) {
-            items.add(id.getText());
-        }
-        return this.validate();
+        setItems(((MediatorLangParser.EnumTypeContext) context).ID().stream().map(
+                TerminalNode::getText
+        ).collect(Collectors.toList()));
+
+        return this;
     }
 
     @Override
@@ -38,28 +68,22 @@ public class EnumType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public EnumType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public EnumType copy(RawElement parent) throws ValidationException {
         EnumType net = new EnumType();
         net.setParent(parent);
-        net.items = new ArrayList<>(this.items);
+        net.setItems(getItems());
 
-        return net.validate();
+        return net;
     }
 
     @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
     }
 }

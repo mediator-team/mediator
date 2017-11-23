@@ -7,7 +7,10 @@ public class ValidationException extends Exception {
     public ValidationException(Class<? extends RawElement> element, String content) {
         super(content);
     }
-    public ValidationException() { super(); }
+
+    public ValidationException() {
+        super();
+    }
 
     public static ValidationException IncompatibleContextType(
             Class<? extends RawElement> element,

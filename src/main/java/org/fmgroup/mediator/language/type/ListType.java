@@ -6,32 +6,50 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
 
+import java.util.Map;
+
 public class ListType implements Type {
 
     private RawElement parent = null;
+    private Type baseType;
+    private Term capacity = null;
 
-    public Type baseType;
-    public Term capacity = null;
+    public Type getBaseType() {
+        return baseType;
+    }
 
-    @Override
-    public String getName() {
-        return "list";
+    public ListType setBaseType(Type baseType) {
+        this.baseType = baseType;
+        baseType.setParent(this);
+        return this;
+    }
+
+    public Term getCapacity() {
+        return capacity;
+    }
+
+    public ListType setCapacity(Term capacity) {
+        this.capacity = capacity;
+        capacity.setParent(this);
+        return this;
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public ListType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.ListTypeContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ListTypeContext", context.toString());
         }
 
-        baseType = Type.parse(((MediatorLangParser.ListTypeContext) context).type(), this);
+        setParent(parent);
+        setBaseType(Type.parse(((MediatorLangParser.ListTypeContext) context).type(), this));
+
         if (((MediatorLangParser.ListTypeContext) context).capacity == null) {
-            this.capacity = null;
+            setCapacity(null);
         } else {
-            this.capacity = Term.parse(((MediatorLangParser.ListTypeContext) context).capacity, this);
+            setCapacity(Term.parse(((MediatorLangParser.ListTypeContext) context).capacity, this));
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -45,24 +63,26 @@ public class ListType implements Type {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public ListType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public ListType copy(RawElement parent) throws ValidationException {
         ListType nlt = new ListType();
         nlt.setParent(parent);
-        nlt.capacity = (Term) this.capacity.clone(nlt);
-        nlt.baseType = (Type) this.baseType.clone(nlt);
+        nlt.setCapacity(getCapacity().copy(nlt));
+        nlt.setBaseType(getBaseType().copy(nlt));
 
         return nlt;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setBaseType(getBaseType().refactor(typeRewriteMap, termRewriteMap));
+        setCapacity(getCapacity().refactor(termRewriteMap));
+
         return this;
     }
 }

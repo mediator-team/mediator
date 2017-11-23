@@ -1,7 +1,10 @@
 native function digitalWrite(pin: int, val:int);
 native function analogWrite(pin: int, val:int 0..1);
 
-automaton <pinDirection:int, pinSpeed:int> motor (speed : in int -1023 .. 1023 init 0) {
+typedef int -1023 .. 1023 init 0 as signedPWM;
+typedef enum {forward, backward, rotate_left, rotate_right, stop} as action;
+
+automaton <pinDirection:int, pinSpeed:int> engine (speed : in signedPWM) {
     transitions {
         !speed.reqRead -> speed.reqRead = true;
         speed.reqRead && speed.reqWrite -> {
@@ -17,22 +20,49 @@ automaton <pinDirection:int, pinSpeed:int> motor (speed : in int -1023 .. 1023 i
     }
 }
 
-automaton const (ctrl : out int -1023 .. 1023 init 0) {
+// todo use system to encapsulate them
+automaton speeder (act: in action, motor_l, motor_r: out signedPWM) {
     transitions {
-        !ctrl.reqWrite -> ctrl.reqWrite = true;
-        ctrl.reqRead && ctrl.reqWrite -> {
-            ctrl.value = 20;
-            sync ctrl;
+        (act.reqWrite != motor_l.reqWrite) -> {
+            motor_l.reqWrite = act.reqWrite;
+            motor_r.reqWrite = act.reqWrite;
+        }
+
+        ((motor_l.reqRead && motor_r.reqRead) != act.reqRead) -> act.reqRead = motor_l.reqRead && motor_r.reqRead;
+
+        act.reqRead && act.reqWrite -> {
+            sync act;
+            if (act.value == forward) {
+                motor_l.value = 5;
+                motor_r.value = 5;
+            } else if (act.value == backward) {
+
+            } else if (act.value == stop) {
+                motor_l.value = 0;
+                motor_r.value = 0;
+            }
+        }
+    }
+}
+
+automaton controller (act: out action) {
+    transitions {
+        !act.reqWrite -> act.reqWrite = true;
+        act.reqRead -> {
+            act.value = forward;
+            sync act;
         }
     }
 }
 
 system testbench() {
     components {
-        m1 : motor<8, 9>;
+        m1 : engine<8, 9>;
+        m2 : engine<11, 10>;
+        c  : controller;
     }
 
     connections {
-        const(m1.speed);
+        speeder(c.act, m1.speed, m2.speed);
     }
 }

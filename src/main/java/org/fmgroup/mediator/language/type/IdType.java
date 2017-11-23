@@ -4,37 +4,39 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
-import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
+import org.fmgroup.mediator.language.term.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class IdType implements Type {
 
-    public RawElement parent = null;
-    public List<String> scopeIdentifiers = new ArrayList<>();
-    public String identifier;
-    public TypeDeclaration reference = null;
+    private RawElement parent = null;
+    private List<String> scopeIdentifiers = new ArrayList<>();
+    private String identifier;
+    private TypeDeclaration reference = null;
 
-    @Override
-    public String getName() {
-        return "id";
+    public List<String> getScopeIdentifiers() {
+        return scopeIdentifiers;
     }
 
-    @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
-        if (!(context instanceof MediatorLangParser.IdTypeContext)) {
-            throw ValidationException.IncompatibleContextType(this.getClass(), "IdTypeContext", context.toString());
-        }
+    public IdType setScopeIdentifiers(List<String> scopeIdentifiers) {
+        this.scopeIdentifiers = scopeIdentifiers;
+        return this;
+    }
 
-        this.identifier = ((MediatorLangParser.IdTypeContext) context).scopedID().identifier.getText();
-        for (Token scope : ((MediatorLangParser.IdTypeContext) context).scopedID().scopes) {
-            scopeIdentifiers.add(scope.getText());
-        }
+    public String getIdentifier() {
+        return identifier;
+    }
 
-        // if this id contains scopeIdentifiers
+    public IdType setIdentifier(String identifier) throws ValidationException {
+        this.identifier = identifier;
+
         if (scopeIdentifiers.size() > 0) {
             // TODO
         } else {
@@ -49,7 +51,34 @@ public class IdType implements Type {
             throw ValidationException.UnknownIdentifier(this.toString(), "type");
         }
 
-        return this.validate();
+        return this;
+    }
+
+    public TypeDeclaration getReference() {
+        return reference;
+    }
+
+    public IdType setReference(TypeDeclaration reference) {
+        this.reference = reference;
+        return this;
+    }
+
+    @Override
+    public IdType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
+        if (!(context instanceof MediatorLangParser.IdTypeContext)) {
+            throw ValidationException.IncompatibleContextType(this.getClass(), "IdTypeContext", context.toString());
+        }
+
+        setParent(parent);
+        setScopeIdentifiers(
+                ((MediatorLangParser.IdTypeContext) context)
+                        .scopedID()
+                        .scopes
+                        .stream().map(Token::getText).collect(Collectors.toList())
+        );
+        setIdentifier(((MediatorLangParser.IdTypeContext) context).scopedID().identifier.getText());
+
+        return this;
     }
 
     @Override
@@ -62,29 +91,31 @@ public class IdType implements Type {
     }
 
     @Override
+    public Term getInitValue() throws ValidationException {
+        return reference.getType().getInitValue();
+    }
+
+    @Override
+    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        return this;
+    }
+
+    @Override
     public RawElement getParent() {
         return parent;
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public IdType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new IdType().setIdentifier(this.identifier).setParent(parent).validate();
-    }
-
-    public IdType setIdentifier(String identifier) {
-        this.identifier = identifier;
-        return this;
-    }
-
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
-        return this;
+    public IdType copy(RawElement parent) throws ValidationException {
+        return new IdType()
+                .setParent(parent)
+                .setScopeIdentifiers(getScopeIdentifiers())
+                .setIdentifier(getIdentifier());
     }
 }

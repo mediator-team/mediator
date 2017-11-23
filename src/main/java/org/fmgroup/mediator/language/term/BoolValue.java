@@ -7,15 +7,17 @@ import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.type.BoolType;
 import org.fmgroup.mediator.language.type.Type;
 
-public class BoolValue implements Term {
+/**
+ * formalization for boolean value true/false
+ */
+public class BoolValue implements Value {
 
-    public boolean value;
-
+    private boolean value;
     private RawElement parent = null;
 
     @Override
     public Type getType() {
-        return new BoolType();
+        return (Type) new BoolType().setParent(parent);
     }
 
     @Override
@@ -24,13 +26,13 @@ public class BoolValue implements Term {
     }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public BoolValue fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.BoolValueContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "BoolValueContext", context.toString());
         }
 
-        this.value = Boolean.valueOf(context.getText());
-        return this.validate();
+        setValue(Boolean.valueOf(context.getText()));
+        return this;
     }
 
     @Override
@@ -44,21 +46,22 @@ public class BoolValue implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent) {
+    public BoolValue setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        return new BoolValue().setValue(this.value).setParent(parent).validate();
+    public BoolValue copy(RawElement parent) throws ValidationException {
+        return new BoolValue().setParent(parent).setValue(this.value);
     }
 
-    public BoolValue setValue(boolean value) { this.value = value; return this; }
+    public boolean getValue() {
+        return this.value;
+    }
 
-    @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public BoolValue setValue(boolean value) {
+        this.value = value;
         return this;
     }
 }

@@ -6,19 +6,33 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
 
+import java.util.Map;
+
 public class ReturnStatement implements Statement {
 
     private RawElement parent;
-    public Term returnedValue;
+    private Term returnedValue;
+
+    public Term getReturnedValue() {
+        return returnedValue;
+    }
+
+    public ReturnStatement setReturnedValue(Term returnedValue) {
+        this.returnedValue = returnedValue;
+        returnedValue.setParent(this);
+        return this;
+    }
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public ReturnStatement fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.ReturnStatementContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "ReturnStatementContext", context.toString());
         }
 
-        returnedValue = Term.parse(((MediatorLangParser.ReturnStatementContext) context).term(), this);
-        return this.validate();
+        setParent(parent);
+        setReturnedValue(Term.parse(((MediatorLangParser.ReturnStatementContext) context).term(), this));
+
+        return this;
     }
 
     @Override
@@ -39,22 +53,23 @@ public class ReturnStatement implements Statement {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
+    public RawElement copy(RawElement parent) throws ValidationException {
         ReturnStatement nrs = new ReturnStatement();
         nrs.setParent(parent);
-        nrs.returnedValue = (Term) this.returnedValue.clone(nrs);
-        return nrs.validate();
+        nrs.setReturnedValue(getReturnedValue().copy(nrs));
+
+        return nrs;
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Statement refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        setReturnedValue(getReturnedValue().refactor(rewriteMap));
         return this;
     }
 }

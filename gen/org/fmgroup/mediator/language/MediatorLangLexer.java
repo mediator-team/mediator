@@ -52,7 +52,7 @@ public class MediatorLangLexer extends Lexer {
 		null, "'import'", "'.'", "'*'", "';'", "'typedef'", "'as'", "','", "'='", 
 		"'sync'", "'return'", "'if'", "'('", "')'", "'{'", "'}'", "'else'", "'<'", 
 		"'>'", "'native'", "'function'", "':'", "'variables'", "'statements'", 
-		"'in'", "'out'", "'transitions'", "'->'", "'group'", "'automaton'", "'components'", 
+		"'in'", "'out'", "'transitions'", "'->'", "'group'", "'automaton'", "'declarationList'",
 		"'internals'", "'connections'", "'system'", "'['", "']'", "'-'", "'!'", 
 		"'%'", "'/'", "'+'", "'<='", "'>='", "'=='", "'!='", "'^'", "'^^'", "'&'", 
 		"'&&'", "'|'", "'||'", "'?'", "'null'", "'int'", "'..'", "'char'", "'double'", 

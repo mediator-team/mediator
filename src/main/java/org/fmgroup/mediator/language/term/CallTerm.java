@@ -9,30 +9,39 @@ import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * formalization for a function call
+ * - func(a, b)
+ * - func()
+ * where **callee** is the function that is called, and **args** is
+ */
 public class CallTerm implements Term {
 
     private RawElement parent;
 
-    public TemplateType callee;
-    public List<Term> args = new ArrayList<>();
+    private TemplateType callee;
+    private List<Term> args = new ArrayList<>();
 
     @Override
-    public RawElement fromContext(ParserRuleContext context) throws ValidationException {
+    public CallTerm fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.CallTermContext)) {
             throw ValidationException.IncompatibleContextType(this.getClass(), "CallTermContext", context.toString());
         }
 
-        this.callee = (TemplateType) new TemplateType().parse(((MediatorLangParser.CallTermContext) context).callee, this);
+        setParent(parent);
+        setCallee(new TemplateType().fromContext(((MediatorLangParser.CallTermContext) context).callee, this));
 
         Term targs = Term.parse(((MediatorLangParser.CallTermContext) context).args, this);
         if (targs instanceof TupleTerm) {
-            args.addAll(((TupleTerm) targs).getTerms());
+            setArgs(((TupleTerm) targs).getTerms());
         } else {
-            args.add(targs);
+            addArg(targs);
         }
 
-        return this.validate();
+        return this;
     }
 
     @Override
@@ -40,7 +49,7 @@ public class CallTerm implements Term {
         return String.format(
                 "%s(%s)",
                 callee.toString(),
-                args.toString()
+                args.stream().map(Object::toString).collect(Collectors.joining(", "))
         );
     }
 
@@ -50,18 +59,47 @@ public class CallTerm implements Term {
     }
 
     @Override
-    public RawElement setParent(RawElement parent)  {
+    public RawElement setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
+    public TemplateType getCallee() {
+        return callee;
+    }
+
+    public CallTerm setCallee(TemplateType callee) {
+        this.callee = callee;
+        callee.setParent(this);
+        return this;
+    }
+
+    public CallTerm addArg(Term arg) {
+        this.args.add(arg);
+        arg.setParent(this);
+        return this;
+    }
+
+    public List<Term> getArgs() {
+        return args;
+    }
+
+    public CallTerm setArgs(List<Term> args) {
+        this.args = new ArrayList<>();
+        args.forEach(this::addArg);
+        return this;
+    }
+
     @Override
-    public RawElement clone(RawElement parent) throws ValidationException {
-        CallTerm nct = (CallTerm) new CallTerm().setParent(parent);
-        nct.parent = parent;
-        nct.callee = (TemplateType) this.callee.clone(nct);
-        nct.args = new ArrayList<>(this.args);
-        return nct.validate();
+    public CallTerm copy(RawElement parent) throws ValidationException {
+        CallTerm nct = new CallTerm();
+        nct.setParent(parent);
+        nct.setCallee(this.getCallee().copy(nct));
+        for (Term arg : this.args) {
+            nct.addArg(arg.copy(nct));
+        }
+
+        return nct;
     }
 
     @Override
@@ -75,8 +113,14 @@ public class CallTerm implements Term {
     }
 
     @Override
-    public RawElement validate() throws ValidationException {
-        // TODO
+    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+        // TODO do we need to refactor the callee?
+        List<Term> args = new ArrayList<>();
+        for (Term arg : getArgs()) {
+            args.add(arg.refactor(rewriteMap));
+        }
+        setArgs(args);
         return this;
     }
+
 }
