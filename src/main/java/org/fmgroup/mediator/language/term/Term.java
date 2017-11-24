@@ -34,9 +34,6 @@ public interface Term extends RawElement {
         if (term instanceof MediatorLangParser.SingleOprTermContext) {
             return new SingleOperatorTerm().fromContext(term, parent);
         }
-        if (term instanceof MediatorLangParser.TupleTermContext) {
-            return new TupleTerm().fromContext(term, parent);
-        }
         if (term instanceof MediatorLangParser.ListTermContext) {
             return new ListTerm().fromContext(term, parent);
         }

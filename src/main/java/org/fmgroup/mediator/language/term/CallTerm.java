@@ -34,11 +34,8 @@ public class CallTerm implements Term {
         setParent(parent);
         setCallee(new TemplateType().fromContext(((MediatorLangParser.CallTermContext) context).callee, this));
 
-        Term targs = Term.parse(((MediatorLangParser.CallTermContext) context).args, this);
-        if (targs instanceof TupleTerm) {
-            setArgs(((TupleTerm) targs).getTerms());
-        } else {
-            addArg(targs);
+        for (MediatorLangParser.TermContext t : ((MediatorLangParser.CallTermContext) context).args.term()) {
+            addArg(Term.parse(t, this));
         }
 
         return this;

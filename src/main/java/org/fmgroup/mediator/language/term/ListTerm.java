@@ -49,11 +49,11 @@ public class ListTerm implements Term {
         }
 
         setParent(parent);
-        Term t = Term.parse(((MediatorLangParser.ListTermContext) context).term(), this);
-        if (t instanceof TupleTerm) {
-            setValues(((TupleTerm) t).getTerms());
-        } else {
-            addValue(t);
+
+        for (MediatorLangParser.TermContext t: ((MediatorLangParser.ListTermContext) context).terms().term()) {
+            addValue(
+                    Term.parse(t, this)
+            );
         }
 
         return this;

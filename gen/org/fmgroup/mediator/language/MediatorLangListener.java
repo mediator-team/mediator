@@ -280,6 +280,16 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitSystem(MediatorLangParser.SystemContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#terms}.
+	 * @param ctx the parse tree
+	 */
+	void enterTerms(MediatorLangParser.TermsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#terms}.
+	 * @param ctx the parse tree
+	 */
+	void exitTerms(MediatorLangParser.TermsContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code valueTerm}
 	 * labeled alternative in {@link MediatorLangParser#term}.
 	 * @param ctx the parse tree
@@ -339,18 +349,6 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBracketTerm(MediatorLangParser.BracketTermContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code tupleTerm}
-	 * labeled alternative in {@link MediatorLangParser#term}.
-	 * @param ctx the parse tree
-	 */
-	void enterTupleTerm(MediatorLangParser.TupleTermContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code tupleTerm}
-	 * labeled alternative in {@link MediatorLangParser#term}.
-	 * @param ctx the parse tree
-	 */
-	void exitTupleTerm(MediatorLangParser.TupleTermContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code singleOprTerm}
 	 * labeled alternative in {@link MediatorLangParser#term}.

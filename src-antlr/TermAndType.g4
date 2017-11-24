@@ -9,11 +9,13 @@ grammar TermAndType;
 // TODO: struct
 // TODO: map
 
+terms: (term (',' term)*)?;
+
 term:	'(' term ')'                                                # bracketTerm
-    |   '[' term ']'                                                # listTerm
+    |   '[' terms ']'                                               # listTerm
     |   opr='-' term                                                # singleOprTerm
     |   opr='!' term                                                # singleOprTerm
-    |   callee=type '(' args=term ')'                               # callTerm
+    |   callee=type '(' args=terms ')'                              # callTerm
     |   container=term '[' key=term ']'                             # elementTerm
     |   structure=term '.' key=ID                                   # fieldTerm
     |   left=term opr='%'  right=term                               # binaryOprTerm
@@ -34,7 +36,6 @@ term:	'(' term ')'                                                # bracketTerm
     |   left=term opr='|'  right=term                               # binaryOprTerm
     |   left=term opr='||' right=term                               # binaryOprTerm
     |   condition=term '?' ifTrue=term ':' ifFalse=term             # iteTerm
-    |   left=term ',' right=term                                    # tupleTerm
     |   value                                                       # valueTerm
     ;
 

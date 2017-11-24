@@ -184,19 +184,6 @@ public class ArduinoGenerator extends Generator {
 
                 if (((AssignmentStatement) s).getTarget() == null) {
                     rel += termGenerate(((AssignmentStatement) s).getExpr(), 0) + ";";
-                } else if (((AssignmentStatement) s).getTarget() instanceof TupleTerm){
-                    // TODO
-                    String temp = "";
-                    for (Term assigned : ((TupleTerm) ((AssignmentStatement) s).getTarget()).getTerms()) {
-                        int index = ((TupleTerm) ((AssignmentStatement) s).getTarget()).getTerms().indexOf(assigned);
-                        if (temp.length() > 0) temp += "\n";
-                        temp += String.format(
-                                "%s = %s;",
-                                assigned.toString(),
-                                ((TupleTerm) ((AssignmentStatement) s).getExpr()).getTerms().get(index)
-                                );
-                    }
-                    rel += temp;
                 } else {
                     rel += termGenerate(((AssignmentStatement) s).getTarget(), 0) +
                             " = " +
