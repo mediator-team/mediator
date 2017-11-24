@@ -80,6 +80,8 @@ public class CallTerm implements Term {
         return this;
     }
 
+    public Term getArg(int i) { return args.get(i); }
+
     public List<Term> getArgs() {
         return args;
     }

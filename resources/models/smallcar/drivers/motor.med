@@ -33,14 +33,16 @@ automaton speeder (act: in action, motor_l, motor_r: out signedPWM) {
         act.reqRead && act.reqWrite -> {
             sync act;
             if (act.value == forward) {
-                motor_l.value = 5;
-                motor_r.value = 5;
+                motor_l.value = 80;
+                motor_r.value = 80;
             } else if (act.value == backward) {
 
             } else if (act.value == stop) {
                 motor_l.value = 0;
                 motor_r.value = 0;
             }
+
+            sync motor_l, motor_r;
         }
     }
 }
@@ -49,7 +51,7 @@ automaton controller (act: out action) {
     transitions {
         !act.reqWrite -> act.reqWrite = true;
         act.reqRead -> {
-            act.value = forward;
+            act.value = stop;
             sync act;
         }
     }

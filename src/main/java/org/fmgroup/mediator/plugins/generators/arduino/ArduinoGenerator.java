@@ -17,14 +17,26 @@ import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
 import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
 import org.fmgroup.mediator.language.type.*;
 
+import javax.rmi.CORBA.Util;
 import java.lang.System;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+enum ArduinoPinDirection {
+    IN,
+    OUT
+}
 
 public class ArduinoGenerator extends Generator {
 
+    private Map<Integer, ArduinoPinDirection> pinStatus = new HashMap<>();
+
     @Override
     public String generate(RawElement elem) throws ArduinoGeneratorException {
+
+        pinStatus = new HashMap<>();
 
         if (elem instanceof Automaton) try {
             return String.format(
@@ -63,10 +75,11 @@ public class ArduinoGenerator extends Generator {
             throw ArduinoGeneratorException.UnclosedEntity(a);
         }
 
-        String endline = System.getProperty("line.separator");
-        String tab = "\t";
-
         String prog = "";
+        String globalDeclarations = "";
+        String setup = "";
+        String loop = "";
+
         for (Declaration var : a.getLocalVars().getDeclarationList()) {
             assert var instanceof VariableDeclaration;
             String strType = typeGenerate(((VariableDeclaration) var).getType());
@@ -76,50 +89,39 @@ public class ArduinoGenerator extends Generator {
                 }
 
                 strType += ";\n";
-                prog += String.format(strType, name);
+                globalDeclarations += String.format(strType, name);
             }
         }
 
-        prog += String.format(
+        globalDeclarations += String.format(
                 "\nint cmd_activated[%d];\nint cmd_activated_counter;\n",
                 ((TransitionGroup) a.getTransitions().get(0)).getTransitions().size()
         );
-        prog += "int cmd;\n";
 
-        prog += endline;
+        globalDeclarations += "int cmd;\n";
+
         // generate setup
-        prog += "void setup() {" + endline;
         for (Declaration var : a.getLocalVars().getDeclarationList()) {
             assert var instanceof VariableDeclaration;
             for (String name : var.getIdentifiers()) {
-                prog += UtilCode.addIndent(
-                        name +
-                            " = " +
-                            termGenerate(((VariableDeclaration) var).getType().getInitValue(), 0) + ";" + endline,
-                        1
+                setup += String.format(
+                        "%s = %s;\n",
+                        name,
+                        termGenerate(((VariableDeclaration) var).getType().getInitValue(), 0)
                 );
             }
         }
 
-        prog += "}" + endline;
-
-        prog += endline;
         // generate loop
-        prog += "void loop() {" + endline;
 
         // we assume that the automaton has been canonicalized already
         assert a.getTransitions().size() == 1;
         assert a.getTransitions().get(0) instanceof TransitionGroup;
 
-        prog += UtilCode.addIndent(
-                String.format(
+        loop += String.format(
                         "cmd_activated_counter = 0;\n",
                         ((TransitionGroup) a.getTransitions().get(0)).getTransitions().size()
-                ),
-                1
-        );
-
-        prog += "\n";
+                );
 
         String conditionCheck = "";
         String transitionExecution = "";
@@ -147,18 +149,26 @@ public class ArduinoGenerator extends Generator {
         }
 
         // which transitions are activated ?
-        prog += UtilCode.addIndent(conditionCheck, 1);
-        prog += "\n";
-        prog += UtilCode.addIndent(
-                String.format(
-                        "cmd = cmd_activated[random(%d)];\n",
-                        ((TransitionGroup) a.getTransitions().get(0)).getTransitions().size()
-                ),
-                1
+        loop += conditionCheck;
+        loop += "cmd = cmd_activated[random(cmd_activated_counter)];\n";
+
+        loop += transitionExecution;
+
+        // after all transitions generated, now we analyze the pin directions
+        for (Integer pin: pinStatus.keySet()) {
+            if (pinStatus.get(pin).equals(ArduinoPinDirection.IN)) {
+                setup += String.format("pinMode(%d, INPUT);\n", pin);
+            } else {
+                setup += String.format("pinMode(%d, OUTPUT);\n", pin);
+            }
+        }
+
+        prog = String.format(
+                "%s\nvoid setup() {\n%s}\n\nvoid loop() {\n%s}\n",
+                globalDeclarations,
+                UtilCode.addIndent(setup, 1),
+                UtilCode.addIndent(loop, 1)
         );
-        prog += "\n";
-        prog += UtilCode.addIndent(transitionExecution, 1);
-        prog += "}" + endline;
 
         return prog;
     }
@@ -241,6 +251,7 @@ public class ArduinoGenerator extends Generator {
     }
 
     private String termGenerate(Term t, int parentPrecedence) throws ArduinoGeneratorException {
+
         if (t instanceof IntValue) return String.valueOf(((IntValue) t).getValue());
         if (t instanceof NullValue) return "NULL";
         if (t instanceof BoolValue) return ((BoolValue) t).getValue() ? "1" : "0";
@@ -253,7 +264,6 @@ public class ArduinoGenerator extends Generator {
 
 
         if (t instanceof BinaryOperatorTerm) {
-            // TODO : validation
             // TODO : brackets
             return String.format(
                     "%s %s %s",
@@ -273,6 +283,30 @@ public class ArduinoGenerator extends Generator {
             for (Term arg : ((CallTerm) t).getArgs()) {
                 args.add(termGenerate(arg, 0));
             }
+
+            // todo check whether it is a pwm port
+
+            String calleeName = ((CallTerm) t).getCallee().toString();
+            Integer pin = null;
+            ArduinoPinDirection pinDirection = null;
+
+            if (calleeName.equals("digitalWrite") || calleeName.equals("analogWrite")) {
+                pin = Integer.parseInt(((CallTerm) t).getArg(0).toString());
+                pinDirection = ArduinoPinDirection.OUT;
+            }
+            else if (calleeName.equals("digitalRead") || calleeName.equals("analogRead")) {
+                pin = Integer.parseInt(((CallTerm) t).getArg(0).toString());
+                pinDirection = ArduinoPinDirection.IN;
+            }
+
+            if (pin != null) {
+                if (pinStatus.containsKey(pin) && !pinStatus.get(pin).equals(pinDirection)) {
+                    throw ArduinoGeneratorException.InconsistentPinType(pin);
+                }
+
+                pinStatus.put(pin, pinDirection);
+            }
+
             return String.format(
                     "%s(%s)",
                     ((CallTerm) t).getCallee().toString(),

@@ -42,4 +42,13 @@ public class ArduinoGeneratorException extends Exception{
         return ex;
     }
 
+    public static ArduinoGeneratorException InconsistentPinType(int pinIndex) {
+        ArduinoGeneratorException ex = new ArduinoGeneratorException(
+                String.format(
+                        "directions of pin %d are inconsistent.",
+                        pinIndex
+                )
+        );
+        return ex;
+    }
 }
