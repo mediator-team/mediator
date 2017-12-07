@@ -36,6 +36,19 @@ public class BoolValue implements Value {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Boolean) {
+            return getValue() == ((Boolean) obj).booleanValue();
+        }
+
+        if (obj instanceof BoolValue) {
+            return getValue() == ((BoolValue) obj).getValue();
+        }
+
+        return false;
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

@@ -1,5 +1,4 @@
-native function digitalWrite(pin: int, val:int);
-native function analogWrite(pin: int, val:int 0..1);
+from arduino.arduino import digitalWrite, analogWrite;
 
 typedef int -1023 .. 1023 init 0 as signedPWM;
 typedef enum {forward, backward, rotate_left, rotate_right, stop} as action;
@@ -20,7 +19,7 @@ automaton <pinDirection:int, pinSpeed:int> engine (speed : in signedPWM) {
     }
 }
 
-// todo use system to encapsulate them
+
 automaton speeder (act: in action, motor_l, motor_r: out signedPWM) {
     transitions {
         (act.reqWrite != motor_l.reqWrite) -> {
@@ -47,10 +46,20 @@ automaton speeder (act: in action, motor_l, motor_r: out signedPWM) {
     }
 }
 
-automaton controller (act: out action) {
+automaton <trigPin:int, echoPin:int> ultraSonicDist (dist: out double) {
+    transitions {
+        !dist.reqWrite -> dist.reqWrite = true;
+        dist.reqRead -> {
+            sync dist;
+        }
+    }
+}
+
+automaton controller (dist: in double init 0, act: out action) {
     transitions {
         !act.reqWrite -> act.reqWrite = true;
         act.reqRead -> {
+            sync dist;
             act.value = stop;
             sync act;
         }
@@ -66,5 +75,6 @@ system testbench() {
 
     connections {
         speeder(c.act, m1.speed, m2.speed);
+        ultraSonicDist<6,7>(c.dist);
     }
 }

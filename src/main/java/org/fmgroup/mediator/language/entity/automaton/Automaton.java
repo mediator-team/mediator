@@ -19,7 +19,7 @@ public class Automaton implements Entity, Scope, Templated {
     private Template template = null;
     private EntityInterface entityInterface = null;
     private VariableDeclarationCollection localVars = new VariableDeclarationCollection();
-    private List<Transition> transitions = new ArrayList<>();
+    private List<Transition> transitions = new ArrayList();
     private String name;
 
     public EntityInterface getEntityInterface() {
@@ -53,7 +53,7 @@ public class Automaton implements Entity, Scope, Templated {
     }
 
     public Automaton setTransitions(List<Transition> transitions) {
-        this.transitions = new ArrayList<>();
+        this.transitions = new ArrayList();
         transitions.forEach(this::addTransition);
         return this;
     }
@@ -98,7 +98,7 @@ public class Automaton implements Entity, Scope, Templated {
         // step 1. analyze local variables
         for (MediatorLangParser.VariableSegmentContext vsc : automaton.variableSegment()) {
             for (MediatorLangParser.LocalVariableDefContext lvc : vsc.localVariableDef()) {
-                this.localVars.addDeclaration((VariableDeclaration) new VariableDeclaration().fromContext(lvc, this));
+                this.localVars.addDeclaration(new VariableDeclaration().fromContext(lvc, this));
             }
         }
 

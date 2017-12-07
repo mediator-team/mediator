@@ -10,12 +10,12 @@ import org.fmgroup.mediator.language.ValidationException;
 import org.ini4j.Ini;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Project {
     /**
@@ -44,10 +44,23 @@ public class Project {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            builtinPaths.add(
+                    Paths.get(
+                            URLDecoder.decode(
+                                    this.getClass().getResource("/").getPath().toString(), "utf-8"
+                            ),
+                            "library"
+                    ).toString()
+            );
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<String> getExternalPaths() {
-        String paths = configFile.get("library", "externala");
+        String paths = configFile.get("library", "externals");
         if (paths == null) return new ArrayList<>();
         else
             return Arrays.asList(paths.split(":"));
@@ -91,7 +104,7 @@ public class Project {
             parser.removeErrorListeners();
             parser.addErrorListener(new VerboseListener());
 
-            return new Program().fromContext(parser.prog(), null);
+            return new Program().setProject(this).fromContext(parser.prog(), null);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ValidationException e) {

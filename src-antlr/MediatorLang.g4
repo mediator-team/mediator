@@ -4,8 +4,12 @@ import TermAndType;
 
 prog: (dependency | typedef | function | automaton | system )* ;
 
-dependency:
-    'import' (ID '.') * (ID | '*') ';';
+dependency
+    locals [ boolean importAll = false ]
+:
+    'import' importedlib=scopedID ';'
+    | 'from' fromlib=scopedID 'import' (ID (',' ID)* | '*' {$importAll = true;})';'
+;
 
 typedef: 'typedef' type 'as' ID (',' ID)* ';';
 

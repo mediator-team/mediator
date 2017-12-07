@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class IteStatement implements Statement {
+public class IteStatement implements Statement, Statements {
 
     private RawElement parent;
     private Term condition;
@@ -152,5 +152,18 @@ public class IteStatement implements Statement {
             s.refactor(rewriteMap);
         }
         return this;
+    }
+
+    @Override
+    public Statement nextStatement(Statement s) {
+        if (thenStmts.contains(s)) {
+            if (thenStmts.indexOf(s) + 1 < thenStmts.size()) return thenStmts.get(thenStmts.indexOf(s) + 1);
+            else return null;
+        }
+        if (elseStmts.contains(s)) {
+            if (elseStmts.indexOf(s) + 1 < elseStmts.size()) return elseStmts.get(elseStmts.indexOf(s) + 1);
+            else return null;
+        }
+        return null;
     }
 }

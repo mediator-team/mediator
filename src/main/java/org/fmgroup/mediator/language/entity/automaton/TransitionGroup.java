@@ -16,20 +16,33 @@ import java.util.stream.Collectors;
 public class TransitionGroup implements Transition, RawElement {
 
     private RawElement parent;
-    private List<Transition> transitions = new ArrayList<>();
+    private List<TransitionSingle> transitions = new ArrayList();
 
     public List<Transition> getTransitions() {
-        return transitions;
+        return transitions.stream().map(
+                transitionSingle -> (Transition) transitionSingle
+        ).collect(Collectors.toList());
     }
 
-    public TransitionGroup setTransitions(List<Transition> transitions) {
-        this.transitions = new ArrayList<>();
-        transitions.forEach(this::addTransition);
+    public TransitionGroup setTransitions(List<Transition> transitions) throws ValidationException {
+        this.transitions = new ArrayList();
+        for (Transition t:transitions) {
+            addTransition(t);
+        }
         return this;
     }
 
-    public TransitionGroup addTransition(Transition transition) {
-        this.transitions.add(transition);
+    public TransitionGroup addTransition(Transition transition) throws ValidationException {
+        if (transition instanceof TransitionGroup) {
+            throw ValidationException.UnexpectedElement(
+                    this.getClass(),
+                    transition.getClass(),
+                    "TransitionSingle",
+                    "sub-transitions"
+            );
+        }
+
+        this.transitions.add((TransitionSingle) transition);
         transition.setParent(this);
         return this;
     }

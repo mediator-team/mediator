@@ -1,6 +1,9 @@
 package org.fmgroup.mediator.language;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.fmgroup.mediator.core.project.Project;
+import org.fmgroup.mediator.core.project.ProjectException;
 import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.entity.system.System;
@@ -14,16 +17,77 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Program implements RawElement, Scope {
 
-    public List<Program> dependencies = new ArrayList<>();
-    public TypeDeclarationCollection typedefs = new TypeDeclarationCollection();
-    public Map<String, Function> functions = new HashMap<>();
-    public Map<String, Automaton> automata = new HashMap<>();
-    public Map<String, Automaton> compiledAutomata = new HashMap<>();
-    public Map<String, System> systems = new HashMap<>();
+    private List<Program> dependencies = new ArrayList<>();
+    private TypeDeclarationCollection typedefs = new TypeDeclarationCollection();
+    private Map<String, Function> functions = new HashMap<>();
+    private Map<String, Automaton> automata = new HashMap<>();
+    private Map<String, Automaton> compiledAutomata = new HashMap<>();
+    private Map<String, System> systems = new HashMap<>();
+    private Project project = null;
 
+    public List<Program> getDependencies() {
+        return dependencies;
+    }
+
+    public TypeDeclarationCollection getTypedefs() {
+        return typedefs;
+    }
+
+    public Map<String, Function> getFunctions() {
+        return functions;
+    }
+
+    public Program addFunction(String name, Function f) throws ValidationException {
+        if (functions.containsKey(name)) {
+            throw ValidationException.DumplicatedIdentifier(name, "function");
+        }
+
+        functions.put(name, f);
+        return this;
+    }
+
+    public Map<String, Automaton> getAutomata() {
+        return automata;
+    }
+
+    public Program addAutomaton(String name, Automaton a) throws ValidationException {
+        if (automata.containsKey(name)) {
+            throw ValidationException.DumplicatedIdentifier(name, "automaton");
+        }
+
+        automata.put(name, a);
+        return this;
+    }
+
+    public Map<String, Automaton> getCompiledAutomata() {
+        return compiledAutomata;
+    }
+
+    public Map<String, System> getSystems() {
+        return systems;
+    }
+
+    public Program addSystem (String name, System s) throws ValidationException {
+        if (systems.containsKey(name)) {
+            throw ValidationException.DumplicatedIdentifier(name, "system");
+        }
+
+        systems.put(name, s);
+        return this;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public Program setProject(Project project) {
+        this.project = project;
+        return this;
+    }
 
     @Override
     public Program fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
@@ -34,7 +98,53 @@ public class Program implements RawElement, Scope {
         MediatorLangParser.ProgContext prog = (MediatorLangParser.ProgContext) context;
         // step 1. load dependencies
         for (MediatorLangParser.DependencyContext dc : prog.dependency()) {
-            //
+            if (dc.importedlib != null) {
+                String libpath = dc.importedlib.scopes.stream().map(
+                        token -> token.getText() + "/"
+                ).collect(Collectors.joining("")) + dc.importedlib.identifier.getText();
+
+                // todo
+            } else {
+                String libpath = dc.fromlib.scopes.stream().map(
+                        token -> token.getText() + "/"
+                ).collect(Collectors.joining("")) + dc.fromlib.identifier.getText() + ".med";
+
+                List<String> idTsoImport = dc.ID().stream().map(ParseTree::getText).collect(Collectors.toList());
+
+                try {
+                    Program lib = project.parseFile(libpath);
+
+                    for (TypeDeclaration typedef : lib.getTypedefs().getDeclarationList()) {
+                        boolean flag = false;
+                        for (String name: typedef.getIdentifiers()) {
+                            if (idTsoImport.contains(name)) {
+                                flag = true;
+                                break;
+                            }
+                        }
+
+                        if (flag || dc.importAll) this.getTypedefs().addDeclaration(typedef);
+                    }
+
+                    for (String funcname : lib.getFunctions().keySet()) {
+                        if (idTsoImport.contains(funcname) || dc.importAll)
+                            this.addFunction(funcname, lib.getFunctions().get(funcname));
+                    }
+
+                    for (String name : lib.getAutomata().keySet()) {
+                        if (idTsoImport.contains(name) || dc.importAll)
+                            this.addAutomaton(name, lib.getAutomata().get(name));
+                    }
+
+                    for (String name : lib.getSystems().keySet()) {
+                        if (idTsoImport.contains(name) || dc.importAll)
+                            this.addSystem(name, lib.getSystems().get(name));
+                    }
+
+                } catch (ProjectException e) {
+                    throw ValidationException.UnderDevelopment();
+                }
+            }
         }
 
         // step 2. analyze typedefs

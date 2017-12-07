@@ -1,9 +1,14 @@
 package org.fmgroup.mediator.plugins.generators.arduino;
 
-import org.fmgroup.mediator.generator.framework.Generator;
 import org.fmgroup.mediator.common.UtilCode;
-import org.fmgroup.mediator.language.*;
+import org.fmgroup.mediator.plugin.Generator;
+import org.fmgroup.mediator.language.Program;
+import org.fmgroup.mediator.language.RawElement;
+import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.automaton.Automaton;
+import org.fmgroup.mediator.language.entity.automaton.Transition;
+import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
+import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
@@ -12,13 +17,8 @@ import org.fmgroup.mediator.language.statement.IteStatement;
 import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.*;
-import org.fmgroup.mediator.language.entity.automaton.Transition;
-import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
-import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
 import org.fmgroup.mediator.language.type.*;
 
-import javax.rmi.CORBA.Util;
-import java.lang.System;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +29,7 @@ enum ArduinoPinDirection {
     OUT
 }
 
-public class ArduinoGenerator extends Generator {
+public class ArduinoGenerator implements Generator {
 
     private Map<Integer, ArduinoPinDirection> pinStatus = new HashMap<>();
 
@@ -57,7 +57,7 @@ public class ArduinoGenerator extends Generator {
         // TODO generate typedefs in other programs
         // TODO only generate typedefs used
 
-        for (Declaration typedecl : p.typedefs.getDeclarationList()) {
+        for (Declaration typedecl : p.getTypedefs().getDeclarationList()) {
             assert typedecl instanceof TypeDeclaration;
             code += String.format(
                     "typedef %s %s;\n",

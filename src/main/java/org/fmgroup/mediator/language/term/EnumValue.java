@@ -32,6 +32,15 @@ public class EnumValue implements Value {
     }
 
     @Override
+    public EnumValue copy(RawElement parent) throws ValidationException {
+        EnumValue newev = new EnumValue().setParent(parent);
+        newev.setReference(getReference());
+        newev.setIdentifier(getIdentifier());
+
+        return newev;
+    }
+
+    @Override
     public String toString() {
         return identifier;
     }

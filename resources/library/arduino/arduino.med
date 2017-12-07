@@ -1,0 +1,2 @@
+native function digitalWrite(pin: int, val:int 0..1);
+native function analogWrite(pin: int, val:int 0..1023);

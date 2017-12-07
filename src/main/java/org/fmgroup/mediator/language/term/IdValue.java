@@ -7,9 +7,6 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.scope.Scope;
-import org.fmgroup.mediator.language.scope.TypeDeclaration;
-import org.fmgroup.mediator.language.scope.VariableDeclaration;
-import org.fmgroup.mediator.language.type.EnumType;
 import org.fmgroup.mediator.language.type.IdType;
 import org.fmgroup.mediator.language.type.Type;
 

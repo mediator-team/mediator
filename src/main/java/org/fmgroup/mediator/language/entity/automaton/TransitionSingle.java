@@ -6,6 +6,7 @@ import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.statement.Statement;
+import org.fmgroup.mediator.language.statement.Statements;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.Term;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TransitionSingle implements Transition {
+public class TransitionSingle implements Transition, Statements {
 
     private RawElement parent;
     private Term guard;
@@ -130,7 +131,7 @@ public class TransitionSingle implements Transition {
     }
 
     @Override
-    public Transition refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
+    public TransitionSingle refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
         this.parent = parent;
         setGuard(getGuard().refactor(rewriteMap));
         List<Statement> newStatements = new ArrayList<>();
@@ -140,5 +141,14 @@ public class TransitionSingle implements Transition {
 
         setStatements(newStatements);
         return this;
+    }
+
+    @Override
+    public Statement nextStatement(Statement s) {
+        if (statements.contains(s)) {
+            if (statements.indexOf(s) + 1 < statements.size()) return statements.get(statements.indexOf(s) + 1);
+        }
+
+        return null;
     }
 }

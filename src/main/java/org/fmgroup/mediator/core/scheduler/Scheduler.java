@@ -1,25 +1,32 @@
 package org.fmgroup.mediator.core.scheduler;
 
-import org.fmgroup.mediator.language.*;
+import org.fmgroup.mediator.language.RawElement;
+import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.Entity;
-import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.entity.PortDeclaration;
+import org.fmgroup.mediator.language.entity.automaton.Automaton;
+import org.fmgroup.mediator.language.entity.automaton.Transition;
+import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
+import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
 import org.fmgroup.mediator.language.entity.system.ComponentDeclaration;
+import org.fmgroup.mediator.language.entity.system.Connection;
 import org.fmgroup.mediator.language.entity.system.InternalDeclaration;
+import org.fmgroup.mediator.language.entity.system.System;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
-import org.fmgroup.mediator.language.entity.system.Connection;
-import org.fmgroup.mediator.language.entity.system.System;
 import org.fmgroup.mediator.language.statement.AssignmentStatement;
 import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.*;
-import org.fmgroup.mediator.language.entity.automaton.Transition;
-import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
-import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
-import org.fmgroup.mediator.language.type.*;
+import org.fmgroup.mediator.language.type.BoolType;
+import org.fmgroup.mediator.language.type.IdType;
+import org.fmgroup.mediator.language.type.InitType;
+import org.fmgroup.mediator.language.type.Type;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class Scheduler {
@@ -284,9 +291,9 @@ public class Scheduler {
         }
 
         for (Map<Entity, Transition> combination : combinations) {
-            Transition syncTrans = Synchronize(combination, a);
+            TransitionSingle syncTrans = Synchronize(combination, a);
             if (syncTrans != null) {
-                baseGroup.getTransitions().add(syncTrans);
+                baseGroup.addTransition(syncTrans);
             }
         }
 
@@ -294,7 +301,7 @@ public class Scheduler {
 
     }
 
-    private static Transition Synchronize(Map<Entity, Transition> combination, Entity parent) throws ValidationException {
+    private static TransitionSingle Synchronize(Map<Entity, Transition> combination, Entity parent) throws ValidationException {
         /*
         In what case a set of transitions can be synchronized?
         - 1. all internal declarationList are synchronized
@@ -443,7 +450,7 @@ public class Scheduler {
                 ctrans.add(tnew);
             } else {
                 ctrans.addAll(
-                        CanonicalizeTransitions(cond, ((TransitionGroup)t).getTransitions(), parent)
+                        CanonicalizeTransitions(cond, ((TransitionGroup) t).getTransitions(), parent)
                 );
             }
 

@@ -9,6 +9,7 @@ import org.fmgroup.mediator.language.term.Term;
 import java.util.Map;
 
 public interface Transition extends RawElement {
+
     static Transition parse(MediatorLangParser.TransitionContext context, RawElement parent) throws ValidationException {
 
         if (context instanceof MediatorLangParser.TransitionSingleContext)
@@ -34,7 +35,7 @@ public interface Transition extends RawElement {
         }
     }
 
-    default Transition refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
+    default TransitionSingle refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
         throw ValidationException.UnderDevelopment();
     }
 }
