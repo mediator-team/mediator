@@ -1,7 +1,6 @@
 package org.fmgroup.mediator.plugins.generators.arduino;
 
 import org.fmgroup.mediator.common.UtilCode;
-import org.fmgroup.mediator.plugin.Generator;
 import org.fmgroup.mediator.language.Program;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
@@ -18,6 +17,7 @@ import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.*;
 import org.fmgroup.mediator.language.type.*;
+import org.fmgroup.mediator.plugin.Generator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,8 +54,8 @@ public class ArduinoGenerator implements Generator {
     private String typedefGenerate(Program p) throws ArduinoGeneratorException {
         String code = "";
 
-        // TODO generate typedefs in other programs
-        // TODO only generate typedefs used
+        // TODO CommandGenerate typedefs in other programs
+        // TODO only CommandGenerate typedefs used
 
         for (Declaration typedecl : p.getTypedefs().getDeclarationList()) {
             assert typedecl instanceof TypeDeclaration;
@@ -100,7 +100,7 @@ public class ArduinoGenerator implements Generator {
 
         globalDeclarations += "int cmd;\n";
 
-        // generate setup
+        // CommandGenerate setup
         for (Declaration var : a.getLocalVars().getDeclarationList()) {
             assert var instanceof VariableDeclaration;
             for (String name : var.getIdentifiers()) {
@@ -112,16 +112,16 @@ public class ArduinoGenerator implements Generator {
             }
         }
 
-        // generate loop
+        // CommandGenerate loop
 
         // we assume that the automaton has been canonicalized already
         assert a.getTransitions().size() == 1;
         assert a.getTransitions().get(0) instanceof TransitionGroup;
 
         loop += String.format(
-                        "cmd_activated_counter = 0;\n",
-                        ((TransitionGroup) a.getTransitions().get(0)).getTransitions().size()
-                );
+                "cmd_activated_counter = 0;\n",
+                ((TransitionGroup) a.getTransitions().get(0)).getTransitions().size()
+        );
 
         String conditionCheck = "";
         String transitionExecution = "";
@@ -155,7 +155,7 @@ public class ArduinoGenerator implements Generator {
         loop += transitionExecution;
 
         // after all transitions generated, now we analyze the pin directions
-        for (Integer pin: pinStatus.keySet()) {
+        for (Integer pin : pinStatus.keySet()) {
             if (pinStatus.get(pin).equals(ArduinoPinDirection.IN)) {
                 setup += String.format("pinMode(%d, INPUT);\n", pin);
             } else {
@@ -189,8 +189,7 @@ public class ArduinoGenerator implements Generator {
                             " = " +
                             termGenerate(((AssignmentStatement) s).getExpr(), 0) + ";";
                 }
-            }
-            else if (s instanceof IteStatement) {
+            } else if (s instanceof IteStatement) {
                 rel += String.format(
                         "if (%s) {\n%s\n}",
                         termGenerate(((IteStatement) s).getCondition(), 0),
@@ -280,8 +279,7 @@ public class ArduinoGenerator implements Generator {
             if (calleeName.equals("digitalWrite") || calleeName.equals("analogWrite")) {
                 pin = Integer.parseInt(((CallTerm) t).getArg(0).toString());
                 pinDirection = ArduinoPinDirection.OUT;
-            }
-            else if (calleeName.equals("digitalRead") || calleeName.equals("analogRead")) {
+            } else if (calleeName.equals("digitalRead") || calleeName.equals("analogRead")) {
                 pin = Integer.parseInt(((CallTerm) t).getArg(0).toString());
                 pinDirection = ArduinoPinDirection.IN;
             }
@@ -315,5 +313,20 @@ public class ArduinoGenerator implements Generator {
         if (t instanceof EnumValue) return t.toString();
 
         throw ArduinoGeneratorException.UnhandledTerm(t);
+    }
+
+    @Override
+    public String getName() {
+        return "Arduino C code generator";
+    }
+
+    @Override
+    public String getVersion() {
+        return "0.0.1";
+    }
+
+    @Override
+    public String getDescription() {
+        return "providing support for Arduino C code generation";
     }
 }

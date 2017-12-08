@@ -3,7 +3,7 @@ package org.fmgroup.mediator.plugin;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.plugins.generators.arduino.ArduinoGeneratorException;
 
-public interface Generator {
+public interface Generator extends Plugin {
     String generate(RawElement elem) throws ArduinoGeneratorException;
 
     /**

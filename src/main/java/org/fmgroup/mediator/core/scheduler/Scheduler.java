@@ -274,7 +274,7 @@ public class Scheduler {
         }
 
         // start synchronization
-        // generate all possible combinations
+        // CommandGenerate all possible combinations
         List<Map<Entity, Transition>> combinations = new ArrayList<>();
         combinations.add(new HashMap<>());
         for (Entity owner : externals.keySet()) {

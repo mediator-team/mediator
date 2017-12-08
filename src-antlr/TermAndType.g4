@@ -12,6 +12,7 @@ grammar TermAndType;
 terms: (term (',' term)*)?;
 
 term:	'(' term ')'                                                # bracketTerm
+    |   '(' term (',' term)+ ')'                                    # tupleTerm
     |   '[' terms ']'                                               # listTerm
     |   opr='-' term                                                # singleOprTerm
     |   opr='!' term                                                # singleOprTerm
@@ -50,6 +51,7 @@ value:
     ;
 
 type:   '(' type ')'                                                # bracketType
+    |   '(' type (',' type)+ ')'                                    # tupleType
     |   'int'                                                       # intType
     |   'int' lbound=term '..' ubound=term                          # boundedIntType
     |   'char'                                                      # charType

@@ -19,7 +19,7 @@ public class ComponentDeclarationCollection implements DeclarationCollection<Com
     /**
      * parses a context, basically a `components` segment and add all the component declarations to this object
      * **NOTE** different from other fromContext functions, it is designed to be executed several times. So if you
-     * want to generate a brand new ComponentDeclarationCollection, please manually create a new instance and call
+     * want to CommandGenerate a brand new ComponentDeclarationCollection, please manually create a new instance and call
      * fromContext again
      *
      * @param context

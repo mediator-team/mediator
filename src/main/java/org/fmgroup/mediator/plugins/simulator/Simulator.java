@@ -13,17 +13,20 @@ import org.fmgroup.mediator.language.statement.IteStatement;
 import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.Statements;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Simulator {
+public class Simulator implements Plugin {
 
     private Entity entity;
     private List<SimulatorState> trace = new ArrayList<>();
 
     private int position;
+
+    public Simulator () { }
 
     public Simulator (Entity entity) throws SimulatorException, ValidationException {
         this.entity = entity;
@@ -152,4 +155,18 @@ public class Simulator {
         }
     }
 
+    @Override
+    public String getName() {
+        return "Simulator";
+    }
+
+    @Override
+    public String getVersion() {
+        return "0.0.1";
+    }
+
+    @Override
+    public String getDescription() {
+        return "a simple simulator based on parallel semantics";
+    }
 }

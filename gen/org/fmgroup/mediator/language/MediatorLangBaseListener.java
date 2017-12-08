@@ -400,6 +400,18 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTupleTerm(MediatorLangParser.TupleTermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTupleTerm(MediatorLangParser.TupleTermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSingleOprTerm(MediatorLangParser.SingleOprTermContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -623,6 +635,18 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitEnumType(MediatorLangParser.EnumTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTupleType(MediatorLangParser.TupleTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTupleType(MediatorLangParser.TupleTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
