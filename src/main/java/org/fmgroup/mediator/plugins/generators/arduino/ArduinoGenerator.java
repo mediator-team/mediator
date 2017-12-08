@@ -1,6 +1,7 @@
 package org.fmgroup.mediator.plugins.generators.arduino;
 
 import org.fmgroup.mediator.common.UtilCode;
+import org.fmgroup.mediator.core.scheduler.Scheduler;
 import org.fmgroup.mediator.language.Program;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
@@ -8,6 +9,7 @@ import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.entity.automaton.Transition;
 import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
 import org.fmgroup.mediator.language.entity.automaton.TransitionSingle;
+import org.fmgroup.mediator.language.entity.system.System;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
@@ -38,17 +40,30 @@ public class ArduinoGenerator implements Generator {
 
         pinStatus = new HashMap<>();
 
-        if (elem instanceof Automaton) try {
-            return String.format(
-                    "%s\n%s",
-                    typedefGenerate((Program) elem.getParent()),
-                    automatonGenerate((Automaton) elem)
-            );
-        } catch (ValidationException e) {
-            e.printStackTrace();
+        if (elem instanceof Automaton) {
+            try {
+                return String.format(
+                        "%s\n%s",
+                        typedefGenerate((Program) elem.getParent()),
+                        automatonGenerate((Automaton) elem)
+                );
+            } catch (ValidationException e) {
+                e.printStackTrace();
+            }
+        } else if (elem instanceof System){
+            try {
+                return generate(Scheduler.Schedule((System) elem));
+            } catch (ValidationException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
+    }
+
+    @Override
+    public String getSupportedPlatform() {
+        return "arduino";
     }
 
     private String typedefGenerate(Program p) throws ArduinoGeneratorException {
@@ -179,7 +194,7 @@ public class ArduinoGenerator implements Generator {
             if (rel.length() > 0) rel += "\n";
 
             if (s instanceof SynchronizingStatement) {
-                System.err.println("A sync statement is not supposed to show up when generating codes.");
+                java.lang.System.err.println("A sync statement is not supposed to show up when generating codes.");
             } else if (s instanceof AssignmentStatement) {
 
                 if (((AssignmentStatement) s).getTarget() == null) {

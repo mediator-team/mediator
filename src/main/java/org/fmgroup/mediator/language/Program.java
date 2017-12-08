@@ -1,9 +1,11 @@
 package org.fmgroup.mediator.language;
 
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.fmgroup.mediator.core.project.Project;
-import org.fmgroup.mediator.core.project.ProjectException;
+import org.fmgroup.mediator.common.ToolInfo;
+import org.fmgroup.mediator.core.antlr.VerboseListener;
 import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.entity.system.System;
@@ -13,6 +15,9 @@ import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
 import org.fmgroup.mediator.language.scope.TypeDeclarationCollection;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +32,17 @@ public class Program implements RawElement, Scope {
     private Map<String, Automaton> automata = new HashMap<>();
     private Map<String, Automaton> compiledAutomata = new HashMap<>();
     private Map<String, System> systems = new HashMap<>();
-    private Project project = null;
+
+    public List<String> getExternalPaths() {
+        return externalPaths;
+    }
+
+    public Program setExternalPaths(List<String> externalPaths) {
+        this.externalPaths = new ArrayList<>(externalPaths);
+        return this;
+    }
+
+    private List<String> externalPaths = null;
 
     public List<Program> getDependencies() {
         return dependencies;
@@ -80,15 +95,6 @@ public class Program implements RawElement, Scope {
         return this;
     }
 
-    public Project getProject() {
-        return project;
-    }
-
-    public Program setProject(Project project) {
-        this.project = project;
-        return this;
-    }
-
     @Override
     public Program fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
         if (!(context instanceof MediatorLangParser.ProgContext)) {
@@ -111,38 +117,37 @@ public class Program implements RawElement, Scope {
 
                 List<String> idTsoImport = dc.ID().stream().map(ParseTree::getText).collect(Collectors.toList());
 
+                Program lib = null;
                 try {
-                    Program lib = project.parseFile(libpath);
-
-                    for (TypeDeclaration typedef : lib.getTypedefs().getDeclarationList()) {
-                        boolean flag = false;
-                        for (String name: typedef.getIdentifiers()) {
-                            if (idTsoImport.contains(name)) {
-                                flag = true;
-                                break;
-                            }
+                    lib = Program.parseFile(libpath);
+                } catch (FileNotFoundException e) {
+                    throw ValidationException.UnknownIdentifier(libpath, "library");
+                }
+                for (TypeDeclaration typedef : lib.getTypedefs().getDeclarationList()) {
+                    boolean flag = false;
+                    for (String name: typedef.getIdentifiers()) {
+                        if (idTsoImport.contains(name)) {
+                            flag = true;
+                            break;
                         }
-
-                        if (flag || dc.importAll) this.getTypedefs().addDeclaration(typedef);
                     }
 
-                    for (String funcname : lib.getFunctions().keySet()) {
-                        if (idTsoImport.contains(funcname) || dc.importAll)
-                            this.addFunction(funcname, lib.getFunctions().get(funcname));
-                    }
+                    if (flag || dc.importAll) this.getTypedefs().addDeclaration(typedef);
+                }
 
-                    for (String name : lib.getAutomata().keySet()) {
-                        if (idTsoImport.contains(name) || dc.importAll)
-                            this.addAutomaton(name, lib.getAutomata().get(name));
-                    }
+                for (String funcname : lib.getFunctions().keySet()) {
+                    if (idTsoImport.contains(funcname) || dc.importAll)
+                        this.addFunction(funcname, lib.getFunctions().get(funcname));
+                }
 
-                    for (String name : lib.getSystems().keySet()) {
-                        if (idTsoImport.contains(name) || dc.importAll)
-                            this.addSystem(name, lib.getSystems().get(name));
-                    }
+                for (String name : lib.getAutomata().keySet()) {
+                    if (idTsoImport.contains(name) || dc.importAll)
+                        this.addAutomaton(name, lib.getAutomata().get(name));
+                }
 
-                } catch (ProjectException e) {
-                    throw ValidationException.UnderDevelopment();
+                for (String name : lib.getSystems().keySet()) {
+                    if (idTsoImport.contains(name) || dc.importAll)
+                        this.addSystem(name, lib.getSystems().get(name));
                 }
             }
         }
@@ -230,6 +235,52 @@ public class Program implements RawElement, Scope {
         } else {
             return null;
         }
+        return null;
+    }
+
+    public static Program parseFile(String filename) throws FileNotFoundException {
+        return Program.parseFile(filename, new ArrayList<>());
+    }
+
+    public static Program parseFile(String filename, List<String> externalPaths) throws FileNotFoundException {
+        File file = null;
+        List<String> paths = new ArrayList<>();
+
+        // obtain paths, both internal and external
+        paths.addAll(externalPaths);
+        paths.add(ToolInfo.getSystemLibraryPath());
+        paths.add(java.lang.System.getProperty("user.dir").toString());
+
+        for (String path : paths) {
+            if (Files.exists(Paths.get(path, filename))) {
+                file = Paths.get(path, filename).toFile();
+            }
+        }
+
+        if (file == null) {
+            throw new FileNotFoundException(String.format(
+                    "cannot locate %s in all paths",
+                    filename
+            ));
+        }
+
+        try {
+            InputStream is = new FileInputStream(file);
+            MediatorLangLexer lexer = new MediatorLangLexer(CharStreams.fromStream(is));
+            CommonTokenStream ts = new CommonTokenStream(lexer);
+            MediatorLangParser parser = new MediatorLangParser(ts);
+
+            // register exception listener
+            parser.removeErrorListeners();
+            parser.addErrorListener(new VerboseListener());
+
+            return new Program().setExternalPaths(externalPaths).fromContext(parser.prog(), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

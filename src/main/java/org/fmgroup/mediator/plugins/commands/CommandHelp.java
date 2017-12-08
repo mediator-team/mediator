@@ -1,5 +1,6 @@
 package org.fmgroup.mediator.plugins.commands;
 
+import net.sourceforge.argparse4j.inf.Namespace;
 import org.fmgroup.mediator.plugin.command.Command;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public class CommandHelp implements Command {
     }
 
     @Override
-    public boolean isBuiltIn() {
-        return true;
+    public void run(Namespace args) {
+
     }
 
     @Override
-    public void run(List<String> args) {
-        // todo
+    public boolean isBuiltIn() {
+        return true;
     }
 }

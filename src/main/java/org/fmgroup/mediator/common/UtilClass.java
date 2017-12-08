@@ -1,5 +1,6 @@
 package org.fmgroup.mediator.common;
 
+import org.fmgroup.mediator.plugin.Generator;
 import org.fmgroup.mediator.plugin.command.Command;
 import org.fmgroup.mediator.plugin.Plugin;
 
@@ -10,6 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+// todo consider using https://github.com/ronmamo/reflections instead
+// prevent doing redundant work!
 
 public class UtilClass {
 
@@ -42,17 +46,6 @@ public class UtilClass {
         return getImplementation(_interface, pkg);
     }
 
-    public static boolean isExtendedFrom(Class sub, Class parent) {
-        try {
-            sub.asSubclass(parent);
-            return true;
-        } catch (ClassCastException e) {
-            // this class does not implement the interface
-        }
-
-        return false;
-    }
-
     public static List<Class> getImplementation(Class _interface, File root) {
         List<Class> classes = new ArrayList<>();
         for (File f : root.listFiles()) {
@@ -80,11 +73,40 @@ public class UtilClass {
         return classes;
     }
 
-    public static List<Class> getPlugins() {
-        return getImplementation(Plugin.class, "org.fmgroup.mediator.plugins");
+    public static List<Class<Plugin>> getPlugins() {
+        List<Class<Plugin>> plugins = new ArrayList<>();
+        for (Class c: getImplementation(Plugin.class, "org.fmgroup.mediator.plugins")) {
+            plugins.add(c);
+        }
+
+        return plugins;
     }
 
-    public static List<Class> getCommands() {
-        return getImplementation(Command.class, "org.fmgroup.mediator.plugins");
+    public static List<Class<Command>> getCommands() {
+        List<Class<Command>> commands = new ArrayList<>();
+        for (Class c: getImplementation(Command.class, "org.fmgroup.mediator.plugins")) {
+            commands.add(c);
+        }
+
+        return commands;
+    }
+
+    public static List<Class<Generator>> getGenerators() {
+        List<Class<Generator>> generators = new ArrayList<>();
+        for (Class c : getImplementation(Generator.class, "org.fmgroup.mediator.plugins")) {
+            generators.add(c);
+        }
+        return generators;
+    }
+
+    public static boolean isExtendedFrom(Class sub, Class parent) {
+        try {
+            sub.asSubclass(parent);
+            return true;
+        } catch (ClassCastException e) {
+            // this class does not implement the interface
+        }
+
+        return false;
     }
 }

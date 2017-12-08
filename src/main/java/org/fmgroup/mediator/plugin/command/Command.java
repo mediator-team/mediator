@@ -2,9 +2,10 @@ package org.fmgroup.mediator.plugin.command;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
 import org.fmgroup.mediator.plugin.Plugin;
 
-import java.util.List;
+import java.io.FileNotFoundException;
 
 public interface Command extends Plugin {
     String getCommandName();
@@ -29,5 +30,5 @@ public interface Command extends Plugin {
         return parser;
     }
 
-    void run (List<String> args);
+    void run (Namespace args) throws FileNotFoundException;
 }

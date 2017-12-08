@@ -2,18 +2,19 @@ package org.fmgroup.mediator.core;
 
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 import org.fmgroup.mediator.common.UtilClass;
-import org.fmgroup.mediator.core.project.ProjectException;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.plugin.command.Command;
 import org.fmgroup.mediator.plugin.Plugin;
 import org.fmgroup.mediator.plugins.simulator.SimulatorException;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
 public class Core {
-    public static void main (String args[]) throws ProjectException, ValidationException, SimulatorException {
+    public static void main (String args[]) throws ValidationException, SimulatorException {
 
         if (args.length == 0) {
             /**
@@ -21,7 +22,7 @@ public class Core {
              */
             System.out.println("Mediator Backend ver. 0.0.1");
             System.out.print("Loading plugins ... ");
-            List<Class> plugins = UtilClass.getPlugins();
+            List<Class<Plugin>> plugins = UtilClass.getPlugins();
             System.out.println("loaded.");
 
             String str_plugins = "", str_commands = "";
@@ -63,7 +64,7 @@ public class Core {
              *
              * TODO how to formalize the parameters in the plugins?
              */
-            List<Class> commands = UtilClass.getCommands();
+            List<Class<Command>> commands = UtilClass.getCommands();
             for (Class command : commands) {
                 ArgumentParser parser = null;
                 try {
@@ -71,8 +72,14 @@ public class Core {
                     if (cmdinst.getCommandName().equals(args[0])) {
                         // command found
                         parser = cmdinst.getParamsParser();
-                        parser.parseArgs((String[]) Arrays.asList(args).subList(1, args.length).toArray(args));
-                        cmdinst.run(Arrays.asList(args).subList(1, args.length));
+
+                        // remove the command name in args
+                        String [] subArgs = new String[args.length - 1];
+                        Arrays.asList(args).subList(1, args.length).toArray(subArgs);
+
+                        // parse args from subargs
+                        Namespace parsedArgs = parser.parseArgs(subArgs);
+                        cmdinst.run(parsedArgs);
                     }
                 } catch (InstantiationException e) {
                     e.printStackTrace();
@@ -80,6 +87,8 @@ public class Core {
                     e.printStackTrace();
                 } catch (ArgumentParserException e) {
                     parser.handleError(e);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         }

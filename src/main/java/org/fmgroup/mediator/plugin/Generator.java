@@ -16,4 +16,6 @@ public interface Generator extends Plugin {
     default boolean available(RawElement elem) throws ArduinoGeneratorException {
         return true;
     }
+
+    String getSupportedPlatform();
 }
