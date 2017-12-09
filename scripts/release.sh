@@ -1,25 +1,48 @@
 #!/bin/bash
 
+MAVEN_TARGET=target
+PACKAGE_TARGET=release
+
 basepath=$(cd `dirname $0`; cd ..; pwd)
 cd $basepath
 
-mkdir -p release
-rm -rf release/*
+bold=$(tput bold)
+normal=$(tput sgr0)
 
-# compile
-mvn clean
-mvn compile
+case $1 in
+    package)
+        mkdir -p $PACKAGE_TARGET
+        rm -rf $PACKAGE_TARGET/*
 
-cp -r target/classes/* release/
-cp -r target/mvnlib/* release/
-rm -rf release/META-INF
+        # compile
+        mvn clean
+        mvn compile
 
-# clean
-mvn clean
+        cp -r $MAVEN_TARGET/classes/* $PACKAGE_TARGET/
+        cp -r $MAVEN_TARGET/mvnlib/* $PACKAGE_TARGET/
+        rm -rf $PACKAGE_TARGET/META-INF
 
-# copy launchers
-cp scripts/launchers/* release/
-chmod +x release/*.sh
+        # copy launchers
+        cp scripts/launchers/* $PACKAGE_TARGET/
+        chmod +x $PACKAGE_TARGET/*.sh
 
+        zip $PACKAGE_TARGET.zip -r $PACKAGE_TARGET
+    ;;
 
-# todo zip file
+    clean)
+        mvn clean
+        rm -rf $PACKAGE_TARGET
+        rm -rf $PACKAGE_TARGET.zip
+    ;;
+
+    *)
+        # print help
+        echo "Mediator Compiling and Packaging Script"
+        echo ""
+        echo "    ${bold}usage: <release.sh> <command>${normal}"
+        echo ""
+        echo "supported <command>"
+        echo "---"
+        echo "- ${bold}package${normal} : compile and copy (both Mediator class files and dependencies) to ${PACKAGE_TARGET}, and generating launcher scripts together with zip packages"
+        echo "- ${bold}clean${normal}   : clean all generated files"
+esac
