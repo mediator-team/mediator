@@ -95,10 +95,6 @@ public class CommandGenerate implements Command {
     @Override
     public void run(Namespace args) throws FileNotFoundException {
         File medSource = args.get("FILE");
-        if (!medSource.exists()) {
-            System.err.println(String.format("file %s not exists", medSource.getPath()));
-            return;
-        }
 
         Program prog = Program.parseFile(medSource.getPath());
         List<Class<Generator>> generators = UtilClass.getGenerators();

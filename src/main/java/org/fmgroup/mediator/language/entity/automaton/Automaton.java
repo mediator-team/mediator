@@ -19,7 +19,7 @@ public class Automaton implements Entity, Scope, Templated {
     private RawElement parent = null;
     private Template template = null;
     private EntityInterface entityInterface = null;
-    private VariableDeclarationCollection localVars = new VariableDeclarationCollection();
+    private VariableDeclarationCollection localVars = new VariableDeclarationCollection().setParent(this);
     private List<Transition> transitions = new ArrayList();
     private String name;
 

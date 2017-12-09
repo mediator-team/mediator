@@ -3,6 +3,7 @@ package org.fmgroup.mediator.core;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.fmgroup.mediator.common.ToolInfo;
 import org.fmgroup.mediator.common.UtilClass;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.plugin.command.Command;
@@ -88,7 +89,10 @@ public class Core {
                 } catch (ArgumentParserException e) {
                     parser.handleError(e);
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    if (ToolInfo.DEBUG) {
+                        e.printStackTrace();
+                    } else
+                        System.err.println(e.getMessage());
                 }
             }
         }

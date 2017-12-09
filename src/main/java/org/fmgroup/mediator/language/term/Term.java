@@ -68,7 +68,7 @@ public interface Term extends RawElement {
 
     int getPrecedence();
 
-    default Type getType() {
+    default Type getType() throws ValidationException {
         return null;
     }
 
@@ -77,5 +77,10 @@ public interface Term extends RawElement {
     @Override
     default Term copy(RawElement parent) throws ValidationException {
         throw ValidationException.UnderDevelopment();
+    }
+
+    @Override
+    default Term copy() throws ValidationException {
+        return this.copy(this.getParent());
     }
 }

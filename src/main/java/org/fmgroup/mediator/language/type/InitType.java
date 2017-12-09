@@ -84,4 +84,9 @@ public class InitType implements Type {
 
         return nit;
     }
+
+    @Override
+    public Type extractRawType() throws ValidationException {
+        return baseType;
+    }
 }

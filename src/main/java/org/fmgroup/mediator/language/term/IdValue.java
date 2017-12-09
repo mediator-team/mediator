@@ -7,7 +7,8 @@ import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.scope.Scope;
-import org.fmgroup.mediator.language.type.IdType;
+import org.fmgroup.mediator.language.scope.TypeDeclaration;
+import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
@@ -22,8 +23,12 @@ public class IdValue implements Value {
     private Declaration reference = null;
 
     @Override
-    public Type getType() {
-        return new IdType();
+    public Type getType() throws ValidationException {
+        if (reference instanceof VariableDeclaration) {
+            return ((VariableDeclaration) reference).getType().extractRawType();
+        }
+
+        throw ValidationException.UnderDevelopment();
     }
 
     @Override

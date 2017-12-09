@@ -68,8 +68,6 @@ public class ArduinoGenerator implements Generator {
 
     private String typedefGenerate(Program p) throws ArduinoGeneratorException {
         String code = "";
-
-        // TODO CommandGenerate typedefs in other programs
         // TODO only CommandGenerate typedefs used
 
         for (Declaration typedecl : p.getTypedefs().getDeclarationList()) {
@@ -188,7 +186,7 @@ public class ArduinoGenerator implements Generator {
         return prog;
     }
 
-    private String statementGenerate(List<Statement> statements) throws ArduinoGeneratorException {
+    private String statementGenerate(List<Statement> statements) throws ArduinoGeneratorException, ValidationException {
         String rel = "";
         for (Statement s : statements) {
             if (rel.length() > 0) rel += "\n";
@@ -203,6 +201,11 @@ public class ArduinoGenerator implements Generator {
                     rel += termGenerate(((AssignmentStatement) s).getTarget(), 0) +
                             " = " +
                             termGenerate(((AssignmentStatement) s).getExpr(), 0) + ";";
+
+                    String assertion = termAssertionGenerate(((AssignmentStatement) s).getTarget());
+                    if (assertion.length() > 0) {
+                        rel += "\n" + assertion;
+                    }
                 }
             } else if (s instanceof IteStatement) {
                 rel += String.format(
@@ -328,6 +331,33 @@ public class ArduinoGenerator implements Generator {
         if (t instanceof EnumValue) return t.toString();
 
         throw ArduinoGeneratorException.UnhandledTerm(t);
+    }
+
+    public String termAssertionGenerate(Term t) throws ValidationException, ArduinoGeneratorException {
+        String result = "";
+        if (t.getType() instanceof BoundedIntType) {
+            BinaryOperatorTerm land = new BinaryOperatorTerm().setParent(t.getParent())
+                    .setOpr(EnumBinaryOperator.LAND)
+                    .setLeft(new BinaryOperatorTerm())
+                    .setRight(new BinaryOperatorTerm());
+
+            ((BinaryOperatorTerm) land.getLeft()).setLeft(t.copy());
+            ((BinaryOperatorTerm) land.getLeft()).setRight(((BoundedIntType) t.getType()).getLowerBound());
+            ((BinaryOperatorTerm) land.getLeft()).setOpr(EnumBinaryOperator.GEQ);
+
+            ((BinaryOperatorTerm) land.getRight()).setLeft(t.copy());
+            ((BinaryOperatorTerm) land.getRight()).setRight(((BoundedIntType) t.getType()).getUpperBound());
+            ((BinaryOperatorTerm) land.getRight()).setOpr(EnumBinaryOperator.LEQ);
+
+            result = termGenerate(land, 0);
+        }
+
+        // TODO assertions of more types should be supported
+
+        if (result.length() > 0) {
+            return String.format("assert (%s);", result);
+        }
+        return "";
     }
 
     @Override

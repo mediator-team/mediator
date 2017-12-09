@@ -61,8 +61,25 @@ public interface Type extends RawElement {
         throw ValidationException.UnderDevelopment();
     }
 
+    @Override
+    default Type copy() throws ValidationException {
+        return this.copy(this.getParent());
+    }
+
     default Term getInitValue() throws ValidationException {
         throw ValidationException.TypeNotInitialized(this);
+    }
+
+    /**
+     * default function of extractRawType, returns the copy of itself
+     * definition of raw type : no aliases are permitted in so called `raw types`
+     * NOTE: anyone who overwrites this function should follow this advice,
+     * <b>NO impact is permitted on the original type</b>
+     * @return the corresponding raw type
+     * @throws ValidationException
+     */
+    default Type extractRawType() throws ValidationException {
+        return this.copy();
     }
 
     Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException;

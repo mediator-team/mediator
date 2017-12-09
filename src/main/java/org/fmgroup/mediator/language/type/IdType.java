@@ -118,4 +118,9 @@ public class IdType implements Type {
                 .setScopeIdentifiers(getScopeIdentifiers())
                 .setIdentifier(getIdentifier());
     }
+
+    @Override
+    public Type extractRawType() throws ValidationException {
+        return reference.getType().extractRawType();
+    }
 }
