@@ -40,6 +40,9 @@ public interface Term extends RawElement {
         if (term instanceof MediatorLangParser.TupleTermContext) {
             return new TupleTerm().fromContext(term, parent);
         }
+        if (term instanceof MediatorLangParser.StructTermContext) {
+            return new StructTerm().fromContext(term, parent);
+        }
         if (term instanceof MediatorLangParser.IteTermContext) return new IteTerm().fromContext(term, parent);
 
 

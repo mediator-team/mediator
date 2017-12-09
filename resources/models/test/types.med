@@ -22,7 +22,7 @@ automaton <p1:int, p2:int> test (a, b:in int p1 .. p2) {
         // TODO
         arr2: int [arr1];
         // TODO
-        c: int init arr2;
+        c: int init { a = 222222222, b = 3, c = 123, d = 123 };
     }
     transitions {
 
@@ -35,6 +35,9 @@ automaton <p1:int, p2:int> test (a, b:in int p1 .. p2) {
     variables {
         arr3: int;
     }
+} meta {
+    default = 2,
+    a = c
 }
 
 system <p3:int> a (a,b :in int p3 .. p3 + 10) {

@@ -1,5 +1,8 @@
 package org.fmgroup.mediator.plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public interface Plugin {
     String getName();
 
@@ -20,5 +23,15 @@ public interface Plugin {
      */
     default boolean isBuiltIn() {
         return false;
+    }
+
+    /**
+     * tell the system which libraries the plugin needs
+     * so that Mediator may automatically downloads and installs them from update server
+     * <b>this featured is planned but not realized yet</b>
+     * @return
+     */
+    default List<String> requiredLibraries() {
+        return new ArrayList<>();
     }
 }

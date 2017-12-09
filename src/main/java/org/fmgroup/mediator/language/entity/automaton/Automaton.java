@@ -23,6 +23,18 @@ public class Automaton implements Entity, Scope, Templated {
     private List<Transition> transitions = new ArrayList();
     private String name;
 
+    public Meta getMeta() {
+        return meta;
+    }
+
+    public Automaton setMeta(Meta meta) {
+        this.meta = meta;
+        meta.setParent(this);
+        return this;
+    }
+
+    private Meta meta = null;
+
     public EntityInterface getEntityInterface() {
         return entityInterface;
     }
@@ -110,6 +122,9 @@ public class Automaton implements Entity, Scope, Templated {
             }
         }
 
+        if (((MediatorLangParser.AutomatonContext) context).meta() != null)
+            setMeta(new Meta().fromContext(((MediatorLangParser.AutomatonContext) context).meta(), this));
+
         return this;
     }
 
@@ -158,6 +173,9 @@ public class Automaton implements Entity, Scope, Templated {
             );
         }
         rel += "}";
+
+        if (getMeta() != null) rel += " " + getMeta().toString();
+
         return rel;
     }
 

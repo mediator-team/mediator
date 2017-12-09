@@ -24,6 +24,17 @@ public class Function implements RawElement, Scope, Templated {
     private List<Statement> statements = new ArrayList<>();
     private Type returnType = null;
     private boolean isNative = false;
+    private Meta meta = null;
+
+    public Meta getMeta() {
+        return meta;
+    }
+
+    public Function setMeta(Meta meta) {
+        this.meta = meta;
+        meta.setParent(this);
+        return this;
+    }
 
     public String getName() {
         return name;
@@ -115,6 +126,9 @@ public class Function implements RawElement, Scope, Templated {
             for (MediatorLangParser.StatementContext sc : ((MediatorLangParser.FunctionContext) context).statement()) {
                 addStatement(Statement.parse(sc, this));
             }
+
+            if (((MediatorLangParser.FunctionContext) context).meta() != null)
+                setMeta(new Meta().fromContext(((MediatorLangParser.FunctionContext) context).meta(), this));
         }
 
         return this;
@@ -144,6 +158,7 @@ public class Function implements RawElement, Scope, Templated {
             }
             rel += UtilCode.addIndent("}\n", 1);
             rel += "}";
+            if (getMeta() != null) rel += " " + getMeta().toString();
         } else {
             rel += ";";
         }

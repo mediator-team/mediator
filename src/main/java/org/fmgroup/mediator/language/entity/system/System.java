@@ -21,6 +21,16 @@ public class System implements Entity, Scope, Templated {
     private ComponentDeclarationCollection componentCollection = null;
     private InternalDeclarationCollection internalCollection = null;
     private List<Connection> connections = new ArrayList<>();
+    private Meta meta = null;
+
+    public Meta getMeta() {
+        return meta;
+    }
+
+    public System setMeta(Meta meta) {
+        this.meta = meta;
+        return this;
+    }
 
     public EntityInterface getEntityInterface() {
         return entityInterface;
@@ -121,6 +131,9 @@ public class System implements Entity, Scope, Templated {
             }
         }
 
+        if (((MediatorLangParser.SystemContext) context).meta() != null)
+            setMeta(new Meta().fromContext(((MediatorLangParser.SystemContext) context).meta(), this));
+
         return this;
     }
 
@@ -145,6 +158,9 @@ public class System implements Entity, Scope, Templated {
             rel += UtilCode.addIndent(connectionSeg, 1);
         }
         rel += "}";
+
+        if (getMeta() != null) rel += " " + getMeta().toString();
+
         return rel;
     }
 

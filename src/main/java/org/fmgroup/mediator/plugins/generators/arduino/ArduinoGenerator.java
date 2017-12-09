@@ -216,11 +216,9 @@ public class ArduinoGenerator implements Generator {
 
                 if (((IteStatement) s).getElseStmts().size() > 0) {
                     rel += String.format(
-                            " else {\n%s\n}\n",
+                            " else {\n%s\n}",
                             UtilCode.addIndent(statementGenerate(((IteStatement) s).getElseStmts()), 1)
                     );
-                } else {
-                    rel += "\n";
                 }
             } else {
                 throw ArduinoGeneratorException.UnhandledStatement(s);
@@ -373,5 +371,12 @@ public class ArduinoGenerator implements Generator {
     @Override
     public String getDescription() {
         return "providing support for Arduino C code generation";
+    }
+
+    @Override
+    public List<String> requiredLibraries() {
+        List<String> libs = new ArrayList<>();
+        libs.add("arduino");
+        return libs;
     }
 }

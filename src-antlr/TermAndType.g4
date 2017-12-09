@@ -6,7 +6,6 @@ grammar TermAndType;
     - '!' term tries to find a shortest suffix which is a term
 */
 
-// TODO: struct
 // TODO: map
 
 // FIXME: remove terms
@@ -15,6 +14,7 @@ terms: (term (',' term)*)?;
 term:	'(' term ')'                                                # bracketTerm
     |   '(' term (',' term)+ ')'                                    # tupleTerm
     |   '[' terms ']'                                               # listTerm
+    |   '{' (ID '=' term (',' ID '=' term)*)? '}'                   # structTerm
     |   opr='-' term                                                # singleOprTerm
     |   opr='!' term                                                # singleOprTerm
     |   callee=type '(' args=terms ')'                              # callTerm

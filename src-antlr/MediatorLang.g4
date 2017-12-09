@@ -41,7 +41,7 @@ locals [ boolean isNative = false ]
                 'variables' '{' (localVariableDef ';')* '}'
                 | 'statements' '{' statement* '}'
             ) *
-        '}'
+        '}' meta?
         |
         {$isNative}?
         ';'
@@ -77,6 +77,7 @@ automaton
     'automaton' template? name=ID '(' entityInterface ')' '{'
         (variableSegment | transitionSegment )*
     '}'
+    meta?
 ;
 
 componentSegment: 'components' '{' (componentDecl ';')* '}';
@@ -91,6 +92,12 @@ system
     'system' template? name=ID '(' entityInterface ')' '{'
         (componentSegment | internalSegment | connectionSegment)*
     '}'
+    meta?
+;
+
+meta
+:
+    'meta' '{' (ID '=' term (',' ID '=' term)*)? '}'
 ;
 
 LINE_COMMENT  : '//' .*? '\r'? '\n' -> skip ; // Match"//" stuff '\n'
