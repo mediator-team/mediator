@@ -1,8 +1,8 @@
 package org.fmgroup.mediator.language.term;
 
-import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.type.Type;
 
 import java.util.Map;
@@ -37,10 +37,13 @@ public interface Term extends RawElement {
         if (term instanceof MediatorLangParser.ListTermContext) {
             return new ListTerm().fromContext(term, parent);
         }
+        if (term instanceof MediatorLangParser.TupleTermContext) {
+            return new TupleTerm().fromContext(term, parent);
+        }
         if (term instanceof MediatorLangParser.IteTermContext) return new IteTerm().fromContext(term, parent);
 
 
-        throw ValidationException.UnregisteredTerm(term.getClass().toString());
+        throw ValidationException.UnregisteredTerm(term.getClass().toString()).At(term);
     }
 
     static Term parseValue(MediatorLangParser.ValueContext value, RawElement parent) throws ValidationException {

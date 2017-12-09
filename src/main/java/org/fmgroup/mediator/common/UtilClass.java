@@ -10,12 +10,20 @@ import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // todo consider using https://github.com/ronmamo/reflections instead
 // prevent doing redundant work!
 
 public class UtilClass {
+
+    /**
+     * use cache to improve performance, but only when the classes do not change
+     * dynamically
+     */
+    private static Map<Class, Map<String, List<Class>>> cache = new HashMap<>();
 
     private static String getClassRoot() {
         try {
@@ -29,11 +37,28 @@ public class UtilClass {
         return null;
     }
 
+    /**
+     * get all implemention classes of <b>_interface</b> in the root package, i.e. the whole
+     * directory in classloader
+     * @param _interface
+     * @return
+     */
     public static List<Class> getImplementation(Class _interface) {
         return getImplementation(_interface, "");
     }
 
+    /**
+     * get all implemention classes of <b>_interface</b> in package <b>pkgname</b>
+     * <b>NOTE</b> only this getImplementation function is utilized with cache
+     * @param _interface
+     * @param pkgname
+     * @return
+     */
     public static List<Class> getImplementation(Class _interface, String pkgname) {
+
+        // use cache to enhance performance
+        if (cache.containsKey(_interface) && cache.get(_interface).containsKey(pkgname))
+            return cache.get(_interface).get(pkgname);
 
         Path searchPath = Paths.get(
                 getClassRoot(),
@@ -43,7 +68,12 @@ public class UtilClass {
         File pkg = searchPath.toFile();
         assert pkg.isDirectory();
 
-        return getImplementation(_interface, pkg);
+        List<Class> classes = getImplementation(_interface, pkg);
+
+        if (!cache.containsKey(_interface)) cache.put(_interface, new HashMap<>());
+        cache.get(_interface).put(pkgname, classes);
+
+        return classes;
     }
 
     public static List<Class> getImplementation(Class _interface, File root) {

@@ -3,6 +3,7 @@ package org.fmgroup.mediator.language.type;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.fmgroup.mediator.language.*;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.CallTerm;
 import org.fmgroup.mediator.language.term.Term;
 

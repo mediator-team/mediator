@@ -1,10 +1,10 @@
 package org.fmgroup.mediator.language.entity;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.system.ComponentDeclaration;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.Scope;
 
 public class PortIdentifier implements RawElement {

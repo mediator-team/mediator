@@ -10,6 +10,8 @@ import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.entity.system.System;
 import org.fmgroup.mediator.language.function.Function;
+import org.fmgroup.mediator.language.generated.MediatorLangLexer;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
@@ -272,13 +274,22 @@ public class Program implements RawElement, Scope {
 
             // register exception listener
             parser.removeErrorListeners();
-            parser.addErrorListener(new VerboseListener());
+            VerboseListener listener = new VerboseListener();
+            parser.addErrorListener(listener);
 
-            return new Program().setExternalPaths(externalPaths).fromContext(parser.prog(), null);
+            MediatorLangParser.ProgContext prog = parser.prog();
+            if (!listener.Succeed()) {
+                for (ValidationException ex: listener.getExceptions()) {
+                    java.lang.System.err.println(ex.toString());
+                }
+                return null;
+            }
+            return new Program().setExternalPaths(externalPaths).fromContext(prog, null);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ValidationException e) {
-            e.printStackTrace();
+            java.lang.System.err.println(e.toString());
+            if (ToolInfo.DEBUG) e.printStackTrace();
         }
 
         return null;

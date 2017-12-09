@@ -12,7 +12,6 @@ import org.fmgroup.mediator.plugins.generators.arduino.ArduinoGeneratorException
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,6 +97,7 @@ public class CommandGenerate implements Command {
         File medSource = args.get("FILE");
         if (!medSource.exists()) {
             System.err.println(String.format("file %s not exists", medSource.getPath()));
+            return;
         }
 
         Program prog = Program.parseFile(medSource.getPath());

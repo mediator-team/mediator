@@ -1,6 +1,6 @@
 package org.fmgroup.mediator.language.statement;
 
-import org.fmgroup.mediator.language.MediatorLangParser;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;

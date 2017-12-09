@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 public class ToolInfo {
     public static String version = "alpha";
     public static String authors = "Li Yi";
+    public static boolean DEBUG  = true;
 
     public static String getSystemLibraryPath() {
         try {

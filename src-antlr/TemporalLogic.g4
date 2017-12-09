@@ -1,0 +1,3 @@
+grammar TemporalLogic;
+
+import TermAndType;

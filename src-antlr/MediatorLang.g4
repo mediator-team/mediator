@@ -1,6 +1,6 @@
 grammar MediatorLang;
 
-import TermAndType;
+import TemporalLogic;
 
 prog: (dependency | typedef | function | automaton | system )* ;
 

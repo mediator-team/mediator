@@ -5,6 +5,7 @@ import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.EntityInterface;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;

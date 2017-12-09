@@ -1,9 +1,14 @@
 package org.fmgroup.mediator.language;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.term.Term;
 import org.fmgroup.mediator.language.type.Type;
 
 public class ValidationException extends Exception {
+
+    private int line = 0;
+    private int column = 0;
+
     public ValidationException(Class<? extends RawElement> element, String content) {
         super(content);
     }
@@ -64,7 +69,6 @@ public class ValidationException extends Exception {
         );
     }
 
-
     public static ValidationException DumplicatedIdentifier(String identifier, String identifierType) {
         return new ValidationException(
                 null,
@@ -81,7 +85,7 @@ public class ValidationException extends Exception {
 
     public static ValidationException UnexpectedTermType(Class<? extends Term> t, String needed) {
         return new ValidationException(
-                (Class<? extends RawElement>) t,
+                t,
                 String.format("%s is expected.", needed)
         );
     }
@@ -111,6 +115,40 @@ public class ValidationException extends Exception {
         return new ValidationException(
                 null,
                 msg
+        );
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public ValidationException setLine(int line) {
+        this.line = line;
+        return this;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public ValidationException setColumn(int column) {
+        this.column = column;
+        return this;
+    }
+
+    public ValidationException At(ParserRuleContext context) {
+        setLine(context.start.getLine());
+        setColumn(context.start.getStartIndex());
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "(%d, %d) %s",
+                getLine(),
+                getColumn(),
+                getMessage()
         );
     }
 }

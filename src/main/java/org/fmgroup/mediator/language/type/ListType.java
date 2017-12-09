@@ -1,9 +1,9 @@
 package org.fmgroup.mediator.language.type;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
 
 import java.util.Map;
@@ -30,7 +30,8 @@ public class ListType implements Type {
 
     public ListType setCapacity(Term capacity) {
         this.capacity = capacity;
-        capacity.setParent(this);
+        if (capacity != null)
+            capacity.setParent(this);
         return this;
     }
 

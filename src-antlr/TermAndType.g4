@@ -9,6 +9,7 @@ grammar TermAndType;
 // TODO: struct
 // TODO: map
 
+// FIXME: remove terms
 terms: (term (',' term)*)?;
 
 term:	'(' term ')'                                                # bracketTerm

@@ -3,6 +3,7 @@ package org.fmgroup.mediator.language.type;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.BoolValue;
 import org.fmgroup.mediator.language.term.Term;
 
@@ -19,6 +20,11 @@ public class BoolType implements Type {
 
     @Override
     public BoolType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
+        if (!(context instanceof MediatorLangParser.BoolTypeContext)) {
+            throw ValidationException.IncompatibleContextType(this.getClass(), "BoolTypeContext", context.toString());
+        }
+
+
         setParent(parent);
         return this;
     }

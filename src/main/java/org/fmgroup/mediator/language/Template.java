@@ -1,6 +1,7 @@
 package org.fmgroup.mediator.language;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;

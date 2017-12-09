@@ -1,8 +1,8 @@
 package org.fmgroup.mediator.language.type;
 
-import org.fmgroup.mediator.language.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
 
 import java.util.Map;
@@ -33,6 +33,8 @@ public interface Type extends RawElement {
         if (tc instanceof MediatorLangParser.NullTypeContext)
             return new NullType().fromContext(tc, parent);
 
+        if (tc instanceof MediatorLangParser.TupleTypeContext)
+            return new TupleType().fromContext(tc, parent);
         if (tc instanceof MediatorLangParser.InitTypeContext)
             return new InitType().fromContext(tc, parent);
         if (tc instanceof MediatorLangParser.ListTypeContext)

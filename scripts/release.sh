@@ -6,10 +6,20 @@ cd $basepath
 mkdir -p release
 rm -rf release/*
 
+# compile
+mvn clean
+mvn compile
+
 cp -r target/classes/* release/
+cp -r target/mvnlib/* release/
 rm -rf release/META-INF
 
-# copy launchers
-cp scripts/launchers/* release/ 
+# clean
+mvn clean
 
-# todo package dependencies
+# copy launchers
+cp scripts/launchers/* release/
+chmod +x release/*.sh
+
+
+# todo zip file
