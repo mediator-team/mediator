@@ -20,7 +20,7 @@ public class Automaton implements Entity, Scope, Templated {
     private Template template = null;
     private EntityInterface entityInterface = null;
     private VariableDeclarationCollection localVars = new VariableDeclarationCollection().setParent(this);
-    private List<Transition> transitions = new ArrayList();
+    private List<Transition> transitions = new ArrayList<>();
     private String name;
 
     public Meta getMeta() {
@@ -66,7 +66,7 @@ public class Automaton implements Entity, Scope, Templated {
     }
 
     public Automaton setTransitions(List<Transition> transitions) {
-        this.transitions = new ArrayList();
+        this.transitions = new ArrayList<>();
         transitions.forEach(this::addTransition);
         return this;
     }

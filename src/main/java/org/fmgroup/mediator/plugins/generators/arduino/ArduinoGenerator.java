@@ -5,6 +5,7 @@ import org.fmgroup.mediator.core.scheduler.Scheduler;
 import org.fmgroup.mediator.language.Program;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
+import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.automaton.Automaton;
 import org.fmgroup.mediator.language.entity.automaton.Transition;
 import org.fmgroup.mediator.language.entity.automaton.TransitionGroup;
@@ -19,8 +20,10 @@ import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.*;
 import org.fmgroup.mediator.language.type.*;
-import org.fmgroup.mediator.plugin.Generator;
+import org.fmgroup.mediator.plugin.generator.FileSet;
+import org.fmgroup.mediator.plugin.generator.Generator;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +38,7 @@ public class ArduinoGenerator implements Generator {
 
     private Map<Integer, ArduinoPinDirection> pinStatus = new HashMap<>();
 
-    @Override
-    public String generate(RawElement elem) throws ArduinoGeneratorException {
+    public String entityGenerate(Entity elem) throws ArduinoGeneratorException {
 
         pinStatus = new HashMap<>();
 
@@ -50,15 +52,35 @@ public class ArduinoGenerator implements Generator {
             } catch (ValidationException e) {
                 e.printStackTrace();
             }
-        } else if (elem instanceof System){
+        } else if (elem instanceof System) {
             try {
-                return generate(Scheduler.Schedule((System) elem));
+                return entityGenerate(Scheduler.Schedule((System) elem));
             } catch (ValidationException e) {
                 e.printStackTrace();
             }
         }
 
         return null;
+    }
+
+    @Override
+    public FileSet generate(RawElement elem) throws ArduinoGeneratorException {
+        // todo put dependencies
+        FileSet files = new FileSet();
+        if (elem instanceof Entity) {
+            try {
+                files.add(((Entity) elem).getName() + ".c", entityGenerate((Entity) elem));
+            } catch (FileAlreadyExistsException e) {
+                e.printStackTrace();
+            }
+
+            return files;
+        } else {
+            throw new ArduinoGeneratorException(String.format(
+                    "unsupport language element %s",
+                    elem.getClass().getName()
+            ));
+        }
     }
 
     @Override

@@ -1,17 +1,20 @@
 package org.fmgroup.mediator.plugins.commands;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.fmgroup.mediator.common.UtilClass;
 import org.fmgroup.mediator.language.Program;
-import org.fmgroup.mediator.plugin.Generator;
+import org.fmgroup.mediator.plugin.generator.FileSet;
+import org.fmgroup.mediator.plugin.generator.Generator;
 import org.fmgroup.mediator.plugin.command.Command;
 import org.fmgroup.mediator.plugins.generators.arduino.ArduinoGeneratorException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,20 +103,44 @@ public class CommandGenerate implements Command {
         List<Class<Generator>> generators = UtilClass.getGenerators();
         String entityName = args.get("entity");
 
+        int failcounter = 0;
+
         for (Class generator : generators) {
             try {
                 Generator g = (Generator) generator.newInstance();
                 if (g.getSupportedPlatform().equals(args.get("target_platform"))) {
-                    System.out.println(g.generate(prog.getEntity(null, entityName)));
+                    FileSet files = g.generate(prog.getEntity(null, entityName));
+
+                    if (args.get("output_dir") == null) {
+                        System.out.println(files.toString());
+                    } else {
+                        files.writeToFileSystem(args.get("output_dir"));
+                    }
                     break;
                 }
+
+                continue;
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (ArduinoGeneratorException e) {
                 e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                System.err.println(e.toString());
             }
+
+            failcounter ++;
+        }
+
+        // todo how many succeed ? how many failed?
+        if (failcounter == 0) {
+            System.out.println("Code generation finished with no errors.");
+        } else {
+            System.out.println(String.format(
+                    "Code generation failed, %d files cannot be written to the disk.",
+                    failcounter
+            ));
         }
     }
 

@@ -1,6 +1,6 @@
 package org.fmgroup.mediator.common;
 
-import org.fmgroup.mediator.plugin.Generator;
+import org.fmgroup.mediator.plugin.generator.Generator;
 import org.fmgroup.mediator.plugin.command.Command;
 import org.fmgroup.mediator.plugin.Plugin;
 

@@ -1,9 +1,15 @@
 package org.fmgroup.mediator.plugins.commands;
 
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.fmgroup.mediator.common.ToolInfo;
+import org.fmgroup.mediator.common.UtilClass;
+import org.fmgroup.mediator.plugin.generator.Generator;
+import org.fmgroup.mediator.plugin.Plugin;
 import org.fmgroup.mediator.plugin.command.Command;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 
 public class CommandSelfCheck implements Command{
     @Override
@@ -13,7 +19,38 @@ public class CommandSelfCheck implements Command{
 
     @Override
     public void run(Namespace args) throws FileNotFoundException {
-        // TODO
+        int counter = 0;
+
+        for (Class plugin: UtilClass.getPlugins()) {
+            try {
+                Plugin p = (Plugin) plugin.newInstance();
+                if (p instanceof Generator) {
+                    for (String libraryname : p.requiredLibraries()) {
+                        File libfolder = Paths.get(
+                                ToolInfo.getSystemLibraryPath(),
+                                libraryname
+                        ).toFile();
+
+                        if (!libfolder.exists()) {
+                            System.err.println(String.format("Library not found: %s", libraryname));
+                            counter ++;
+                        }
+                    }
+                }
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (counter == 0) {
+            System.out.println("Congratulation! Self-checing has succeeded.");
+        } else {
+            System.err.println(
+                    String.format("Oops, %d errors found in self-checking.", counter)
+            );
+        }
     }
 
     @Override
