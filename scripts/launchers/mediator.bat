@@ -1,0 +1,1 @@
+java -classpath %~dp0 org.fmgroup.mediator.core.Core %1 %2 %3 %4 %5 %6 %7 %8 %9

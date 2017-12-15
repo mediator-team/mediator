@@ -9,10 +9,26 @@ public class ToolInfo {
     public static String authors = "Li Yi";
     public static boolean DEBUG  = true;
 
+    public static boolean isWindows() {
+        String os = System.getProperty("os.name");
+        return os.toLowerCase().contains("windows");
+    }
+
+    public static String getSystemRootPath() {
+        String path = ToolInfo.class.getResource("/").getPath().toString();
+        if (isWindows()) {
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+            path = path.replace('/', '\\');
+        }
+        return path;
+    }
+
     public static String getSystemLibraryPath() {
         try {
             String root = URLDecoder.decode(
-                    ToolInfo.class.getResource("/").getPath().toString(),
+                    getSystemRootPath(),
                     "utf-8"
             );
 

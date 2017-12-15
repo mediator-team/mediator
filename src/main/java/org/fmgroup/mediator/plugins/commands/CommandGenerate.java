@@ -120,11 +120,7 @@ public class CommandGenerate implements Command {
                 }
 
                 continue;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (ArduinoGeneratorException e) {
+            } catch (InstantiationException | IllegalAccessException | ArduinoGeneratorException e) {
                 e.printStackTrace();
             } catch (FileNotFoundException e) {
                 System.err.println(e.toString());
@@ -133,7 +129,6 @@ public class CommandGenerate implements Command {
             failcounter ++;
         }
 
-        // todo how many succeed ? how many failed?
         if (failcounter == 0) {
             System.out.println("Code generation finished with no errors.");
         } else {

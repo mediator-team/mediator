@@ -28,7 +28,7 @@ public class UtilClass {
     private static String getClassRoot() {
         try {
             return URLDecoder.decode(
-                    UtilClass.class.getResource("/").getPath().toString(),
+                    ToolInfo.getSystemRootPath(),
                     "utf-8"
             );
         } catch (UnsupportedEncodingException e) {
@@ -84,8 +84,11 @@ public class UtilClass {
                 if (clsname.startsWith(getClassRoot())) {
                     clsname = clsname.substring(getClassRoot().length());
                 }
-                // fixme what if under windows system?
-                clsname = clsname.replace("/", ".");
+                if (ToolInfo.isWindows()) {
+                    clsname = clsname.replace("\\", ".");
+                } else {
+                    clsname = clsname.replace("/", ".");
+                }
 
                 try {
                     if (isExtendedFrom(Class.forName(clsname), _interface)) {
