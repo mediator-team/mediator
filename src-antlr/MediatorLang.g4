@@ -22,6 +22,7 @@ statement:
     |   'if' '(' condition=term ')'
         (thenstmt=statement | '{' thenstmts=statements '}')
         ('else' (elsestmt=statement | '{' elsestmts=statements '}'))?       # iteStatement
+    |   'assert' term ';'                                                   # assertStatement
 ;
 
 statements:
@@ -72,10 +73,18 @@ transition:
     |   'group' '{' transition * '}'                    # transitionGroup
     ;
 
+propertySegment:
+    'properties' '{'
+        (ID ':' property ';')*
+    '}'
+;
+
+property: pathFormulae;
+
 automaton
 :
     'automaton' template? name=ID '(' entityInterface ')' '{'
-        (variableSegment | transitionSegment )*
+        (variableSegment | transitionSegment | propertySegment)*
     '}'
     meta?
 ;

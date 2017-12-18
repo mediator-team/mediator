@@ -6,6 +6,7 @@ import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.EntityInterface;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
+import org.fmgroup.mediator.language.property.PropertyCollection;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
@@ -21,6 +22,18 @@ public class Automaton implements Entity, Scope, Templated {
     private EntityInterface entityInterface = null;
     private VariableDeclarationCollection localVars = new VariableDeclarationCollection().setParent(this);
     private List<Transition> transitions = new ArrayList<>();
+
+    public PropertyCollection getProperties() {
+        return properties;
+    }
+
+    public Automaton setProperties(PropertyCollection properties) {
+        this.properties = properties;
+        properties.setParent(this);
+        return this;
+    }
+
+    private PropertyCollection properties = null;
     private String name;
 
     public Meta getMeta() {
@@ -125,6 +138,12 @@ public class Automaton implements Entity, Scope, Templated {
         if (((MediatorLangParser.AutomatonContext) context).meta() != null)
             setMeta(new Meta().fromContext(((MediatorLangParser.AutomatonContext) context).meta(), this));
 
+        // step 3. analyze properties
+        this.setProperties(new PropertyCollection());
+        for (MediatorLangParser.PropertySegmentContext pseg : ((MediatorLangParser.AutomatonContext) context).propertySegment()) {
+            this.getProperties().fromContext(pseg, this);
+        }
+
         return this;
     }
 
@@ -146,6 +165,7 @@ public class Automaton implements Entity, Scope, Templated {
         }
 
         a.setTransitions(transitions);
+        a.setProperties(getProperties().copy(a));
 
         return a;
     }
@@ -172,6 +192,8 @@ public class Automaton implements Entity, Scope, Templated {
                     1
             );
         }
+
+        rel += UtilCode.addIndent(properties.toString(), 1);
         rel += "}";
 
         if (getMeta() != null) rel += " " + getMeta().toString();

@@ -35,6 +35,10 @@ automaton <p1:int, p2:int> test (a, b:in int p1 .. p2) {
     variables {
         arr3: int;
     }
+    properties {
+        H: A true && (true -> false);
+        H2: A G a.value >= 1;
+    }
 } meta {
     default = 2,
     a = c

@@ -1,4 +1,4 @@
-// Generated from /Users/liyi/Library/Mobile Documents/com~apple~CloudDocs/项目/Mediator/src-antlr/MediatorLang.g4 by ANTLR 4.7
+// Generated from /Users/liyi/Dropbox/Projects/Mediator/src-antlr/MediatorLang.g4 by ANTLR 4.7
 package org.fmgroup.mediator.language.generated;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -95,6 +95,18 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIteStatement(MediatorLangParser.IteStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code assertStatement}
+	 * labeled alternative in {@link MediatorLangParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssertStatement(MediatorLangParser.AssertStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code assertStatement}
+	 * labeled alternative in {@link MediatorLangParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssertStatement(MediatorLangParser.AssertStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#statements}.
 	 * @param ctx the parse tree
@@ -210,6 +222,26 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitTransitionGroup(MediatorLangParser.TransitionGroupContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#propertySegment}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertySegment(MediatorLangParser.PropertySegmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#propertySegment}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertySegment(MediatorLangParser.PropertySegmentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#property}.
+	 * @param ctx the parse tree
+	 */
+	void enterProperty(MediatorLangParser.PropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#property}.
+	 * @param ctx the parse tree
+	 */
+	void exitProperty(MediatorLangParser.PropertyContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#automaton}.
 	 * @param ctx the parse tree
 	 */
@@ -289,6 +321,174 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMeta(MediatorLangParser.MetaContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code notPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotPathFormulae(MediatorLangParser.NotPathFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code notPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotPathFormulae(MediatorLangParser.NotPathFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code existsPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterExistsPathFormulae(MediatorLangParser.ExistsPathFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code existsPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitExistsPathFormulae(MediatorLangParser.ExistsPathFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code bracketPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterBracketPathFormulae(MediatorLangParser.BracketPathFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code bracketPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitBracketPathFormulae(MediatorLangParser.BracketPathFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code allPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterAllPathFormulae(MediatorLangParser.AllPathFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code allPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitAllPathFormulae(MediatorLangParser.AllPathFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code binaryPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterBinaryPathFormulae(MediatorLangParser.BinaryPathFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code binaryPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitBinaryPathFormulae(MediatorLangParser.BinaryPathFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code atomicPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtomicPathFormulae(MediatorLangParser.AtomicPathFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code atomicPathFormulae}
+	 * labeled alternative in {@link MediatorLangParser#pathFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtomicPathFormulae(MediatorLangParser.AtomicPathFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code notStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotStateFormulae(MediatorLangParser.NotStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code notStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotStateFormulae(MediatorLangParser.NotStateFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code pathStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterPathStateFormulae(MediatorLangParser.PathStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code pathStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitPathStateFormulae(MediatorLangParser.PathStateFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code globallyStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterGloballyStateFormulae(MediatorLangParser.GloballyStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code globallyStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitGloballyStateFormulae(MediatorLangParser.GloballyStateFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code binaryStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterBinaryStateFormulae(MediatorLangParser.BinaryStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code binaryStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitBinaryStateFormulae(MediatorLangParser.BinaryStateFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code bracketStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterBracketStateFormulae(MediatorLangParser.BracketStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code bracketStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitBracketStateFormulae(MediatorLangParser.BracketStateFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code finallyStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterFinallyStateFormulae(MediatorLangParser.FinallyStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code finallyStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitFinallyStateFormulae(MediatorLangParser.FinallyStateFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code nextStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterNextStateFormulae(MediatorLangParser.NextStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code nextStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitNextStateFormulae(MediatorLangParser.NextStateFormulaeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code untilStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void enterUntilStateFormulae(MediatorLangParser.UntilStateFormulaeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code untilStateFormulae}
+	 * labeled alternative in {@link MediatorLangParser#stateFormulae}.
+	 * @param ctx the parse tree
+	 */
+	void exitUntilStateFormulae(MediatorLangParser.UntilStateFormulaeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#terms}.
 	 * @param ctx the parse tree
