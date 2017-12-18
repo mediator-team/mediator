@@ -27,5 +27,5 @@ Run `mediator.sh` or `mediator.bat` to use mediator. The program provides a buil
 
 ## supported platforms
 
-The building scripts currently supports both Linux and Mac OS.
-The mediator program supports all platforms. Unfortunately, the windows version is still suffering from path issues, which we are still correcting now.
+- The building scripts currently supports both Linux and Mac OS.
+- Released program works on popular operating systems including Linux (tested under Ubuntu 16.04), Darwin (tested under Mac OS high sierra) and Windows (tested under Windows 10 x64). Till now all codes are written in Java, which means support of all OS where Jre supports.
