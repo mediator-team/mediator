@@ -80,8 +80,8 @@ public class SingleOperatorTerm implements Term {
     }
 
     @Override
-    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        setTerm(getTerm().refactor(rewriteMap));
+    public Term refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setTerm(getTerm().refactor(typeRewriteMap, termRewriteMap));
         return this;
     }
 

@@ -88,10 +88,10 @@ public class ListTerm implements Term {
     }
 
     @Override
-    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+    public Term refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         List<Term> lstterms = new ArrayList<>();
         for (Term t : getValues()) {
-            lstterms.add(t.refactor(rewriteMap));
+            lstterms.add(t.refactor(typeRewriteMap, termRewriteMap));
         }
         setValues(lstterms);
         return this;

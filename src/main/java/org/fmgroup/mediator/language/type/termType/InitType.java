@@ -56,7 +56,7 @@ public class InitType implements Type {
     @Override
     public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         setBaseType(getBaseType().refactor(typeRewriteMap, termRewriteMap));
-        setDefaultValue(getDefaultValue().refactor(termRewriteMap));
+        setDefaultValue(getDefaultValue().refactor(typeRewriteMap, termRewriteMap));
         return this;
     }
 

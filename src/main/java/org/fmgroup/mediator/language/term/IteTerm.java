@@ -102,10 +102,10 @@ public class IteTerm implements Term {
     }
 
     @Override
-    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        setCondition(getCondition().refactor(rewriteMap));
-        setThenTerm(getThenTerm().refactor(rewriteMap));
-        setElseTerm(getElseTerm().refactor(rewriteMap));
+    public Term refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setCondition(getCondition().refactor(typeRewriteMap, termRewriteMap));
+        setThenTerm(getThenTerm().refactor(typeRewriteMap, termRewriteMap));
+        setElseTerm(getElseTerm().refactor(typeRewriteMap, termRewriteMap));
 
         return this;
     }

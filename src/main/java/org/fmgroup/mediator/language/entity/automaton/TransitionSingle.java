@@ -134,10 +134,10 @@ public class TransitionSingle implements Transition, Statements {
     @Override
     public TransitionSingle refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap, RawElement parent) throws ValidationException {
         this.parent = parent;
-        setGuard(getGuard().refactor(termRewriteMap));
+        setGuard(getGuard().refactor(typeRewriteMap, termRewriteMap));
         List<Statement> newStatements = new ArrayList<>();
         for (Statement s : getStatements()) {
-            newStatements.add(s.refactor(termRewriteMap));
+            newStatements.add(s.refactor(typeRewriteMap, termRewriteMap));
         }
 
         setStatements(newStatements);

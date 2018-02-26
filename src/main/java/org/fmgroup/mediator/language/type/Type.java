@@ -86,4 +86,12 @@ public interface Type extends RawElement {
     }
 
     Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException;
+
+    default boolean isSubtypeOf(Type parentType) {
+        return false;
+    }
+
+    default boolean isEqualTo(Type anotherType) {
+        return this.isSubtypeOf(anotherType) && anotherType.isSubtypeOf(this);
+    }
 }

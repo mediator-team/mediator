@@ -5,6 +5,7 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class FinallyStateFormulae implements StateFormulae{
     }
 
     @Override
-    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
+    public Term refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return null;
     }
 

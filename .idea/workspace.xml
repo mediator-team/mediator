@@ -2,68 +2,39 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="89ba4046-2dc9-4a2b-a905-b108fae88d3c" name="Default" comment="reformed scheduler as a">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/library/builtin/array.med" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/models/test/newconn.med" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/antlr/Parser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/PortDirection.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/BasicConnection.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/CustomConnection.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/Options.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/commands/CommandDebug.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/Scheduler.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/scheduler/Scheduler.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/scheduler/TopoGraph.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/TopoGraph.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/scheduler/TopoGraphVertice.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/TopoGraphVertice.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/AbstractType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/AbstractType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/BoolType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoolType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/BoundedIntType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoundedIntType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/DoubleType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/DoubleType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/EnumType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/EnumType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/IdType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/IdType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/InitType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/InitType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/IntType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/IntType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/ListType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/ListType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/NullType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/NullType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/StructType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/StructType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/TemplateType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/TemplateType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/TupleType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/TupleType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/UnionType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/UnionType.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/models/test/types.med" afterPath="$PROJECT_DIR$/resources/models/test/types.med" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src-antlr/MediatorLang.g4" afterPath="$PROJECT_DIR$/src-antlr/MediatorLang.g4" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/Core.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/Core.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Template.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Template.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Templated.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Templated.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/Entity.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/Entity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/PortDeclaration.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/PortDeclaration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/Automaton.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/Automaton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/Transition.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/Transition.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionGroup.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionGroup.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/models/smallcar/motor.med" afterPath="$PROJECT_DIR$/resources/models/smallcar/motor.med" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionSingle.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionSingle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/ComponentDeclaration.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/ComponentDeclaration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/Connection.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/Connection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclaration.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclaration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclarationCollection.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclarationCollection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/System.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/System.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/function/Function.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/function/Function.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLang.tokens" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLang.tokens" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangBaseListener.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangBaseListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangLexer.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangLexer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangLexer.tokens" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangLexer.tokens" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangListener.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangParser.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangParser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/Scope.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/Scope.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/VariableDeclaration.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/VariableDeclaration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/BoolValue.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/BoolValue.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/BinaryOperatorFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/BinaryOperatorFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/NotFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/NotFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AllPathFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AllPathFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AtomicPathFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AtomicPathFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/ExistsPathFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/ExistsPathFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/FinallyStateFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/FinallyStateFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/GloballyStateFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/GloballyStateFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/NextStateFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/NextStateFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/UntilStateFormulae.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/UntilStateFormulae.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/AssignmentStatement.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/AssignmentStatement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/IteStatement.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/IteStatement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/ReturnStatement.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/ReturnStatement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/Statement.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/Statement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/SynchronizingStatement.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/SynchronizingStatement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/BinaryOperatorTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/BinaryOperatorTerm.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/CallTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/CallTerm.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/DoubleValue.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/DoubleValue.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/EnumValue.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/EnumValue.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IntValue.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IntValue.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/NullValue.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/NullValue.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ElementTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ElementTerm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/FieldTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/FieldTerm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IteTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IteTerm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ListTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ListTerm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/SingleOperatorTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/SingleOperatorTerm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/StructTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/StructTerm.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Term.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Term.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/TupleTerm.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/TupleTerm.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Value.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Value.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/Type.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/Type.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugin/command/Command.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugin/command/Command.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/generators/arduino/ArduinoGenerator.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/generators/arduino/ArduinoGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/TemplateType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/TemplateType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoundedIntType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoundedIntType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/InitType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/InitType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/ListType.java" afterPath="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/ListType.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -86,112 +57,102 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Scheduler.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/Scheduler.java">
+      <file leaf-file-name="NextStateFormulae.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/NextStateFormulae.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-722">
-              <caret line="368" column="40" lean-forward="true" selection-start-line="368" selection-start-column="40" selection-end-line="368" selection-end-column="40" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ArduinoGenerator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/generators/arduino/ArduinoGenerator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="57" column="38" lean-forward="false" selection-start-line="57" selection-start-column="38" selection-end-line="57" selection-end-column="38" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TopoGraph.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/TopoGraph.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7">
-              <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+            <state relative-caret-position="130">
+              <caret line="43" column="91" lean-forward="false" selection-start-line="43" selection-start-column="91" selection-end-line="43" selection-end-column="91" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TopoGraphVertice.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/TopoGraphVertice.java">
+      <file leaf-file-name="NotFormulae.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/NotFormulae.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+            <state relative-caret-position="175">
+              <caret line="41" column="91" lean-forward="false" selection-start-line="41" selection-start-column="91" selection-end-line="41" selection-end-column="91" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IdValue.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IdValue.java">
+      <file leaf-file-name="GloballyStateFormulae.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/GloballyStateFormulae.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-149">
-              <caret line="69" column="5" lean-forward="false" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+            <state relative-caret-position="130">
+              <caret line="43" column="91" lean-forward="false" selection-start-line="43" selection-start-column="91" selection-end-line="43" selection-end-column="91" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ValidationException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/ValidationException.java">
+      <file leaf-file-name="IteStatement.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/IteStatement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="81" column="0" lean-forward="false" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+            <state relative-caret-position="100">
+              <caret line="152" column="53" lean-forward="false" selection-start-line="152" selection-start-column="53" selection-end-line="152" selection-end-column="53" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TransitionGroup.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionGroup.java">
+      <file leaf-file-name="ReturnStatement.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/ReturnStatement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1176">
-              <caret line="29" column="23" lean-forward="false" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
-              <folding>
-                <element signature="e#857#858#0" expanded="true" />
-                <element signature="e#891#892#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListType.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/ListType.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="86" column="0" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+            <state relative-caret-position="227">
+              <caret line="65" column="42" lean-forward="false" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="42" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UnionType.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/UnionType.java">
+      <file leaf-file-name="Statement.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/Statement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="50">
-              <caret line="52" column="22" lean-forward="false" selection-start-line="52" selection-start-column="22" selection-end-line="52" selection-end-column="22" />
+            <state relative-caret-position="300">
+              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="VariableDeclaration.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/VariableDeclaration.java">
+      <file leaf-file-name="TransitionSingle.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionSingle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="79" column="13" lean-forward="false" selection-start-line="79" selection-start-column="13" selection-end-line="79" selection-end-column="13" />
-              <folding>
-                <element signature="e#675#676#0" expanded="true" />
-                <element signature="e#702#703#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="160">
+              <caret line="139" column="57" lean-forward="false" selection-start-line="139" selection-start-column="57" selection-end-line="139" selection-end-column="57" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SynchronizingStatement.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/SynchronizingStatement.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="175">
+              <caret line="109" column="43" lean-forward="false" selection-start-line="109" selection-start-column="43" selection-end-line="109" selection-end-column="43" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AssignmentStatement.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/AssignmentStatement.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="522">
+              <caret line="104" column="74" lean-forward="true" selection-start-line="104" selection-start-column="74" selection-end-line="104" selection-end-column="74" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ExistsPathFormulae.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/ExistsPathFormulae.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -221,6 +182,8 @@
       <find>internal</find>
       <find>&quot;reqRead</find>
       <find>get</find>
+      <find>ref</find>
+      <find>refa</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -234,37 +197,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/NotFormulae.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/EnumBinaryOperatorTemporal.java" />
-        <option value="$PROJECT_DIR$/src-antlr/TemporalLogic.g4" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/PathFormulae.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/BinaryOperatorFormulae.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AtomicPathFormulae.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/StateFormulae.java" />
-        <option value="$PROJECT_DIR$/resources/models/test/types.med" />
-        <option value="$PROJECT_DIR$/src-antlr/TermAndType.g4" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangParser.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/StructType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/entityType/EntityType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/entityType/TemplateType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/AbstractType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/EntityType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/CustomConnection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/PortDeclaration.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/PortDirection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/Scope.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/Options.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Term.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoundedIntType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/Entity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Template.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/function/Function.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugin/command/Command.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/Core.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/antlr/Parser.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/System.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/TemplateType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionSingle.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Templated.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/IdType.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/Automaton.java" />
@@ -272,12 +204,10 @@
         <option value="$PROJECT_DIR$/src-antlr/MediatorLang.g4" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/commands/CommandDebug.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclarationCollection.java" />
-        <option value="$PROJECT_DIR$/resources/models/test/newconn.med" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclaration.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/Transition.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/BasicConnection.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/Connection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/InitType.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/UnionType.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionGroup.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/scheduler/Scheduler.java" />
@@ -285,6 +215,39 @@
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/TopoGraphVertice.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/generators/arduino/ArduinoGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/Scheduler.java" />
+        <option value="$PROJECT_DIR$/resources/models/test/newconn.med" />
+        <option value="$PROJECT_DIR$/resources/models/smallcar/motor.med" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/Type.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Term.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/BinaryOperatorTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/TemplateType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/CallTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ElementTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/FieldTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IteTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ListTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/SingleOperatorTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/StructTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/TupleTerm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Value.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoundedIntType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/InitType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/ListType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/FinallyStateFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/BinaryOperatorFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AtomicPathFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/UntilStateFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AllPathFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/NextStateFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/NotFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/GloballyStateFormulae.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/IteStatement.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/ReturnStatement.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/Statement.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionSingle.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/SynchronizingStatement.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/AssignmentStatement.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/ExistsPathFormulae.java" />
       </list>
     </option>
   </component>
@@ -322,33 +285,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <expand>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Mediator" type="cbb8eebc:String" user="Mediator" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Mediator" type="58d84e3e:PackageViewProjectNode" />
-              <item name="Mediator" type="616d4139:PackageViewModuleNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="58d84e3e:PackageViewProjectNode" />
-              <item name="Mediator" type="616d4139:PackageViewModuleNode" />
-              <item name="org.fmgroup.mediator" type="1f31426a:PackageElementNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -360,37 +296,6 @@
             <path>
               <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
               <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="library" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-              <item name="smallcar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -413,15 +318,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="mediator" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
@@ -431,16 +327,6 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="mediator" type="462c0819:PsiDirectoryNode" />
               <item name="language" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="language" type="462c0819:PsiDirectoryNode" />
-              <item name="scope" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
@@ -469,7 +355,9 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="plugin" type="462c0819:PsiDirectoryNode" />
+              <item name="language" type="462c0819:PsiDirectoryNode" />
+              <item name="type" type="462c0819:PsiDirectoryNode" />
+              <item name="paramType" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
@@ -478,47 +366,9 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="plugin" type="462c0819:PsiDirectoryNode" />
-              <item name="command" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="plugins" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="plugins" type="462c0819:PsiDirectoryNode" />
-              <item name="commands" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="plugins" type="462c0819:PsiDirectoryNode" />
-              <item name="arduino" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="mediator" type="462c0819:PsiDirectoryNode" />
-              <item name="plugins" type="462c0819:PsiDirectoryNode" />
-              <item name="scheduler" type="462c0819:PsiDirectoryNode" />
+              <item name="language" type="462c0819:PsiDirectoryNode" />
+              <item name="type" type="462c0819:PsiDirectoryNode" />
+              <item name="termType" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
@@ -528,6 +378,33 @@
             <path>
               <item name="Mediator" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="Mediator" type="cbb8eebc:String" user="Mediator" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Mediator" type="58d84e3e:PackageViewProjectNode" />
+              <item name="Mediator" type="616d4139:PackageViewModuleNode" />
+            </path>
+            <path>
+              <item name="Mediator" type="58d84e3e:PackageViewProjectNode" />
+              <item name="Mediator" type="616d4139:PackageViewModuleNode" />
+              <item name="org.fmgroup.mediator" type="1f31426a:PackageElementNode" />
             </path>
           </expand>
           <select />
@@ -548,7 +425,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -791,7 +668,8 @@
       <workItem from="1517290141125" duration="96000" />
       <workItem from="1517539636374" duration="4071000" />
       <workItem from="1519355880110" duration="68000" />
-      <workItem from="1519356553938" duration="52630000" />
+      <workItem from="1519356553938" duration="54268000" />
+      <workItem from="1519632695257" duration="1741000" />
     </task>
     <task id="LOCAL-00001" summary="rebase the project using Maven">
       <created>1509544688928</created>
@@ -867,7 +745,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="575029000" />
+    <option name="totallyTimeSpent" value="578408000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="809" extended-state="0" />
@@ -883,9 +761,8 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39213026" sideWeight="0.49027777" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904148" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28333333" sideWeight="0.49253732" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21527778" sideWeight="0.49253732" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3266385" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="ANTLR Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -902,6 +779,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296875" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904148" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3266385" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -971,353 +849,10 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/generated/MediatorLangLexer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="113" column="11" lean-forward="false" selection-start-line="113" selection-start-column="11" selection-end-line="113" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/src.zip!/java/io/FileInputStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/src.zip!/java/io/File.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="510" column="18" lean-forward="false" selection-start-line="510" selection-start-column="18" selection-end-line="510" selection-end-column="18" />
-          <folding>
-            <element signature="e#21135#21136#0" expanded="false" />
-            <element signature="e#21162#21163#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugin/command/Command.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="33" column="37" lean-forward="false" selection-start-line="33" selection-start-column="37" selection-end-line="33" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Program.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="255" column="35" lean-forward="true" selection-start-line="255" selection-start-column="35" selection-end-line="255" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/Core.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="82" column="0" lean-forward="false" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/antlr/Parser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/commands/CommandGenerate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-134">
-          <caret line="101" column="36" lean-forward="false" selection-start-line="101" selection-start-column="36" selection-end-line="101" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/VariableDeclarationCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="53" column="41" lean-forward="false" selection-start-line="53" selection-start-column="41" selection-end-line="53" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Template.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="93" column="15" lean-forward="false" selection-start-line="93" selection-start-column="15" selection-end-line="93" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoolType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-54">
-          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/TupleType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-287">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/StructType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-725">
-          <caret line="13" column="13" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionSingle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="133" column="4" lean-forward="false" selection-start-line="133" selection-start-column="4" selection-end-line="133" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/RawElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="35" column="23" lean-forward="false" selection-start-line="35" selection-start-column="23" selection-end-line="35" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/IdType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="104" column="20" lean-forward="false" selection-start-line="104" selection-start-column="20" selection-end-line="104" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/TemplateType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="166" column="29" lean-forward="false" selection-start-line="166" selection-start-column="29" selection-end-line="166" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/models/smallcar/smallcar.med">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/models/smallcar/motor.med">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-844">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/models/queue.med">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="66" column="14" lean-forward="true" selection-start-line="66" selection-start-column="14" selection-end-line="66" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/models/test/types.med">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-171">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src-antlr/MediatorLang.g4">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1">
-          <caret line="82" column="0" lean-forward="true" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/System.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="637">
-          <caret line="191" column="68" lean-forward="false" selection-start-line="191" selection-start-column="68" selection-end-line="191" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/models/test/newconn.med">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="28" column="22" lean-forward="false" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclarationCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="52" column="37" lean-forward="false" selection-start-line="52" selection-start-column="37" selection-end-line="52" selection-end-column="37" />
-          <folding>
-            <element signature="e#1827#1828#0" expanded="false" />
-            <element signature="e#1865#1866#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/PortVariableType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" column="12" lean-forward="false" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/release/models/queue.med">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="15" column="11" lean-forward="false" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/PortIdentifier.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-716">
-          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/InternalDeclaration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="14" column="42" lean-forward="false" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
-          <folding>
-            <element signature="e#1381#1382#0" expanded="true" />
-            <element signature="e#1408#1409#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/ComponentDeclaration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="19" column="21" lean-forward="true" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
-          <folding>
-            <element signature="e#738#739#0" expanded="false" />
-            <element signature="e#765#766#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/BasicConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="233" column="0" lean-forward="false" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
-          <folding>
-            <element signature="e#9089#9090#0" expanded="false" />
-            <element signature="e#9125#9126#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/Templated.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="34" column="37" lean-forward="false" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/Automaton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="243" column="0" lean-forward="false" selection-start-line="243" selection-start-column="0" selection-end-line="243" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/Type.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="87" column="9" lean-forward="false" selection-start-line="87" selection-start-column="9" selection-end-line="87" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/system/Connection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/commands/CommandDebug.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/InitType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/scope/VariableDeclaration.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
           <caret line="79" column="13" lean-forward="false" selection-start-line="79" selection-start-column="13" selection-end-line="79" selection-end-column="13" />
-          <folding>
-            <element signature="e#675#676#0" expanded="true" />
-            <element signature="e#702#703#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/ListType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="86" column="0" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/UnionType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="52" column="22" lean-forward="false" selection-start-line="52" selection-start-column="22" selection-end-line="52" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/SynchronizingStatement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1268">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1325,57 +860,28 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="38" column="23" lean-forward="false" selection-start-line="38" selection-start-column="23" selection-end-line="38" selection-end-column="23" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/scheduler/Scheduler.java" />
+    <entry file="file://$PROJECT_DIR$/resources/models/smallcar/motor.med">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="67" column="1" lean-forward="true" selection-start-line="67" selection-start-column="1" selection-end-line="67" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionGroup.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1176">
+        <state relative-caret-position="25">
           <caret line="29" column="23" lean-forward="false" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
-          <folding>
-            <element signature="e#857#858#0" expanded="true" />
-            <element signature="e#891#892#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IdValue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-149">
-          <caret line="69" column="5" lean-forward="false" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/ValidationException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="81" column="0" lean-forward="false" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/PortVariableValue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-12">
-          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/scheduler/Scheduler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="303" column="4" lean-forward="false" selection-start-line="303" selection-start-column="4" selection-end-line="464" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/TopoGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7">
-          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        <state relative-caret-position="122">
+          <caret line="80" column="21" lean-forward="true" selection-start-line="80" selection-start-column="21" selection-end-line="80" selection-end-column="21" />
           <folding />
         </state>
       </provider>
@@ -1384,6 +890,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32">
           <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/TopoGraph.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
           <folding />
         </state>
       </provider>
@@ -1398,13 +912,342 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/UnionType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="52" column="22" lean-forward="false" selection-start-line="52" selection-start-column="22" selection-end-line="52" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/models/test/newconn.med">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="7" column="9" lean-forward="true" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/core/Core.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="82" column="0" lean-forward="false" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/Type.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-937">
+          <caret line="14" column="9" lean-forward="false" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+          <folding>
+            <element signature="e#3863#3864#0" expanded="true" />
+            <element signature="e#3891#3892#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/plugins/scheduler/Scheduler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-722">
-          <caret line="368" column="40" lean-forward="true" selection-start-line="368" selection-start-column="40" selection-end-line="368" selection-end-column="40" />
+        <state relative-caret-position="-561">
+          <caret line="238" column="11" lean-forward="true" selection-start-line="238" selection-start-column="11" selection-end-line="238" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/paramType/TemplateType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="173" column="23" lean-forward="false" selection-start-line="173" selection-start-column="23" selection-end-line="173" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/CallTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="121">
+          <caret line="38" column="9" lean-forward="true" selection-start-line="38" selection-start-column="9" selection-end-line="38" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/BinaryOperatorTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="37" column="55" lean-forward="true" selection-start-line="37" selection-start-column="55" selection-end-line="37" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/BoolValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-562">
+          <caret line="12" column="25" lean-forward="true" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/DoubleValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="60" column="43" lean-forward="false" selection-start-line="60" selection-start-column="43" selection-end-line="60" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ElementTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="78" column="5" lean-forward="true" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/EnumValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-296">
+          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/FieldTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="81" column="68" lean-forward="true" selection-start-line="81" selection-start-column="68" selection-end-line="81" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IdValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="69" column="5" lean-forward="false" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IntValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/IteTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="108" column="0" lean-forward="true" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/ListTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="93" column="67" lean-forward="true" selection-start-line="93" selection-start-column="67" selection-end-line="93" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/PortVariableType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="12" lean-forward="false" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/PortVariableValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/SingleOperatorTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="83" column="66" lean-forward="true" selection-start-line="83" selection-start-column="66" selection-end-line="83" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/StructTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="96" column="54" lean-forward="true" selection-start-line="96" selection-start-column="54" selection-end-line="96" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Term.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="80" column="5" lean-forward="true" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/TupleTerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="537">
+          <caret line="97" column="0" lean-forward="false" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/term/Value.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="11" column="33" lean-forward="false" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/BoundedIntType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="80" column="63" lean-forward="false" selection-start-line="80" selection-start-column="63" selection-end-line="80" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/InitType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="58" column="67" lean-forward="false" selection-start-line="58" selection-start-column="67" selection-end-line="58" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/type/termType/ListType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-650">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/FinallyStateFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="44" column="6" lean-forward="true" selection-start-line="44" selection-start-column="6" selection-end-line="44" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/BinaryOperatorFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="65" column="30" lean-forward="false" selection-start-line="65" selection-start-column="30" selection-end-line="65" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AtomicPathFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="49" column="9" lean-forward="true" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/UntilStateFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="55" column="91" lean-forward="false" selection-start-line="55" selection-start-column="91" selection-end-line="55" selection-end-column="91" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/AllPathFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="44" column="91" lean-forward="false" selection-start-line="44" selection-start-column="91" selection-end-line="44" selection-end-column="91" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/NextStateFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="43" column="91" lean-forward="false" selection-start-line="43" selection-start-column="91" selection-end-line="43" selection-end-column="91" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/NotFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="41" column="91" lean-forward="false" selection-start-line="41" selection-start-column="91" selection-end-line="41" selection-end-column="91" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/StateFormulae/GloballyStateFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="43" column="91" lean-forward="false" selection-start-line="43" selection-start-column="91" selection-end-line="43" selection-end-column="91" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/IteStatement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="152" column="53" lean-forward="false" selection-start-line="152" selection-start-column="53" selection-end-line="152" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/ReturnStatement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="65" column="42" lean-forward="false" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/Statement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/entity/automaton/TransitionSingle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="139" column="57" lean-forward="false" selection-start-line="139" selection-start-column="57" selection-end-line="139" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/SynchronizingStatement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="109" column="43" lean-forward="false" selection-start-line="109" selection-start-column="43" selection-end-line="109" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/statement/AssignmentStatement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="104" column="74" lean-forward="true" selection-start-line="104" selection-start-column="74" selection-end-line="104" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fmgroup/mediator/language/property/PathFormulae/ExistsPathFormulae.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

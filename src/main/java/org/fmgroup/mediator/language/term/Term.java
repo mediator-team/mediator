@@ -72,10 +72,13 @@ public interface Term extends RawElement {
     int getPrecedence();
 
     default Type getType() throws ValidationException {
+        assert false;
         return null;
     }
 
-    Term refactor(Map<String, Term> rewriteMap) throws ValidationException;
+    default Term refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        return this;
+    }
 
     @Override
     default Term copy(RawElement parent) throws ValidationException {

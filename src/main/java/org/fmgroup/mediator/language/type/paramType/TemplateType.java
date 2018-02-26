@@ -171,7 +171,7 @@ public class TemplateType implements Type {
     }
 
     @Override
-    public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+    public TemplateType refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
     }
 

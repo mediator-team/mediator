@@ -83,7 +83,7 @@ public class ListType implements Type {
     @Override
     public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         setBaseType(getBaseType().refactor(typeRewriteMap, termRewriteMap));
-        setCapacity(getCapacity().refactor(termRewriteMap));
+        setCapacity(getCapacity().refactor(typeRewriteMap, termRewriteMap));
 
         return this;
     }

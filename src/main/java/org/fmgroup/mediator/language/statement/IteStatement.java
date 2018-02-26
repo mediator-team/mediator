@@ -6,6 +6,7 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,13 +144,13 @@ public class IteStatement implements Statement, Statements {
     }
 
     @Override
-    public Statement refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        setCondition(getCondition().refactor(rewriteMap));
+    public Statement refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setCondition(getCondition().refactor(typeRewriteMap, termRewriteMap));
         for (Statement s : getThenStmts()) {
-            s.refactor(rewriteMap);
+            s.refactor(typeRewriteMap, termRewriteMap);
         }
         for (Statement s : getElseStmts()) {
-            s.refactor(rewriteMap);
+            s.refactor(typeRewriteMap, termRewriteMap);
         }
         return this;
     }

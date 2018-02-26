@@ -79,9 +79,9 @@ public class ElementTerm implements Term {
     }
 
     @Override
-    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        setContainer(getContainer().refactor(rewriteMap));
-        setKey(getKey().refactor(rewriteMap));
+    public ElementTerm refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setContainer(getContainer().refactor(typeRewriteMap, termRewriteMap));
+        setKey(getKey().refactor(typeRewriteMap, termRewriteMap));
         return this;
     }
 

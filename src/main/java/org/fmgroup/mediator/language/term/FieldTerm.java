@@ -53,7 +53,6 @@ public class FieldTerm implements Term {
     }
 
     public FieldTerm setOwner(Term owner) {
-        // TODO
         this.owner = owner;
         owner.setParent(this);
         return this;
@@ -79,8 +78,8 @@ public class FieldTerm implements Term {
     }
 
     @Override
-    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        setOwner(getOwner().refactor(rewriteMap));
+    public Term refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setOwner(getOwner().refactor(typeRewriteMap, termRewriteMap));
         return this;
     }
 

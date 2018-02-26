@@ -77,8 +77,8 @@ public class BoundedIntType implements Type {
 
     @Override
     public BoundedIntType refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
-        setLowerBound(getLowerBound().refactor(termRewriteMap));
-        setUpperBound(getUpperBound().refactor(termRewriteMap));
+        setLowerBound(getLowerBound().refactor(typeRewriteMap, termRewriteMap));
+        setUpperBound(getUpperBound().refactor(typeRewriteMap, termRewriteMap));
 
         return this;
     }

@@ -6,6 +6,7 @@ import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.PortIdentifier;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,12 +104,12 @@ public class SynchronizingStatement implements Statement {
     }
 
     @Override
-    public SynchronizingStatement refactor(Map<String, Term> rewriteMap) throws ValidationException {
+    public SynchronizingStatement refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         List<PortIdentifier> newPorts = new ArrayList<>();
 
         for (PortIdentifier port : getSynchronizedPorts()) {
-            if (rewriteMap.containsKey(port + ".value")) {
-                String newPortName = rewriteMap.get(port + ".value").toString().replace("_value", "");
+            if (termRewriteMap.containsKey(port + ".value")) {
+                String newPortName = termRewriteMap.get(port + ".value").toString().replace("_value", "");
                 newPorts.add(new PortIdentifier().setParent(this.parent).setPortName(newPortName, true));
             } else {
                 newPorts.add(port);

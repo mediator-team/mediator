@@ -35,7 +35,8 @@ automaton speeder (act: in action, motor_l, motor_r: out signedPWM) {
                 motor_l.value = 80;
                 motor_r.value = 80;
             } else if (act.value == backward) {
-
+                motor_l.value = -80;
+                motor_r.value = -80;
             } else if (act.value == stop) {
                 motor_l.value = 0;
                 motor_r.value = 0;

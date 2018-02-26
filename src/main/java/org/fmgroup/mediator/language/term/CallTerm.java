@@ -112,11 +112,11 @@ public class CallTerm implements Term {
     }
 
     @Override
-    public Term refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        // TODO do we need to refactor the callee?
+    public CallTerm refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setCallee(getCallee().refactor(typeRewriteMap, termRewriteMap));
         List<Term> args = new ArrayList<>();
         for (Term arg : getArgs()) {
-            args.add(arg.refactor(rewriteMap));
+            args.add(arg.refactor(typeRewriteMap, termRewriteMap));
         }
         setArgs(args);
         return this;

@@ -33,10 +33,9 @@ public class BinaryOperatorTerm implements Term {
     }
 
     @Override
-    public BinaryOperatorTerm refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        setLeft(getLeft().refactor(rewriteMap));
-        setRight(getRight().refactor(rewriteMap));
-
+    public BinaryOperatorTerm refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setLeft(getLeft().refactor(typeRewriteMap, termRewriteMap));
+        setRight(getRight().refactor(typeRewriteMap, termRewriteMap));
         return this;
     }
 

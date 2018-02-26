@@ -5,6 +5,7 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.Map;
 
@@ -98,10 +99,10 @@ public class AssignmentStatement implements Statement {
     }
 
     @Override
-    public Statement refactor(Map<String, Term> rewriteMap) throws ValidationException {
-        setExpr(getExpr().refactor(rewriteMap));
+    public Statement refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setExpr(getExpr().refactor(typeRewriteMap, termRewriteMap));
         if (getTarget() != null)
-            setTarget(getTarget().refactor(rewriteMap));
+            setTarget(getTarget().refactor(typeRewriteMap, termRewriteMap));
 
         return this;
     }

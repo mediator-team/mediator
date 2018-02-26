@@ -4,6 +4,7 @@ import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.Map;
 
@@ -27,5 +28,5 @@ public interface Statement extends RawElement {
         throw ValidationException.UnregisteredStatement(sc.getClass().toString());
     }
 
-    Statement refactor(Map<String, Term> rewriteMap) throws ValidationException;
+    Statement refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException;
 }
