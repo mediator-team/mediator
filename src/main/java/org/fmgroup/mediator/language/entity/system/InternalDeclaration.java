@@ -3,6 +3,7 @@ package org.fmgroup.mediator.language.entity.system;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.type.Type;
+import org.fmgroup.mediator.language.type.paramType.AbstractType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class InternalDeclaration implements Declaration {
 
     private RawElement parent = null;
     private String identifier = null;
-    private Type type = null;
+    private Type type = new AbstractType();
 
     /**
      * since there is no corresponding parser rule for an internal declaration, we don't overwrite
@@ -60,5 +61,10 @@ public class InternalDeclaration implements Declaration {
         List<String> result = new ArrayList<>();
         result.add(identifier);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return this.getIdentifier();
     }
 }

@@ -86,4 +86,8 @@ public interface Term extends RawElement {
     default Term copy() throws ValidationException {
         return this.copy(this.getParent());
     }
+
+    default boolean isValue() {
+        return false;
+    }
 }

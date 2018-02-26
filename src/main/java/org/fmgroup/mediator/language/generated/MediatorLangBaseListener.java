@@ -340,13 +340,73 @@ public class MediatorLangBaseListener implements MediatorLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConnectionDecl(MediatorLangParser.ConnectionDeclContext ctx) { }
+	@Override public void enterCustomConnection(MediatorLangParser.CustomConnectionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConnectionDecl(MediatorLangParser.ConnectionDeclContext ctx) { }
+	@Override public void exitCustomConnection(MediatorLangParser.CustomConnectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBasicConnection(MediatorLangParser.BasicConnectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBasicConnection(MediatorLangParser.BasicConnectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPortCollection(MediatorLangParser.PortCollectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPortCollection(MediatorLangParser.PortCollectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConnectionOptions(MediatorLangParser.ConnectionOptionsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConnectionOptions(MediatorLangParser.ConnectionOptionsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConnectionOption(MediatorLangParser.ConnectionOptionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConnectionOption(MediatorLangParser.ConnectionOptionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConnectionOptionItem(MediatorLangParser.ConnectionOptionItemContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConnectionOptionItem(MediatorLangParser.ConnectionOptionItemContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -9,6 +9,7 @@ import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.Statements;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,12 +132,12 @@ public class TransitionSingle implements Transition, Statements {
     }
 
     @Override
-    public TransitionSingle refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
+    public TransitionSingle refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap, RawElement parent) throws ValidationException {
         this.parent = parent;
-        setGuard(getGuard().refactor(rewriteMap));
+        setGuard(getGuard().refactor(termRewriteMap));
         List<Statement> newStatements = new ArrayList<>();
         for (Statement s : getStatements()) {
-            newStatements.add(s.refactor(rewriteMap));
+            newStatements.add(s.refactor(termRewriteMap));
         }
 
         setStatements(newStatements);

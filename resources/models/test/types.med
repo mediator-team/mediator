@@ -24,6 +24,7 @@ automaton <p1:int, p2:int> test (a, b:in int p1 .. p2) {
         // TODO
         c: int init { a = 222222222, b = 3, c = 123, d = 123 };
     }
+    clocks a,b;
     transitions {
 
         (c >= 0) -> {

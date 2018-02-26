@@ -9,6 +9,7 @@ import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VariableDeclaration implements RawElement, Declaration {
 
@@ -83,6 +84,16 @@ public class VariableDeclaration implements RawElement, Declaration {
 
     public VariableDeclaration setIdentifiers(List<String> identifiers) {
         this.identifiers = identifiers;
+        return this;
+    }
+
+    public VariableDeclaration addPrefix(String prefix) {
+        setIdentifiers(
+                getIdentifiers().stream().map(
+                        s -> prefix + s
+                ).collect(Collectors.toList())
+        );
+
         return this;
     }
 }

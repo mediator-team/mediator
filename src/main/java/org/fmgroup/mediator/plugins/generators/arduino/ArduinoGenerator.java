@@ -1,7 +1,7 @@
 package org.fmgroup.mediator.plugins.generators.arduino;
 
 import org.fmgroup.mediator.common.UtilCode;
-import org.fmgroup.mediator.core.scheduler.Scheduler;
+import org.fmgroup.mediator.plugins.scheduler.Scheduler;
 import org.fmgroup.mediator.language.Program;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
@@ -20,6 +20,7 @@ import org.fmgroup.mediator.language.statement.Statement;
 import org.fmgroup.mediator.language.statement.SynchronizingStatement;
 import org.fmgroup.mediator.language.term.*;
 import org.fmgroup.mediator.language.type.*;
+import org.fmgroup.mediator.language.type.termType.*;
 import org.fmgroup.mediator.plugin.generator.FileSet;
 import org.fmgroup.mediator.plugin.generator.Generator;
 

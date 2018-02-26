@@ -1,16 +1,17 @@
 package org.fmgroup.mediator.language.scope;
 
+import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.entity.PortDeclaration;
 import org.fmgroup.mediator.language.entity.system.ComponentDeclaration;
 import org.fmgroup.mediator.language.term.IdValue;
-import org.fmgroup.mediator.language.type.EnumType;
-import org.fmgroup.mediator.language.type.IdType;
+import org.fmgroup.mediator.language.type.termType.EnumType;
+import org.fmgroup.mediator.language.type.termType.IdType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface Scope {
+public interface Scope extends RawElement{
 
     List<DeclarationCollection> getDeclarations();
 

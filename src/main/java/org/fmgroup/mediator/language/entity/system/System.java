@@ -8,9 +8,12 @@ import org.fmgroup.mediator.language.entity.EntityInterface;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
+import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class System implements Entity, Scope, Templated {
 
@@ -66,13 +69,13 @@ public class System implements Entity, Scope, Templated {
         return connections;
     }
 
-    public System setConnections(List<Connection> connections) {
+    public System setConnections(List<CustomConnection> connections) {
         this.connections = new ArrayList<>();
         connections.forEach(this::addConnection);
         return this;
     }
 
-    public System addConnection(Connection connection) {
+    public System addConnection(CustomConnection connection) {
         this.connections.add(connection);
         connection.setParent(this);
         return this;
@@ -127,7 +130,11 @@ public class System implements Entity, Scope, Templated {
 
         for (MediatorLangParser.ConnectionSegmentContext csc : ((MediatorLangParser.SystemContext) context).connectionSegment()) {
             for (MediatorLangParser.ConnectionDeclContext conn : csc.connectionDecl()) {
-                connections.add(new Connection().fromContext(conn, this));
+                if (conn instanceof MediatorLangParser.CustomConnectionContext) {
+                    connections.add(new CustomConnection().fromContext(conn, this));
+                } else if (conn instanceof MediatorLangParser.BasicConnectionContext) {
+                    connections.add(new BasicConnection().fromContext(conn, this));
+                }
             }
         }
 
@@ -182,8 +189,15 @@ public class System implements Entity, Scope, Templated {
 
     @Override
     public Template getTemplate() {
+        if (template == null) return new Template().setParent(this);
         return template;
     }
+
+    @Override
+    public Templated refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        throw ValidationException.UnderDevelopment();
+    }
+
 
     public System setTemplate(Template template) {
         this.template = template;

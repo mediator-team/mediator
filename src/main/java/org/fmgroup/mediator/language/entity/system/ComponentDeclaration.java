@@ -6,7 +6,7 @@ import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.Declaration;
-import org.fmgroup.mediator.language.type.TemplateType;
+import org.fmgroup.mediator.language.type.paramType.TemplateType;
 
 import java.util.ArrayList;
 import java.util.List;

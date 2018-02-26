@@ -88,7 +88,7 @@ public class Core {
                     e.printStackTrace();
                 } catch (ArgumentParserException e) {
                     parser.handleError(e);
-                } catch (FileNotFoundException e) {
+                } catch (java.io.IOException e) {
                     if (ToolInfo.DEBUG) {
                         e.printStackTrace();
                     } else
@@ -96,29 +96,6 @@ public class Core {
                 }
             }
         }
-
-//
-//        System.out.println("Mediator Tool Alpha.");
-//        Project proj = new Project("resources/models/smallcar");
-//        Program prog = proj.parseFile("drivers/motor.med");
-
-//        System.out.println(prog.toString());
-//        Simulator sim = new Simulator(Scheduler.Schedule(prog.systems.get("testbench")));
-//        while (true)
-//            sim.stepForward();
-//
-//        try {
-//            System.out.println(
-//                    new ArduinoGenerator().CommandGenerate(
-//                            Scheduler.Schedule(prog.getSystems().get("testbench"))
-//                    )
-//            );
-//        }
-//        catch (ArduinoGeneratorException e) {
-//            e.printStackTrace();
-//        } catch (ValidationException e) {
-//            e.printStackTrace();
-//        }
 
     }
 }

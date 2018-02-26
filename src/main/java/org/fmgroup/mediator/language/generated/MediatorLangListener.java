@@ -292,15 +292,69 @@ public interface MediatorLangListener extends ParseTreeListener {
 	 */
 	void exitComponentDecl(MediatorLangParser.ComponentDeclContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MediatorLangParser#connectionDecl}.
+	 * Enter a parse tree produced by the {@code customConnection}
+	 * labeled alternative in {@link MediatorLangParser#connectionDecl}.
 	 * @param ctx the parse tree
 	 */
-	void enterConnectionDecl(MediatorLangParser.ConnectionDeclContext ctx);
+	void enterCustomConnection(MediatorLangParser.CustomConnectionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MediatorLangParser#connectionDecl}.
+	 * Exit a parse tree produced by the {@code customConnection}
+	 * labeled alternative in {@link MediatorLangParser#connectionDecl}.
 	 * @param ctx the parse tree
 	 */
-	void exitConnectionDecl(MediatorLangParser.ConnectionDeclContext ctx);
+	void exitCustomConnection(MediatorLangParser.CustomConnectionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code basicConnection}
+	 * labeled alternative in {@link MediatorLangParser#connectionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterBasicConnection(MediatorLangParser.BasicConnectionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code basicConnection}
+	 * labeled alternative in {@link MediatorLangParser#connectionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitBasicConnection(MediatorLangParser.BasicConnectionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#portCollection}.
+	 * @param ctx the parse tree
+	 */
+	void enterPortCollection(MediatorLangParser.PortCollectionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#portCollection}.
+	 * @param ctx the parse tree
+	 */
+	void exitPortCollection(MediatorLangParser.PortCollectionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#connectionOptions}.
+	 * @param ctx the parse tree
+	 */
+	void enterConnectionOptions(MediatorLangParser.ConnectionOptionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#connectionOptions}.
+	 * @param ctx the parse tree
+	 */
+	void exitConnectionOptions(MediatorLangParser.ConnectionOptionsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#connectionOption}.
+	 * @param ctx the parse tree
+	 */
+	void enterConnectionOption(MediatorLangParser.ConnectionOptionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#connectionOption}.
+	 * @param ctx the parse tree
+	 */
+	void exitConnectionOption(MediatorLangParser.ConnectionOptionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MediatorLangParser#connectionOptionItem}.
+	 * @param ctx the parse tree
+	 */
+	void enterConnectionOptionItem(MediatorLangParser.ConnectionOptionItemContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MediatorLangParser#connectionOptionItem}.
+	 * @param ctx the parse tree
+	 */
+	void exitConnectionOptionItem(MediatorLangParser.ConnectionOptionItemContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MediatorLangParser#system}.
 	 * @param ctx the parse tree

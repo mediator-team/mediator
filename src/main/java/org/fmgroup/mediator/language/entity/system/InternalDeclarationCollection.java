@@ -32,7 +32,7 @@ public class InternalDeclarationCollection implements DeclarationCollection<Inte
         if (declarationList.size() == 0) return "";
         else {
             return String.format(
-                    "internals %s;",
+                    "internals %s;\n",
                     declarationList.stream().map(Object::toString).collect(Collectors.joining(", "))
             );
         }

@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
-import org.fmgroup.mediator.language.type.IntType;
+import org.fmgroup.mediator.language.type.termType.IntType;
 import org.fmgroup.mediator.language.type.Type;
 
 public class IntValue implements Value {

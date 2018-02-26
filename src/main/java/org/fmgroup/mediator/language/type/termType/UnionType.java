@@ -1,10 +1,11 @@
-package org.fmgroup.mediator.language.type;
+package org.fmgroup.mediator.language.type.termType;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class UnionType implements Type {
     public String toString() {
         String str = "";
         for (int i = 0; i < baseTypes.size(); i++) {
-            if (i > 0) str += "| ";
+            if (i > 0) str += " | ";
             str += baseTypes.get(i).toString();
         }
         return str;
@@ -79,6 +80,9 @@ public class UnionType implements Type {
 
     @Override
     public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        for (int i = 0; i < getBaseTypes().size(); i ++) {
+            getBaseTypes().set(i, getBaseTypes().get(i).refactor(typeRewriteMap, termRewriteMap));
+        }
         return this;
     }
 }

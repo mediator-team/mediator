@@ -8,20 +8,20 @@ import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.BinaryOperatorTerm;
 import org.fmgroup.mediator.language.term.EnumBinaryOperator;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TransitionGroup implements Transition, RawElement {
 
     private RawElement parent;
-    private List<TransitionSingle> transitions = new ArrayList();
+    private List<Transition> transitions = new ArrayList();
 
     public List<Transition> getTransitions() {
-        return transitions.stream().map(
-                transitionSingle -> (Transition) transitionSingle
-        ).collect(Collectors.toList());
+        return transitions;
     }
 
     public TransitionGroup setTransitions(List<Transition> transitions) throws ValidationException {
@@ -110,5 +110,14 @@ public class TransitionGroup implements Transition, RawElement {
             }
         }
         return guard;
+    }
+
+    @Override
+    public TransitionGroup refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap, RawElement parent) throws ValidationException {
+        setParent(parent);
+        for (int i = 0; i < transitions.size(); i ++) {
+            transitions.set(i, transitions.get(i).refactor(typeRewriteMap, termRewriteMap, this));
+        }
+        return this;
     }
 }

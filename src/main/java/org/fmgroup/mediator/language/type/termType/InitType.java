@@ -1,10 +1,11 @@
-package org.fmgroup.mediator.language.type;
+package org.fmgroup.mediator.language.type.termType;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.Map;
 
@@ -49,11 +50,12 @@ public class InitType implements Type {
 
     @Override
     public Term getInitValue() throws ValidationException {
-        return (Term) this.getDefaultValue().copy();
+        return this.getDefaultValue().copy();
     }
 
     @Override
     public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        setBaseType(getBaseType().refactor(typeRewriteMap, termRewriteMap));
         setDefaultValue(getDefaultValue().refactor(termRewriteMap));
         return this;
     }

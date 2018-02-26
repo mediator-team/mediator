@@ -1,4 +1,4 @@
-package org.fmgroup.mediator.language.type;
+package org.fmgroup.mediator.language.type.paramType;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -6,6 +6,7 @@ import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.CallTerm;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,5 +173,9 @@ public class TemplateType implements Type {
     @Override
     public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
         return this;
+    }
+
+    public Templated getProviderWithNoTemplate() throws ValidationException {
+        return this.getProvider().resolveTemplate(this.getParams());
     }
 }

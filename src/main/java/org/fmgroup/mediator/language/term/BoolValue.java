@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
-import org.fmgroup.mediator.language.type.BoolType;
+import org.fmgroup.mediator.language.type.termType.BoolType;
 import org.fmgroup.mediator.language.type.Type;
 
 /**

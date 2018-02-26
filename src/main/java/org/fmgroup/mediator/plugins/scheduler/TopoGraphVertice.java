@@ -1,6 +1,6 @@
-package org.fmgroup.mediator.core.scheduler;
+package org.fmgroup.mediator.plugins.scheduler;
 
-class TopoGraphVertice<T> {
+public class TopoGraphVertice<T> {
     public T element = null;
 
     public TopoGraphVertice(T element) {

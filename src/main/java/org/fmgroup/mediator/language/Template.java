@@ -6,7 +6,7 @@ import org.fmgroup.mediator.language.scope.Declaration;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
-import org.fmgroup.mediator.language.type.AbstractType;
+import org.fmgroup.mediator.language.type.paramType.AbstractType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,5 +91,10 @@ public class Template implements RawElement, DeclarationCollection<Declaration> 
         return this;
     }
 
+    public int size() {
+        return getDeclarationList().stream().map(
+                declaration -> declaration.getIdentifiers().size()
+        ).mapToInt(Integer::valueOf).sum();
+    }
 
 }

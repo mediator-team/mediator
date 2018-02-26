@@ -1,4 +1,4 @@
-package org.fmgroup.mediator.language.type;
+package org.fmgroup.mediator.language.type.termType;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -8,6 +8,7 @@ import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.TypeDeclaration;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +98,10 @@ public class IdType implements Type {
 
     @Override
     public Type refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        if (typeRewriteMap.containsKey(this.toString())) {
+            return typeRewriteMap.get(this.toString()).copy(this.getParent());
+        }
+
         return this;
     }
 

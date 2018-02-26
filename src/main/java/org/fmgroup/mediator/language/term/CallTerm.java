@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
-import org.fmgroup.mediator.language.type.TemplateType;
+import org.fmgroup.mediator.language.type.paramType.TemplateType;
 import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;

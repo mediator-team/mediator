@@ -1,21 +1,22 @@
-package org.fmgroup.mediator.language.type;
+package org.fmgroup.mediator.language.type.termType;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.Map;
 
-public class AbstractType implements Type {
+public class IntType implements Type {
 
-    private RawElement parent;
+    private RawElement parent = null;
 
     @Override
-    public AbstractType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
-        if (!(context instanceof MediatorLangParser.AbstractTypeContext)) {
-            throw ValidationException.IncompatibleContextType(this.getClass(), "AbstractTypeContext", context.toString());
+    public IntType fromContext(ParserRuleContext context, RawElement parent) throws ValidationException {
+        if (!(context instanceof MediatorLangParser.IntTypeContext)) {
+            throw ValidationException.IncompatibleContextType(this.getClass(), "IntTypeContext", context.toString());
         }
 
         setParent(parent);
@@ -24,7 +25,7 @@ public class AbstractType implements Type {
 
     @Override
     public String toString() {
-        return "type";
+        return "int";
     }
 
     @Override
@@ -33,14 +34,14 @@ public class AbstractType implements Type {
     }
 
     @Override
-    public AbstractType setParent(RawElement parent) {
+    public IntType setParent(RawElement parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public AbstractType copy(RawElement parent) throws ValidationException {
-        return new AbstractType().setParent(parent);
+    public IntType copy(RawElement parent) throws ValidationException {
+        return new IntType().setParent(parent);
     }
 
     @Override

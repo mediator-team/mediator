@@ -2,7 +2,7 @@ package org.fmgroup.mediator.language.term;
 
 import org.fmgroup.mediator.language.RawElement;
 import org.fmgroup.mediator.language.ValidationException;
-import org.fmgroup.mediator.language.type.EnumType;
+import org.fmgroup.mediator.language.type.termType.EnumType;
 
 public class EnumValue implements Value {
 

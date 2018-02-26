@@ -69,7 +69,7 @@ transitionSegment:
 ;
 
 transition:
-    term '->' ( '{' statements '}' | statement )        # transitionSingle
+    term '->' ( '{' statements '}' ('reset' clock+=ID (',' clock+=ID)* ';' )?  | statement )        # transitionSingle
     |   'group' '{' transition * '}'                    # transitionGroup
     ;
 
@@ -90,11 +90,37 @@ automaton
 ;
 
 componentSegment: 'components' '{' (componentDecl ';')* '}';
-internalSegment: 'internalCollection' ID (',' ID)* ';' ;
+internalSegment: 'internals' ID (',' ID)* ';' ;
 connectionSegment: 'connections' '{' (connectionDecl ';')* '}';
 
 componentDecl: ID (',' ID)* ':' type;
-connectionDecl:  type '(' portIdentifier (',' portIdentifier)* ')';
+connectionDecl:
+    type '(' portIdentifier (',' portIdentifier)* ')'               # customConnection
+    |
+        inPorts=portCollection
+        (
+          '->'
+          | ('--(' connectionOptions ')')? '->'
+        )
+        outPorts=portCollection                                     # basicConnection
+;
+
+portCollection:
+    portIdentifier
+    | '('
+        portIdentifier (',' portIdentifier)*
+      ')'
+;
+
+connectionOptions:
+    (connectionOption (',' connectionOption)*)?
+;
+
+connectionOption:
+    connectionOptionItem ('=' term)?
+;
+
+connectionOptionItem: 'sync' | 'async' | 'capacity' | 'lossy' | 'broadcast' | 'unicast';
 
 system
 :
@@ -110,5 +136,5 @@ meta
 ;
 
 LINE_COMMENT  : '//' .*? '\r'? '\n' -> skip ; // Match"//" stuff '\n'
-COMMENT       : '/*' .*? '*/' ->skip ;        // Match "/*" stuff "*/"
+COMMENT       : '/*' .*? '*/' -> skip ;        // Match "/*" stuff "*/"
 IGNORE          : ('\t'|' '|'\n') -> skip;

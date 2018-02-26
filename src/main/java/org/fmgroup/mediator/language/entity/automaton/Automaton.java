@@ -5,18 +5,23 @@ import org.fmgroup.mediator.common.UtilCode;
 import org.fmgroup.mediator.language.*;
 import org.fmgroup.mediator.language.entity.Entity;
 import org.fmgroup.mediator.language.entity.EntityInterface;
+import org.fmgroup.mediator.language.entity.PortDeclaration;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.property.PropertyCollection;
 import org.fmgroup.mediator.language.scope.DeclarationCollection;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
+import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Automaton implements Entity, Scope, Templated {
+
     private RawElement parent = null;
     private Template template = null;
     private EntityInterface entityInterface = null;
@@ -139,9 +144,11 @@ public class Automaton implements Entity, Scope, Templated {
             setMeta(new Meta().fromContext(((MediatorLangParser.AutomatonContext) context).meta(), this));
 
         // step 3. analyze properties
-        this.setProperties(new PropertyCollection());
-        for (MediatorLangParser.PropertySegmentContext pseg : ((MediatorLangParser.AutomatonContext) context).propertySegment()) {
-            this.getProperties().fromContext(pseg, this);
+        if (((MediatorLangParser.AutomatonContext) context).propertySegment().size() > 0) {
+            this.setProperties(new PropertyCollection());
+            for (MediatorLangParser.PropertySegmentContext pseg : ((MediatorLangParser.AutomatonContext) context).propertySegment()) {
+                this.getProperties().fromContext(pseg, this);
+            }
         }
 
         return this;
@@ -165,7 +172,7 @@ public class Automaton implements Entity, Scope, Templated {
         }
 
         a.setTransitions(transitions);
-        a.setProperties(getProperties().copy(a));
+        if (getProperties() != null) a.setProperties(getProperties().copy(a));
 
         return a;
     }
@@ -193,7 +200,8 @@ public class Automaton implements Entity, Scope, Templated {
             );
         }
 
-        rel += UtilCode.addIndent(properties.toString(), 1);
+        if (this.properties != null)
+            rel += UtilCode.addIndent(properties.toString(), 1);
         rel += "}";
 
         if (getMeta() != null) rel += " " + getMeta().toString();
@@ -219,9 +227,32 @@ public class Automaton implements Entity, Scope, Templated {
 
     @Override
     public Template getTemplate() {
+        if (this.template == null) return new Template().setParent(this);
         return template;
     }
 
+    @Override
+    public Automaton refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        for (PortDeclaration portdecl : getEntityInterface().getDeclarationList()) {
+            portdecl.setType(
+                    portdecl.getType().refactor(typeRewriteMap, termRewriteMap)
+            );
+        }
+
+        for (VariableDeclaration vardecl : getLocalVars().getDeclarationList()) {
+            vardecl.setType(
+                    vardecl.getType().refactor(typeRewriteMap, termRewriteMap)
+            );
+        }
+
+        for (Transition t : getTransitions()) {
+            t.refactor(typeRewriteMap, termRewriteMap, this);
+        }
+
+        return this;
+    }
+
+    @Override
     public Automaton setTemplate(Template template) {
         this.template = template;
         if (template != null) template.setParent(this);

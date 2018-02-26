@@ -9,10 +9,12 @@ import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.scope.VariableDeclaration;
 import org.fmgroup.mediator.language.scope.VariableDeclarationCollection;
 import org.fmgroup.mediator.language.statement.Statement;
+import org.fmgroup.mediator.language.term.Term;
 import org.fmgroup.mediator.language.type.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Function implements RawElement, Scope, Templated {
 
@@ -209,6 +211,11 @@ public class Function implements RawElement, Scope, Templated {
     @Override
     public Template getTemplate() {
         return this.template;
+    }
+
+    @Override
+    public Templated refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap) throws ValidationException {
+        throw ValidationException.UnderDevelopment();
     }
 
     public Function setTemplate(Template template) {

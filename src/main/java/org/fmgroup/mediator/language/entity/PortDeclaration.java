@@ -11,22 +11,6 @@ import org.fmgroup.mediator.language.type.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-enum PortDirection {
-    IN("in"),
-    OUT("out");
-
-    private String value;
-
-    PortDirection(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return this.value;
-    }
-}
-
 public class PortDeclaration implements RawElement, Declaration {
 
     private List<String> identifiers = new ArrayList<>();

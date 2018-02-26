@@ -1,0 +1,31 @@
+automaton <T:type> a (x: in int) {
+    variables {
+      a: T;
+    }
+    transitions {
+        true -> {
+            sync x;
+        }
+    }
+}
+
+automaton b (y: out int) {
+    transitions {
+        true -> {
+            sync y;
+        }
+    }
+}
+
+system t (z: in int) {
+    components {
+        c1, c2: a<int>;
+        c3, c4: b;
+    }
+
+    internals M;
+
+    connections {
+        (c3.y, c4.y, z) --(async, broadcast, capacity=0)-> (c1.x, c2.x);
+    }
+}

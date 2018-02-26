@@ -1,4 +1,4 @@
-package org.fmgroup.mediator.core.scheduler;
+package org.fmgroup.mediator.plugins.scheduler;
 
 import java.util.*;
 

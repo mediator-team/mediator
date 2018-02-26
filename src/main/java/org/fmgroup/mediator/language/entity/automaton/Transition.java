@@ -5,6 +5,7 @@ import org.fmgroup.mediator.language.ValidationException;
 import org.fmgroup.mediator.language.generated.MediatorLangParser;
 import org.fmgroup.mediator.language.scope.Scope;
 import org.fmgroup.mediator.language.term.Term;
+import org.fmgroup.mediator.language.type.Type;
 
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public interface Transition extends RawElement {
         }
     }
 
-    default TransitionSingle refactor(Map<String, Term> rewriteMap, RawElement parent) throws ValidationException {
+    default Transition refactor(Map<String, Type> typeRewriteMap, Map<String, Term> termRewriteMap, RawElement parent) throws ValidationException {
         throw ValidationException.UnderDevelopment();
     }
 }

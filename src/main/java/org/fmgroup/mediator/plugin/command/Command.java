@@ -6,6 +6,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.fmgroup.mediator.plugin.Plugin;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public interface Command extends Plugin {
     String getCommandName();
@@ -30,5 +31,5 @@ public interface Command extends Plugin {
         return parser;
     }
 
-    void run (Namespace args) throws FileNotFoundException;
+    void run (Namespace args) throws IOException;
 }
